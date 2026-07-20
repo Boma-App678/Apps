@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>كابتن بومة - BOMA Courier</title>
+    <style>
+        :root { 
+            --primary: #1e3d59; --primary-shine: #295075; --accent: #ff6e40; 
+            --green: #10b981; --red: #ef4444; 
+            --bg: #f8fafc; --text: #0f172a; 
+            --text-muted: #64748b; --border: #e2e8f0; --card: #ffffff;
+        }
+        * { box-sizing: border-box; font-family: system-ui, sans-serif; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); display: flex; justify-content: center; height: 100vh; overflow: hidden; }
+        
+        .app-container { width: 100%; max-width: 450px; height: 100%; background: var(--bg); display: flex; flex-direction: column; position: relative; border-left: 1px solid var(--border); border-right: 1px solid var(--border); box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        
+        .header { background: var(--card); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); z-index: 10; }
+        .logo-box { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { font-size: 28px; }
+        .logo-text { font-size: 18px; font-weight: 900; color: var(--accent); letter-spacing: 1px; }
+        
+        .status-toggle { background: var(--border); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 900; cursor: pointer; transition: 0.3s; display: none; align-items: center; gap: 5px; }
+        .status-toggle.online { background: rgba(16, 185, 129, 0.1); color: var(--green); border: 1px solid var(--green); }
+        .status-toggle.offline { background: rgba(239, 68, 68, 0.1); color: var(--red); border: 1px solid var(--red); }
+
+        .screen { display: none; flex: 1; overflow-y: auto; padding: 20px; flex-direction: column; }
+        .screen.active { display: flex; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+        /* Login Screen */
+        .login-box { margin: auto; width: 100%; background: var(--card); padding: 30px 20px; border-radius: 24px; border: 1px solid var(--border); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+        input { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 14px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-size: 16px; font-weight: 900; outline: none; text-align: center; transition: 0.3s; }
+        input:focus { border-color: var(--accent); background: var(--card); box-shadow: 0 0 0 4px rgba(255,110,64,0.1); }
+        .btn { width: 100%; padding: 16px; border-radius: 14px; border: none; font-size: 16px; font-weight: 900; cursor: pointer; transition: 0.2s; color: #fff; }
+        .btn:active { transform: scale(0.95); }
+        .btn-main { background: linear-gradient(135deg, var(--accent), #d35400); box-shadow: 0 6px 15px rgba(255,110,64,0.25); }
+        .btn-green { background: linear-gradient(135deg, var(--green), #059669); box-shadow: 0 6px 15px rgba(16,185,129,0.25); }
+        .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .btn-outline { background: var(--bg); border: 2px solid var(--border); color: var(--text); box-shadow: none; }
+
+        /* Dashboard */
+        .target-box { background: linear-gradient(135deg, var(--primary-shine), var(--primary)); color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(30,61,89,0.2); }
+        .target-header { display: flex; justify-content: space-between; font-weight: 900; font-size: 14px; margin-bottom: 12px; }
+        .progress-bar { width: 100%; height: 10px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.5s ease; border-radius: 10px; }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .stat-val { font-size: 22px; font-weight: 900; margin-top: 5px; }
+        
+        .tabs { display: flex; background: var(--card); border-radius: 16px; padding: 6px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .tab { flex: 1; text-align: center; padding: 12px; font-size: 14px; font-weight: 900; color: var(--text-muted); border-radius: 12px; cursor: pointer; transition: 0.2s; }
+        .tab.active { background: var(--accent); color: #fff; box-shadow: 0 4px 10px rgba(255,110,64,0.2); }
+
+        .order-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 15px; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .order-card::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 5px; background: var(--accent); }
+        .order-card.active-order::before { background: var(--green); }
+        .o-header { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: var(--text-muted); font-weight: bold; border-bottom: 1px dashed var(--border); padding-bottom: 10px; }
+        .o-price { font-size: 22px; font-weight: 900; color: var(--text); direction: ltr; text-align: right; }
+        .o-fee { font-size: 14px; color: var(--green); font-weight: 900; margin-top: 5px; }
+        .o-location { font-size: 14px; font-weight: 900; margin: 15px 0; padding: 12px; background: var(--bg); border-radius: 12px; color: var(--text); border: 1px solid var(--border); }
+        .badge-paid { display: inline-block; padding: 6px 10px; background: rgba(16,185,129,0.1); color: var(--green); border-radius: 8px; font-size: 12px; font-weight: 900; border: 1px solid rgba(16,185,129,0.2); }
+        .badge-cash { display: inline-block; padding: 6px 10px; background: rgba(239,68,68,0.1); color: var(--red); border-radius: 8px; font-size: 12px; font-weight: 900; border: 1px solid rgba(239,68,68,0.2); }
+
+        .action-flex { display: flex; gap: 10px; margin-top: 15px; }
+        
+        /* =========================================
+           🌟 تحسينات الرسائل المنبثقة (Toast & Dialog) 🌟
+           ========================================= */
+
+        /* 1. الرسائل السريعة (Toast) */
+        .toast {
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #fff;
+            border-radius: 50px;
+            padding: 14px 28px;
+            font-size: 15px;
+            font-weight: 900;
+            display: none;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            text-align: center;
+            width: auto;
+            max-width: 90%;
+            line-height: 1.5;
+            border: 1px solid rgba(255,255,255,0.15);
+            animation: slideDownToast 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes slideDownToast {
+            0% { opacity: 0; transform: translate(-50%, -30px); }
+            100% { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        /* 2. خلفية النوافذ المنبثقة (Overlay) */
+        .modal { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(6px); 
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 100; 
+            display: none; 
+            justify-content: center; 
+            align-items: center; /* توسيط في منتصف الشاشة */
+            padding: 24px;
+        }
+
+        /* 3. صندوق النافذة (Dialog Box) */
+        .modal-content { 
+            background: var(--card); 
+            width: 100%; 
+            max-width: 360px; /* تصميم أنحف وأكثر أناقة */
+            border-radius: 32px; 
+            padding: 35px 25px; 
+            text-align: center; 
+            border: none;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15); 
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 4. تحسين حقول إدخال ה- OTP */
+        .otp-input-group { 
+            display: flex; 
+            justify-content: center; 
+            gap: 12px; 
+            margin: 25px 0; 
+            direction: ltr; 
+        }
+        .otp-box { 
+            width: 55px; 
+            height: 65px; 
+            font-size: 28px; 
+            text-align: center; 
+            font-weight: 900; 
+            border-radius: 16px; 
+            border: 2px solid var(--border);
+            background: var(--bg);
+            color: var(--primary);
+            outline: none; 
+            transition: all 0.3s ease; 
+        }
+        .otp-box:focus { 
+            border-color: var(--green); 
+            background: var(--card); 
+            box-shadow: 0 0 0 4px rgba(16,185,129,0.15); 
+        }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toast">رسالة</div>
+
+<div class="app-container">
+    <div class="header">
+        <div class="logo-box">
+            <span class="logo-icon">🦉</span>
+            <span class="logo-text">كابتن بومة</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div id="status-toggle" class="status-toggle online" onclick="toggleStatus()">🟢 متصل</div>
+            <div id="btn-logout" style="display:none; cursor:pointer; font-size:22px; filter:grayscale(1); opacity:0.7;" onclick="logout()">🚪</div>
+        </div>
+    </div>
+
+    <!-- شاشة الدخول -->
+    <div id="login-screen" class="screen active" style="justify-content: center;">
+        <div class="login-box">
+            <h2 style="margin-bottom: 5px; color: var(--primary);">مرحباً كابتن! 🛵</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; font-weight: bold;">سجل دخولك لبدء استقبال الطلبات</p>
+            <input type="text" id="login-id" placeholder="رقم الهاتف أو البريد الإلكتروني" style="direction: ltr;">
+            <input type="password" id="login-pass" placeholder="كلمة المرور">
+            <button class="btn btn-main" onclick="login()">دخول سريع</button>
+        </div>
+    </div>
+
+    <!-- شاشة لوحة التحكم والطلبات -->
+    <div id="home-screen" class="screen">
+        
+        <!-- نظام التارجت (الهدف) -->
+        <div class="target-box">
+            <div class="target-header">
+                <span>🎯 الهدف اليومي (10 طلبات)</span>
+                <span><span id="target-count">0</span> / 10</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="target-progress"></div></div>
+            <small style="color: #cbd5e1; font-weight: bold;" id="target-hint">أكمل الهدف لتحصل على مكافأة 2000 SDG 🎁</small>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div style="font-size: 12px; color: var(--text-muted); font-weight: 900;">أرباحي المتاحة (SDG)</div>
+                <div class="stat-val" style="color: var(--green);" id="stat-balance">0.00</div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size: 12px; color: var(--text-muted); font-weight: 900;">المديونية / عهدة (SDG)</div>
+                <div class="stat-val" style="color: var(--red);" id="stat-debt">0.00</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" id="tab-available" onclick="switchTab('available')">الطلبات المتاحة 🟢</div>
+            <div class="tab" id="tab-my" onclick="switchTab('my')">طلباتي الحالية 🛵</div>
+        </div>
+
+        <div id="orders-container" style="flex: 1; overflow-y: auto; padding-bottom: 20px;"></div>
+    </div>
+</div>
+
+<!-- نافذة إدخال كود التسليم (OTP) -->
+<div class="modal" id="otp-modal">
+    <div class="modal-content">
+        <h2 style="color: var(--green); margin-bottom: 10px;">تسليم الطلب للعميل ✅</h2>
+        <p style="font-size: 14px; color: var(--text-muted); font-weight: bold;">اطلب من العميل الرمز السري المكون من 4 أرقام لتأكيد التسليم وإنهاء الطلب.</p>
+        
+        <div class="otp-input-group">
+            <input type="text" maxlength="1" class="otp-box" id="otp-1" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-box" id="otp-2" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-box" id="otp-3" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-box" id="otp-4" inputmode="numeric">
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-green" style="flex: 2;" onclick="confirmDelivery()">تأكيد واستلام الأرباح</button>
+            <button class="btn btn-outline" style="flex: 1;" onclick="closeOtpModal()">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'https://api.boomapay.com/api';
+
+
+    let courierToken = localStorage.getItem('boma_courier_token');
+    let currentTab = 'available';
+    let selectedOrderId = null;
+    let isOnlineStatus = true;
+
+    function showToast(msg, isError = false) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        // التوافق مع ألوان الـ CSS الجديدة
+        t.style.background = isError ? 'var(--red)' : 'rgba(15, 23, 42, 0.85)';
+        t.style.color = '#fff';
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    function getDeviceId() {
+        let id = localStorage.getItem('boma_device_id');
+        if (!id) { id = 'DEV-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now(); localStorage.setItem('boma_device_id', id); }
+        return id;
+    }
+
+    if (courierToken) {
+        document.getElementById('login-screen').classList.remove('active');
+        document.getElementById('home-screen').classList.add('active');
+        document.getElementById('btn-logout').style.display = 'block';
+        document.getElementById('status-toggle').style.display = 'flex';
+        loadDashboard();
+    }
+
+    async function login() {
+        const identity = document.getElementById('login-id').value.trim();
+        const password = document.getElementById('login-pass').value;
+        if(!identity || !password) return showToast('أكمل البيانات', true);
+        
+        showToast('جاري تسجيل الدخول... ⏳');
+        try {
+            const deviceId = getDeviceId();
+            const res = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ identity, password, deviceId })
+            });
+            const data = await res.json();
+
+            if (data.requiresDeviceOtp) {
+                const enteredOtp = prompt("تنبيه أمني 🛡️: " + data.message + (data.fallbackOtp ? `\n\n(للتجربة، الرمز هو: ${data.fallbackOtp})` : ''));
+                if (!enteredOtp) return showToast('تم إلغاء تسجيل الدخول', true);
+
+                const verifyRes = await fetch(`${API_URL}/auth/verify-otp`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identity, otp: enteredOtp, purpose: 'new_device', deviceId })
+                });
+                const verifyData = await verifyRes.json();
+                if (!verifyRes.ok) return showToast(verifyData.message, true);
+                
+                if (verifyData.user.role !== 'courier') return showToast('هذا الحساب ليس مسجلاً ككابتن توصيل!', true);
+
+                courierToken = verifyData.token;
+                localStorage.setItem('boma_courier_token', courierToken);
+                showMainScreen();
+                return showToast('أهلاً بك كابتن! 🛵');
+            }
+
+            if(!res.ok) return showToast(data.message, true);
+            if(data.user.role !== 'courier') return showToast('هذا الحساب ليس كابتن توصيل!', true);
+
+            courierToken = data.token;
+            localStorage.setItem('boma_courier_token', courierToken);
+            showMainScreen();
+            showToast('أهلاً بك كابتن! 🛵');
+        } catch(e) { showToast('خطأ في الاتصال بالسيرفر', true); }
+    }
+
+    function showMainScreen() {
+        document.getElementById('login-screen').classList.remove('active');
+        document.getElementById('home-screen').classList.add('active');
+        document.getElementById('btn-logout').style.display = 'block';
+        document.getElementById('status-toggle').style.display = 'flex';
+        loadDashboard();
+    }
+
+    function logout() {
+        localStorage.removeItem('boma_courier_token');
+        courierToken = null;
+        document.getElementById('home-screen').classList.remove('active');
+        document.getElementById('login-screen').classList.add('active');
+        document.getElementById('btn-logout').style.display = 'none';
+        document.getElementById('status-toggle').style.display = 'none';
+    }
+
+    async function fetchAuth(endpoint, options = {}) {
+        options.headers = { ...options.headers, 'Content-Type': 'application/json', 'Authorization': `Bearer ${courierToken}` };
+        const res = await fetch(`${API_URL}${endpoint}`, options);
+        if(res.status === 403) { logout(); throw new Error('انتهت الجلسة'); }
+        return res;
+    }
+
+    function loadDashboard() {
+        loadStats();
+        loadOrders();
+    }
+
+    async function loadStats() {
+        try {
+            const res = await fetchAuth('/courier/stats');
+            const data = await res.json();
+            
+            document.getElementById('stat-balance').innerText = Number(data.balance || 0).toLocaleString();
+            document.getElementById('stat-debt').innerText = Number(data.debt || 0).toLocaleString();
+            
+            // تحديث حالة الاتصال
+            isOnlineStatus = data.isOnline;
+            updateStatusUI();
+
+            // تحديث التارجت
+            let targetCount = data.dailyDeliveries || 0;
+            document.getElementById('target-count').innerText = targetCount;
+            let progressPct = (targetCount / 10) * 100;
+            if (progressPct > 100) progressPct = 100;
+            document.getElementById('target-progress').style.width = `${progressPct}%`;
+            
+            const targetHint = document.getElementById('target-hint');
+            if (data.targetAchieved) {
+                targetHint.innerText = 'أنت بطل! 🏆 تم تحقيق هدف اليوم واستلام 2000 SDG';
+                targetHint.style.color = '#fff';
+            } else {
+                targetHint.innerText = `أكمل الهدف لتحصل على مكافأة 2000 SDG 🎁 (باقي ${10 - targetCount})`;
+                targetHint.style.color = '#cbd5e1';
+            }
+
+        } catch(e) {}
+    }
+
+    async function toggleStatus() {
+        const newStatus = !isOnlineStatus;
+        try {
+            const res = await fetchAuth('/courier/status', { method: 'PUT', body: JSON.stringify({ isOnline: newStatus }) });
+            const data = await res.json();
+            isOnlineStatus = data.isOnline;
+            updateStatusUI();
+            loadOrders(); // إعادة تحميل الطلبات
+            showToast(isOnlineStatus ? 'أنت الآن متصل وتستقبل الطلبات' : 'أنت الآن في وضع الاستراحة');
+        } catch(e) { showToast('خطأ في تغيير الحالة', true); }
+    }
+
+    function updateStatusUI() {
+        const btn = document.getElementById('status-toggle');
+        if (isOnlineStatus) {
+            btn.className = 'status-toggle online';
+            btn.innerText = '🟢 متصل';
+        } else {
+            btn.className = 'status-toggle offline';
+            btn.innerText = '🔴 استراحة';
+        }
+    }
+
+    function switchTab(tab) {
+        currentTab = tab;
+        document.getElementById('tab-available').classList.toggle('active', tab === 'available');
+        document.getElementById('tab-my').classList.toggle('active', tab === 'my');
+        loadOrders();
+    }
+
+    async function loadOrders() {
+        const container = document.getElementById('orders-container');
+        container.innerHTML = '<p style="text-align:center; margin-top:20px; font-weight:900;">جاري التحميل... ⏳</p>';
+        
+        if (currentTab === 'available' && !isOnlineStatus) {
+            container.innerHTML = `<div style="text-align:center; margin-top:40px;"><div style="font-size:50px; margin-bottom:10px;">😴</div><h3 style="color:var(--text-muted); font-weight:900;">أنت في وضع الاستراحة</h3><p style="font-weight:bold; color:var(--text-muted); margin-top:5px;">قم بتغيير حالتك إلى متصل لرؤية الطلبات المتاحة</p></div>`;
+            return;
+        }
+
+        try {
+            const endpoint = currentTab === 'available' ? '/courier/orders/available' : '/courier/orders/my';
+            const res = await fetchAuth(endpoint);
+            const orders = await res.json();
+            container.innerHTML = '';
+            
+            if(orders.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:var(--text-muted); margin-top:40px; font-weight:900;">لا توجد طلبات ${currentTab === 'available' ? 'متاحة حالياً.' : 'مستلمة حالياً.'} 📭</p>`;
+                return;
+            }
+
+            orders.forEach(o => {
+                const isMy = currentTab === 'my';
+                const cardClass = isMy ? 'order-card active-order' : 'order-card';
+                const payBadge = o.isPaid ? `<span class="badge-paid">مدفوع مسبقاً (محفظة)</span>` : `<span class="badge-cash">الدفع كاش (استلم من العميل)</span>`;
+                const feeText = (o.deliveryFee && o.deliveryFee > 0) ? `+ أرباحك: ${o.deliveryFee} SDG` : 'الطلب غير محدد الأرباح';
+                const addressExtract = o.paymentMethod.split('||')[1] || 'عنوان غير معروف';
+
+                let actionHtml = '';
+                if(!isMy) {
+                    actionHtml = `<button class="btn btn-main" style="padding:14px;" onclick="acceptOrder('${o._id}')">استلام الطلب 🛵</button>`;
+                } else {
+                    actionHtml = `
+                        <div class="action-flex">
+                            <button class="btn btn-blue" style="flex:1; padding:14px;" onclick="window.open('tel:${addressExtract.split('|')[0] || ''}')">📞 اتصال</button>
+                            <button class="btn btn-green" style="flex:2; padding:14px;" onclick="openOtpModal('${o._id}')">تسليم وإنهاء ✅</button>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML += `
+                    <div class="${cardClass}">
+                        <div class="o-header">
+                            <span>طلب رقم: <b style="color:var(--primary);">${o._id.slice(-5)}</b></span>
+                            <span>${new Date(o.date).toLocaleTimeString('ar-EG')}</span>
+                        </div>
+                        <div class="o-price">${Number(o.totalAmount).toLocaleString()} SDG</div>
+                        <div class="o-fee">${feeText}</div>
+                        <div style="margin-top:8px;">${payBadge}</div>
+                        <div class="o-location">📍 ${addressExtract}</div>
+                        ${actionHtml}
+                    </div>
+                `;
+            });
+        } catch(e) {
+            container.innerHTML = '<p style="text-align:center; color:var(--red); font-weight:900;">خطأ في تحميل البيانات.</p>';
+        }
+    }
+
+    async function acceptOrder(id) {
+        if(!confirm('هل أنت متأكد من استلام هذا الطلب وتوصيله؟')) return;
+        showToast('جاري الاستلام...');
+        try {
+            const res = await fetchAuth(`/courier/orders/${id}/accept`, { method: 'PUT' });
+            if(res.ok) {
+                showToast('تم استلام الطلب بنجاح! 🛵');
+                switchTab('my');
+                loadStats();
+            } else {
+                const data = await res.json();
+                showToast(data.message, true);
+                loadOrders(); 
+            }
+        } catch(e) { showToast('خطأ في الاتصال', true); }
+    }
+
+    function openOtpModal(id) {
+        selectedOrderId = id;
+        document.querySelectorAll('.otp-box').forEach(el => el.value = '');
+        document.getElementById('otp-modal').style.display = 'flex';
+        document.getElementById('otp-1').focus();
+    }
+
+    function closeOtpModal() {
+        document.getElementById('otp-modal').style.display = 'none';
+        selectedOrderId = null;
+    }
+
+    async function confirmDelivery() {
+        if(!selectedOrderId) return;
+        const otp = [1,2,3,4].map(i => document.getElementById(`otp-${i}`).value).join('');
+        if(otp.length !== 4) return showToast('أدخل الرمز المكون من 4 أرقام', true);
+
+        showToast('جاري التأكيد... ⏳');
+        try {
+            const res = await fetchAuth(`/courier/orders/${selectedOrderId}/deliver`, {
+                method: 'PUT', body: JSON.stringify({ otp })
+            });
+            const data = await res.json();
+            
+            if(res.ok) {
+                showToast('🎉 ' + data.message);
+                closeOtpModal();
+                loadDashboard();
+            } else {
+                showToast('❌ ' + data.message, true);
+            }
+        } catch(e) { showToast('خطأ في الاتصال', true); }
+    }
+
+    document.querySelectorAll('.otp-box').forEach((el, idx, arr) => { 
+        el.addEventListener('input', () => { 
+            el.value = el.value.replace(/[^0-9]/g, '').slice(0, 1); 
+            if (el.value && arr[idx + 1]) arr[idx + 1].focus(); 
+        }); 
+        el.addEventListener('keydown', (e) => { 
+            if (e.key === 'Backspace' && !el.value && arr[idx - 1]) arr[idx - 1].focus(); 
+        }); 
+    });
+
+    // 🎨 تطبيق الهوية البصرية
+    function applyCourierBranding() {
+        fetch(`${API_URL}/settings`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data || !data.uiSettings) return;
+            const ui = data.uiSettings;
+            
+            const logoBox = document.querySelector('.logo-box');
+            if (logoBox) {
+                if (ui.homeLogoType === 'image' && ui.homeLogoValue) {
+                    logoBox.innerHTML = `
+                        <img src="${ui.homeLogoValue}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid #fff;">
+                        <span class="logo-text" style="font-size: 18px; font-weight: 900; letter-spacing: 1px;">كابتن بومة</span>
+                    `;
+                } else {
+                    logoBox.innerHTML = `
+                        <div style="width: 42px; height: 42px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 22px;">${ui.homeLogoValue || '🦉'}</div>
+                        <span class="logo-text" style="font-size: 18px; font-weight: 900; letter-spacing: 1px;">كابتن بومة</span>
+                    `;
+                }
+
+                const logoText = logoBox.querySelector('.logo-text');
+                if (logoText && ui.loginBrandColorTop) {
+                    logoText.style.background = `linear-gradient(to right, ${ui.loginBrandColorTop}, ${ui.loginBrandColorBottom || '#1e3d59'})`;
+                    logoText.style.webkitBackgroundClip = 'text';
+                    logoText.style.webkitTextFillColor = 'transparent';
+                }
+            }
+
+            if (ui.btnMainBg) {
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    :root { --accent: ${ui.btnMainBg}; }
+                    .btn-main { background: linear-gradient(135deg, ${ui.btnMainBg}, ${ui.btnMainBg}dd) !important; box-shadow: 0 6px 15px ${ui.btnMainBg}44 !important; }
+                    .tab.active { background: ${ui.btnMainBg} !important; }
+                    .order-card::before { background: ${ui.btnMainBg} !important; }
+                    input:focus { border-color: ${ui.btnMainBg} !important; box-shadow: 0 0 0 4px ${ui.btnMainBg}15 !important;}
+                `;
+                document.head.appendChild(style);
+            }
+        })
+        .catch(err => console.log("خطأ في تحميل الهوية:", err));
+    }
+
+    applyCourierBranding();
+</script>
+</body>
+</html>
