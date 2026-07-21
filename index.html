@@ -1862,7 +1862,7 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
         } catch(e) {}
     }
 
-    async function triggerCheckout() {
+       async function triggerCheckout() {
         if(!registeredUser || !registeredUser.active) return showToast(currentLang === 'ar' ? 'يجب تسجيل الدخول لإتمام الشراء!' : 'Must login to checkout!', true);
         if(cart.length === 0) return showToast(currentLang === 'ar' ? 'العربة فارغة!' : 'Cart is empty!', true);
         
@@ -1876,13 +1876,13 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
         
         let cartTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         const finalAmount = cartTotal + deliveryCost;
+        const detailsStr = `${name} | ${phone} | ${areaText} | ${address}`;
 
         if (selectedPayment === 'wallet') {
             showCustomDialog('💳', currentLang === 'ar' ? 'تأكيد الدفع' : 'Confirm Payment', currentLang === 'ar' ? 'أدخل رمز PIN لتأكيد الشراء من محفظتك' : 'Enter PIN to confirm purchase', currentLang === 'ar' ? 'دفع الآن' : 'Pay Now', currentLang === 'ar' ? 'إلغاء' : 'Cancel', async (pinVal) => {
                 showToast(currentLang === 'ar' ? 'جاري الدفع...' : 'Processing Payment...');
                 try {
                     const token = localStorage.getItem('boma_token');
-                    const detailsStr = `${name} | ${phone} | ${areaText} | ${address}`;
                     const res = await fetch(`${API_URL}/wallet/checkout`, { 
                         method: 'POST', 
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -1899,12 +1899,31 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
                     switchScreen('home-screen', 0);
                 } catch(e) { showToast(e.message, true); }
             }, true, true); 
+        } else if (selectedPayment === 'cash') {
+            // إضافة الدفع كاش هنا
+            showCustomDialog('💵', currentLang === 'ar' ? 'الدفع عند الاستلام' : 'Cash on Delivery', currentLang === 'ar' ? `تأكيد طلبك بقيمة ${finalAmount} SDG؟ (الدفع نقداً للمندوب)` : `Confirm order for ${finalAmount} SDG?`, currentLang === 'ar' ? 'تأكيد الطلب' : 'Confirm Order', currentLang === 'ar' ? 'إلغاء' : 'Cancel', async () => {
+                showToast(currentLang === 'ar' ? 'جاري إرسال الطلب...' : 'Sending order...');
+                try {
+                    const token = localStorage.getItem('boma_token');
+                    const res = await fetch(`${API_URL}/checkout/cash`, { 
+                        method: 'POST', 
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ totalAmount: finalAmount, cartItems: cart, deliveryDetails: detailsStr })
+                    });
+                    if (res.status === 403) return forceLogout('تم إنهاء جلستك.');
+                    const data = await res.json();
+                    if (!res.ok) return showToast(data.message, true);
+                    
+                    cart = []; saveState(); updateCartUI();
+                    showToast(currentLang === 'ar' ? 'تم تأكيد طلبك بنجاح! 🎉' : 'Order confirmed! 🎉');
+                    switchScreen('home-screen', 0);
+                } catch(e) { showToast(e.message, true); }
+            });
         } else {
-            showToast(currentLang === 'ar' ? 'جاري توجيهك לבوابة الدفع...' : 'Redirecting to gateway...');
-
-            setTimeout(() => showToast(currentLang === 'ar' ? 'بوابات الدفع الخارجية تحت التحديث' : 'External gateways updating', true), 1500);
+            showToast(currentLang === 'ar' ? 'بوابات الدفع الخارجية تحت التحديث' : 'External gateways updating', true);
         }
     }
+
 
     function renderExpenseChart(txs) {
         const canvas = document.getElementById('expenseChart');
