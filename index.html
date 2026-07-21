@@ -657,21 +657,29 @@
             <div style="background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--accent-orange); margin-bottom:20px; box-shadow:0 6px 15px rgba(255,110,64,0.05);">
                 <h3 style="color:var(--accent-orange); font-size:16px; margin-bottom:15px; font-weight:900;">➕ إضافة منتج جديد</h3>
                 <select id="v-cat" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg); font-weight:bold;"></select>
-                <!-- 🌟 إضافة حقل العلامة التجارية 🌟 -->
                 <input type="text" id="v-brand-name" placeholder="اسم العلامة التجارية (مثال: محلات النور)" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);">
                 
-                <input type="text" id="v-name" placeholder="اسم المنتج (عربي)" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);">
-</select>
-                <input type="text" id="v-name" placeholder="اسم المنتج (عربي)" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);">
+                <div style="display:flex; gap:10px; margin-bottom:12px;">
+                    <input type="text" id="v-name-ar" placeholder="اسم المنتج (عربي)" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg);">
+                    <input type="text" id="v-name-en" placeholder="اسم المنتج (إنجليزي)" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg); direction:ltr;">
+                </div>
+
                 <div style="display:flex; gap:10px; margin-bottom:12px;">
                     <input type="number" id="v-price" placeholder="السعر الأصلي" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg);">
                     <input type="number" id="v-min-price" placeholder="أدنى سعر تفاوض" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg);">
                 </div>
                 <input type="number" id="v-stock" placeholder="الكمية المتوفرة" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);">
-                <input type="text" id="v-img-url" placeholder="رابط الصورة (أو إيموجي 🎧)" style="width:100%; padding:14px; border-radius:12px; margin-bottom:15px; border:2px solid var(--border); background:var(--input-bg); direction:ltr; text-align:right;">
+                
+                <textarea id="v-desc-ar" placeholder="وصف المنتج (عربي)" rows="2" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);"></textarea>
+                <textarea id="v-desc-en" placeholder="وصف المنتج (إنجليزي)" rows="2" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg); direction:ltr; text-align:left;"></textarea>
+                
+                <input type="text" id="v-variations" placeholder="خيارات (ألوان/مقاسات) افصل بينها بفاصلة ،" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);">
+                
+                <input type="text" id="v-img-url" placeholder="رابط الصورة الأساسية (أو إيموجي 🎧)" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg); direction:ltr; text-align:right;">
+                <input type="text" id="v-gallery" placeholder="روابط صور إضافية (افصل بينها بفاصلة ،)" style="width:100%; padding:14px; border-radius:12px; margin-bottom:15px; border:2px solid var(--border); background:var(--input-bg); direction:ltr; text-align:right;">
+                
                 <button class="btn-main" onclick="submitVendorProduct()" style="border:none;">نشر في متجر بومة 🚀</button>
-            </div>
-            
+
             <!-- قائمة منتجات التاجر -->
             <h3 style="font-size:16px; margin-bottom:15px; color:var(--text-dark); font-weight:900;">📦 منتجاتي الحالية</h3>
             <div id="vendor-products-list" style="display:flex; flex-direction:column; gap:12px; padding-bottom:30px;"></div>
@@ -2234,17 +2242,22 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
         }
     }
 
-        async function submitVendorProduct() {
+            async function submitVendorProduct() {
         const categoryId = document.getElementById('v-cat').value;
         const brandName = document.getElementById('v-brand-name').value.trim();
-        const arName = document.getElementById('v-name').value.trim();
+        const arName = document.getElementById('v-name-ar').value.trim();
+        const enName = document.getElementById('v-name-en').value.trim();
         const price = Number(document.getElementById('v-price').value);
         const minPrice = Number(document.getElementById('v-min-price').value) || price;
         const stock = Number(document.getElementById('v-stock').value) || 0;
+        const arDesc = document.getElementById('v-desc-ar').value.trim();
+        const enDesc = document.getElementById('v-desc-en').value.trim();
+        const variations = document.getElementById('v-variations').value.trim();
         const imgUrl = document.getElementById('v-img-url').value.trim();
+        const gallery = document.getElementById('v-gallery').value.trim();
 
         if (!categoryId || !brandName || !arName || !price || !imgUrl) {
-            return showToast('الرجاء إدخال العلامة التجارية وجميع الحقول بشكل صحيح!', true);
+            return showToast('الرجاء إدخال العلامة التجارية وجميع الحقول الأساسية بشكل صحيح!', true);
         }
 
         if (minPrice > price) {
@@ -2257,18 +2270,27 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
             const res = await fetch(`${API_URL}/vendor/products`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                // 🌟 إرسال العلامة التجارية في الطلب 🌟
-                body: JSON.stringify({ categoryId, brandName, arName, enName: arName, price, minPrice, stock, img: imgUrl })
+                body: JSON.stringify({ 
+                    categoryId, brandName, arName, enName: enName || arName, price, minPrice, stock, 
+                    arDesc, enDesc: enDesc || arDesc, variations, img: imgUrl, gallery 
+                })
             });
             const data = await res.json();
             if (res.ok) {
                 showToast('تم نشر المنتج في المتجر! 🎉');
+                // تصفير الحقول بعد الرفع
                 document.getElementById('v-brand-name').value = '';
-                document.getElementById('v-name').value = '';
+                document.getElementById('v-name-ar').value = '';
+                document.getElementById('v-name-en').value = '';
                 document.getElementById('v-price').value = '';
                 document.getElementById('v-min-price').value = '';
                 document.getElementById('v-stock').value = '';
+                document.getElementById('v-desc-ar').value = '';
+                document.getElementById('v-desc-en').value = '';
+                document.getElementById('v-variations').value = '';
                 document.getElementById('v-img-url').value = '';
+                document.getElementById('v-gallery').value = '';
+                
                 loadVendorStats();
                 loadVendorProducts();
             } else {
@@ -2278,6 +2300,7 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
             showToast('خطأ في الرفع', true);
         }
     }
+
 
 
     async function deleteVendorProduct(id) {
