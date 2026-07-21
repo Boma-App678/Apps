@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>تطبيق بومة - BOMA App</title>
+        <!-- 🌟 التعديل الأول: ربط ملف الـ Manifest (PWA) 🌟 -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1e3d59" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <!-- ============================================== -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style id="dynamic-ui-style"></style>
@@ -2546,6 +2552,19 @@ document.getElementById('reg-pin')?.addEventListener('input', function() {
         hint.innerText = 'رمز PIN آمن وجاهز ✅';
     }
 });
+    // 🌟 التعديل الثاني: تسجيل الـ Service Worker (PWA) 🌟
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('✅ ServiceWorker registered successfully!');
+                })
+                .catch(error => {
+                    console.log('❌ ServiceWorker registration failed: ', error);
+                });
+        });
+    }
+    // =========================================================
 
 </script>
 </body>
