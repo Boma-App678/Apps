@@ -34,6 +34,8 @@
         .login-box { margin: auto; width: 100%; background: var(--card); padding: 30px 20px; border-radius: 24px; border: 1px solid var(--border); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
         input { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 14px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-size: 16px; font-weight: 900; outline: none; text-align: center; transition: 0.3s; }
         input:focus { border-color: var(--accent); background: var(--card); box-shadow: 0 0 0 4px rgba(255,110,64,0.1); }
+        select { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 14px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; font-weight: 900; outline: none; transition: 0.3s; }
+        select:focus { border-color: var(--red); }
         .btn { width: 100%; padding: 16px; border-radius: 14px; border: none; font-size: 16px; font-weight: 900; cursor: pointer; transition: 0.2s; color: #fff; }
         .btn:active { transform: scale(0.95); }
         
@@ -42,6 +44,7 @@
         .btn-green { background: linear-gradient(135deg, var(--green), #059669); box-shadow: 0 6px 15px rgba(16,185,129,0.25); }
         .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .btn-outline { background: var(--bg); border: 2px solid var(--border); color: var(--text); box-shadow: none; }
+        .btn-outline-red { background: var(--bg); border: 2px solid var(--red); color: var(--red); box-shadow: none; }
 
         /* Dashboard */
         .target-box { background: linear-gradient(135deg, var(--primary-shine), var(--primary)); color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(30,61,89,0.2); }
@@ -67,100 +70,21 @@
         .badge-paid { display: inline-block; padding: 6px 10px; background: rgba(16,185,129,0.1); color: var(--green); border-radius: 8px; font-size: 12px; font-weight: 900; border: 1px solid rgba(16,185,129,0.2); }
         .badge-cash { display: inline-block; padding: 6px 10px; background: rgba(239,68,68,0.1); color: var(--red); border-radius: 8px; font-size: 12px; font-weight: 900; border: 1px solid rgba(239,68,68,0.2); }
 
-        .action-flex { display: flex; gap: 10px; margin-top: 15px; }
+        .action-flex { display: flex; gap: 8px; margin-top: 15px; }
         
-        /* =========================================
-           🌟 تحسينات الرسائل المنبثقة (Toast & Dialog) 🌟
-           ========================================= */
+        /* الرسائل السريعة (Toast) */
+        .toast { position: fixed; top: 40px; left: 50%; transform: translateX(-50%); z-index: 9999; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #fff; border-radius: 50px; padding: 14px 28px; font-size: 15px; font-weight: 900; display: none; box-shadow: 0 15px 35px rgba(0,0,0,0.25); text-align: center; width: auto; max-width: 90%; line-height: 1.5; border: 1px solid rgba(255,255,255,0.15); animation: slideDownToast 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes slideDownToast { 0% { opacity: 0; transform: translate(-50%, -30px); } 100% { opacity: 1; transform: translate(-50%, 0); } }
 
-        /* 1. الرسائل السريعة (Toast) */
-        .toast {
-            position: fixed;
-            top: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            color: #fff;
-            border-radius: 50px;
-            padding: 14px 28px;
-            font-size: 15px;
-            font-weight: 900;
-            display: none;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-            text-align: center;
-            width: auto;
-            max-width: 90%;
-            line-height: 1.5;
-            border: 1px solid rgba(255,255,255,0.15);
-            animation: slideDownToast 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
+        /* خلفية النوافذ المنبثقة (Overlay) */
+        .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 24px; }
+        .modal-content { background: var(--card); width: 100%; max-width: 360px; border-radius: 32px; padding: 35px 25px; text-align: center; border: none; box-shadow: 0 30px 60px rgba(0,0,0,0.15); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        @keyframes slideDownToast {
-            0% { opacity: 0; transform: translate(-50%, -30px); }
-            100% { opacity: 1; transform: translate(-50%, 0); }
-        }
-
-        /* 2. خلفية النوافذ المنبثقة (Overlay) */
-        .modal { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(15, 23, 42, 0.6); 
-            backdrop-filter: blur(6px); 
-            -webkit-backdrop-filter: blur(6px);
-            z-index: 100; 
-            display: none; 
-            justify-content: center; 
-            align-items: center; /* توسيط في منتصف الشاشة */
-            padding: 24px;
-        }
-
-        /* 3. صندوق النافذة (Dialog Box) */
-        .modal-content { 
-            background: var(--card); 
-            width: 100%; 
-            max-width: 360px; /* تصميم أنحف وأكثر أناقة */
-            border-radius: 32px; 
-            padding: 35px 25px; 
-            text-align: center; 
-            border: none;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.15); 
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        /* 4. تحسين حقول إدخال ה- OTP */
-        .otp-input-group { 
-            display: flex; 
-            justify-content: center; 
-            gap: 12px; 
-            margin: 25px 0; 
-            direction: ltr; 
-        }
-        .otp-box { 
-            width: 55px; 
-            height: 65px; 
-            font-size: 28px; 
-            text-align: center; 
-            font-weight: 900; 
-            border-radius: 16px; 
-            border: 2px solid var(--border);
-            background: var(--bg);
-            color: var(--primary);
-            outline: none; 
-            transition: all 0.3s ease; 
-        }
-        .otp-box:focus { 
-            border-color: var(--green); 
-            background: var(--card); 
-            box-shadow: 0 0 0 4px rgba(16,185,129,0.15); 
-        }
+        /* حقول إدخال ה- OTP */
+        .otp-input-group { display: flex; justify-content: center; gap: 12px; margin: 25px 0; direction: ltr; }
+        .otp-box { width: 55px; height: 65px; font-size: 28px; text-align: center; font-weight: 900; border-radius: 16px; border: 2px solid var(--border); background: var(--bg); color: var(--primary); outline: none; transition: all 0.3s ease; }
+        .otp-box:focus { border-color: var(--green); background: var(--card); box-shadow: 0 0 0 4px rgba(16,185,129,0.15); }
     </style>
 </head>
 <body>
@@ -223,7 +147,7 @@
     </div>
 </div>
 
-<!-- نافذة إدخال كود التسليم (OTP) -->
+<!-- 🌟 نافذة إدخال كود التسليم (OTP) 🌟 -->
 <div class="modal" id="otp-modal">
     <div class="modal-content">
         <h2 style="color: var(--green); margin-bottom: 10px;">تسليم الطلب للعميل ✅</h2>
@@ -243,19 +167,39 @@
     </div>
 </div>
 
+<!-- 🌟 نافذة الإرجاع اليدوي للطلب 🌟 -->
+<div class="modal" id="return-modal">
+    <div class="modal-content">
+        <h2 style="color: var(--red); margin-bottom: 10px;">إرجاع الطلب للإدارة ❌</h2>
+        <p style="font-size: 14px; color: var(--text-muted); font-weight: bold; margin-bottom: 15px;">الرجاء تحديد سبب عدم تسليم الطلب بدقة لإرساله للمراجعة.</p>
+        
+        <select id="return-reason">
+            <option value="العميل لا يرد على الهاتف">العميل لا يرد على الهاتف</option>
+            <option value="العميل رفض الاستلام">العميل رفض الاستلام</option>
+            <option value="الموقع خاطئ أو غير واضح">الموقع خاطئ أو غير واضح</option>
+            <option value="تأجيل التسليم لموعد آخر">تأجيل التسليم لموعد آخر</option>
+            <option value="سبب آخر">سبب آخر (سيتم التواصل معك)</option>
+        </select>
+
+        <div style="display: flex; gap: 10px;">
+            <button class="btn" style="flex: 2; background: var(--red); color: white;" onclick="confirmReturn()">تأكيد الإرجاع</button>
+            <button class="btn btn-outline" style="flex: 1;" onclick="closeReturnModal()">تراجع</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const API_URL = 'https://api.boomapay.com/api';
-
 
     let courierToken = localStorage.getItem('boma_courier_token');
     let currentTab = 'available';
     let selectedOrderId = null;
     let isOnlineStatus = true;
+    let availableOrdersCount = 0; // لحفظ عدد الطلبات وتنبيه المندوب
 
     function showToast(msg, isError = false) {
         const t = document.getElementById('toast');
         t.innerText = msg;
-        // التوافق مع ألوان الـ CSS الجديدة
         t.style.background = isError ? 'var(--red)' : 'rgba(15, 23, 42, 0.85)';
         t.style.color = '#fff';
         t.style.display = 'block';
@@ -274,6 +218,7 @@
         document.getElementById('btn-logout').style.display = 'block';
         document.getElementById('status-toggle').style.display = 'flex';
         loadDashboard();
+        startPolling(); // بدء جلب الطلبات في الخلفية
     }
 
     async function login() {
@@ -325,6 +270,7 @@
         document.getElementById('btn-logout').style.display = 'block';
         document.getElementById('status-toggle').style.display = 'flex';
         loadDashboard();
+        startPolling();
     }
 
     function logout() {
@@ -356,11 +302,9 @@
             document.getElementById('stat-balance').innerText = Number(data.balance || 0).toLocaleString();
             document.getElementById('stat-debt').innerText = Number(data.debt || 0).toLocaleString();
             
-            // تحديث حالة الاتصال
             isOnlineStatus = data.isOnline;
             updateStatusUI();
 
-            // تحديث التارجت
             let targetCount = data.dailyDeliveries || 0;
             document.getElementById('target-count').innerText = targetCount;
             let progressPct = (targetCount / 10) * 100;
@@ -386,7 +330,7 @@
             const data = await res.json();
             isOnlineStatus = data.isOnline;
             updateStatusUI();
-            loadOrders(); // إعادة تحميل الطلبات
+            loadOrders();
             showToast(isOnlineStatus ? 'أنت الآن متصل وتستقبل الطلبات' : 'أنت الآن في وضع الاستراحة');
         } catch(e) { showToast('خطأ في تغيير الحالة', true); }
     }
@@ -422,6 +366,10 @@
             const endpoint = currentTab === 'available' ? '/courier/orders/available' : '/courier/orders/my';
             const res = await fetchAuth(endpoint);
             const orders = await res.json();
+            
+            // حفظ عدد الطلبات للمقارنة في التحديثات التلقائية
+            if(currentTab === 'available') availableOrdersCount = orders.length;
+
             container.innerHTML = '';
             
             if(orders.length === 0) {
@@ -440,10 +388,12 @@
                 if(!isMy) {
                     actionHtml = `<button class="btn btn-main" style="padding:14px;" onclick="acceptOrder('${o._id}')">استلام الطلب 🛵</button>`;
                 } else {
+                    // 🌟 إضافة زر الإرجاع هنا 🌟
                     actionHtml = `
                         <div class="action-flex">
-                            <button class="btn btn-blue" style="flex:1; padding:14px;" onclick="window.open('tel:${addressExtract.split('|')[0] || ''}')">📞 اتصال</button>
-                            <button class="btn btn-green" style="flex:2; padding:14px;" onclick="openOtpModal('${o._id}')">تسليم وإنهاء ✅</button>
+                            <button class="btn btn-blue" style="flex:1; padding:12px; font-size:14px;" onclick="window.open('tel:${addressExtract.split('|')[0] || ''}')">📞</button>
+                            <button class="btn btn-outline-red" style="flex:1.5; padding:12px; font-size:14px;" onclick="openReturnModal('${o._id}')">إرجاع ❌</button>
+                            <button class="btn btn-green" style="flex:2; padding:12px; font-size:14px;" onclick="openOtpModal('${o._id}')">تسليم ✅</button>
                         </div>
                     `;
                 }
@@ -467,6 +417,26 @@
         }
     }
 
+    // 🌟 جلب التحديثات التلقائية للطلبات الجديدة في الخلفية 🌟
+    function startPolling() {
+        setInterval(async () => {
+            if (!courierToken || !isOnlineStatus) return;
+            try {
+                const res = await fetch(`${API_URL}/courier/orders/available`, {
+                    headers: { 'Authorization': `Bearer ${courierToken}` }
+                });
+                if (res.ok) {
+                    const orders = await res.json();
+                    if (orders.length > availableOrdersCount) {
+                        showToast('🚀 تنبيه: يوجد طلب جديد متاح للتوصيل!');
+                        if (currentTab === 'available') loadOrders();
+                    }
+                    availableOrdersCount = orders.length;
+                }
+            } catch(e) {}
+        }, 10000); // يفحص السيرفر كل 10 ثوانٍ
+    }
+
     async function acceptOrder(id) {
         if(!confirm('هل أنت متأكد من استلام هذا الطلب وتوصيله؟')) return;
         showToast('جاري الاستلام...');
@@ -484,6 +454,7 @@
         } catch(e) { showToast('خطأ في الاتصال', true); }
     }
 
+    // --- نافذة الـ OTP للتسليم ---
     function openOtpModal(id) {
         selectedOrderId = id;
         document.querySelectorAll('.otp-box').forEach(el => el.value = '');
@@ -518,6 +489,40 @@
         } catch(e) { showToast('خطأ في الاتصال', true); }
     }
 
+    // --- 🌟 نافذة الإرجاع 🌟 ---
+    function openReturnModal(id) {
+        selectedOrderId = id;
+        document.getElementById('return-modal').style.display = 'flex';
+    }
+
+    function closeReturnModal() {
+        document.getElementById('return-modal').style.display = 'none';
+        selectedOrderId = null;
+    }
+
+    async function confirmReturn() {
+        if(!selectedOrderId) return;
+        const reason = document.getElementById('return-reason').value;
+        
+        showToast('جاري إرسال المرتجع للإدارة... ⏳');
+        try {
+            const res = await fetchAuth(`/courier/orders/${selectedOrderId}/return`, {
+                method: 'PUT',
+                body: JSON.stringify({ reason })
+            });
+            const data = await res.json();
+            
+            if(res.ok) {
+                showToast('✅ ' + data.message);
+                closeReturnModal();
+                loadDashboard(); // إعادة تحميل الطلبات
+            } else {
+                showToast('❌ ' + data.message, true);
+            }
+        } catch(e) { showToast('خطأ في الاتصال بالسيرفر', true); }
+    }
+
+    // التنقل التلقائي في صناديق الـ OTP
     document.querySelectorAll('.otp-box').forEach((el, idx, arr) => { 
         el.addEventListener('input', () => { 
             el.value = el.value.replace(/[^0-9]/g, '').slice(0, 1); 
@@ -528,7 +533,6 @@
         }); 
     });
 
-    // 🎨 تطبيق الهوية البصرية
     function applyCourierBranding() {
         fetch(`${API_URL}/settings`)
         .then(res => res.json())
@@ -549,13 +553,6 @@
                         <span class="logo-text" style="font-size: 18px; font-weight: 900; letter-spacing: 1px; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">كابتن بومة</span>
                     `;
                 }
-            }
-
-            if (ui.btnMainBg) {
-                const style = document.createElement('style');
-                // تم إيقاف تعديل الألوان من الإدارة للحفاظ على التصميم المخصص اللي طلبته
-                // style.innerHTML = `...`; 
-                document.head.appendChild(style);
             }
         })
         .catch(err => console.log("خطأ في تحميل الهوية:", err));
