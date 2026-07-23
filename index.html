@@ -611,8 +611,54 @@
 
     <div id="services-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="nav_services">خدمات الشركة</div><div></div></div><div class="app-content" id="services-container"></div></div>
     <div id="service-form-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="form_title">تقديم طلب مشروع</div><button class="back-btn" onclick="switchScreen('services-screen',2)">↩</button></div><div class="app-content"><h4 id="form-service-name" style="color:var(--accent-orange);margin-bottom:25px;font-size:18px;font-weight:900;"></h4><div class="form-group"><label data-key="lbl_p_name">اسم المشروع</label><input type="text" id="project-name"></div><div class="form-group"><label data-key="lbl_p_desc">شرح المتطلبات</label><textarea id="project-desc" rows="5"></textarea></div><button class="btn-main" onclick="submitServiceForm()" data-key="btn_submit_form" style="border:none;">إرسال الطلب</button></div></div>
-    <div id="payment-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="payment_title">بوابة الدفع</div><button class="back-btn" onclick="switchScreen('cart-screen',3)">↩</button></div><div class="app-content"><div class="grid-section-title" data-key="checkout_info">بيانات التوصيل والتواصل</div><div class="form-group"><label data-key="checkout_name">اسم المستلم</label><input type="text" id="checkout-name"></div><div class="form-group"><label data-key="checkout_phone">رقم التواصل</label><input type="tel" id="checkout-phone" inputmode="numeric"></div><div class="form-group"><label data-key="checkout_area">منطقة التوصيل</label><select id="checkout-area" onchange="updatePaymentTotal()"></select></div><div class="form-group" style="margin-bottom: 25px;"><label data-key="checkout_address">العنوان التفصيلي</label><textarea id="checkout-address" rows="3"></textarea></div><div style="background: rgba(30,61,89,0.05); padding: 20px; border-radius: 16px; margin-bottom: 25px;"><div style="display: flex; justify-content: space-between; font-weight: 900; color: var(--primary-blue); font-size: 18px;"><span data-key="cart_total_lbl">المجموع الكلي:</span><span id="payment-final-total">0.00 SDG</span></div></div><div class="grid-section-title" data-key="choose_pay">اختر طريقة الدفع</div><div id="payments-container"></div><button class="btn-main" onclick="triggerCheckout()" data-key="btn_pay_now" style="border:none;">ادفع الآن</button><button class="btn-main btn-outline" onclick="switchScreen('cart-screen',3)" data-key="btn_back_cart">العودة للعربة</button></div></div>
     
+    <!-- 🌟 الشاشة المعدلة: شاشة الدفع وإتمام الشراء 🌟 -->
+    <div id="payment-screen" class="screen">
+        <div class="app-header"><div class="boma-fixed-icon"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="payment_title">بوابة الدفع</div><button class="back-btn" onclick="switchScreen('cart-screen',3)">↩</button></div>
+        <div class="app-content">
+            <div class="grid-section-title" data-key="checkout_info">بيانات التوصيل والتواصل</div>
+            <div class="form-group">
+                <label data-key="checkout_name">اسم المستلم</label>
+                <input type="text" id="checkout-name">
+            </div>
+            
+            <!-- التعديل هنا: حقل التواصل الأساسي مع زر اختياري لإضافة رقم واتساب -->
+            <div class="form-group">
+                <label data-key="checkout_phone">رقم التواصل (يفضل رقم الواتساب)</label>
+                <input type="tel" id="checkout-phone" inputmode="numeric" placeholder="مثال: 01xxxxxxx">
+                <div style="text-align: right; margin-top: 8px;">
+                    <span style="color: var(--accent-orange); font-size: 13px; font-weight: 900; cursor: pointer; transition: 0.3s;" onclick="toggleWhatsappField()" id="toggle-wa-btn">+ إضافة رقم واتساب مختلف (اختياري)</span>
+                </div>
+            </div>
+
+            <!-- الحقل المخفي للواتساب -->
+            <div class="form-group" id="whatsapp-field-container" style="display: none; transition: 0.3s;">
+                <label>رقم الواتساب (للمراسلة 💬)</label>
+                <input type="tel" id="checkout-whatsapp" inputmode="numeric" placeholder="أدخل رقم الواتساب هنا...">
+            </div>
+            
+            <div class="form-group">
+                <label data-key="checkout_area">منطقة التوصيل</label>
+                <select id="checkout-area" onchange="updatePaymentTotal()"></select>
+            </div>
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label data-key="checkout_address">العنوان التفصيلي</label>
+                <textarea id="checkout-address" rows="3"></textarea>
+            </div>
+            
+            <div style="background: rgba(30,61,89,0.05); padding: 20px; border-radius: 16px; margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; font-weight: 900; color: var(--primary-blue); font-size: 18px;">
+                    <span data-key="cart_total_lbl">المجموع الكلي:</span>
+                    <span id="payment-final-total">0.00 SDG</span>
+                </div>
+            </div>
+            
+            <div class="grid-section-title" data-key="choose_pay">اختر طريقة الدفع</div>
+            <div id="payments-container"></div>
+            <button class="btn-main" onclick="triggerCheckout()" data-key="btn_pay_now" style="border:none;">ادفع الآن</button>
+            <button class="btn-main btn-outline" onclick="switchScreen('cart-screen',3)" data-key="btn_back_cart">العودة للعربة</button>
+        </div>
+    </div>
     <div id="settings-screen" class="screen">
         <div class="app-header"><div class="boma-fixed-icon"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="nav_settings">الإعدادات</div><div></div></div>
         <div class="app-content">
@@ -743,8 +789,8 @@
     </div>
 
 <script>
-        const STORE_KEY = 'boma_app_client_v52';
-const API_URL = 'https://api.boomapay.com/api';
+    const STORE_KEY = 'boma_app_client_v52';
+    const API_URL = 'https://api.boomapay.com/api';
 
     let customDialogConfirmCallback = null;
     let currentDetQty = 1; 
@@ -1895,8 +1941,7 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
             setTimeout(fetchUserNotifications, 500);
         } catch(e) {}
     }
-
-       async function triggerCheckout() {
+    async function triggerCheckout() {
         if(!registeredUser || !registeredUser.active) return showToast(currentLang === 'ar' ? 'يجب تسجيل الدخول لإتمام الشراء!' : 'Must login to checkout!', true);
         if(cart.length === 0) return showToast(currentLang === 'ar' ? 'العربة فارغة!' : 'Cart is empty!', true);
         
@@ -1906,13 +1951,19 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
         const phone = document.getElementById('checkout-phone').value;
         const name = document.getElementById('checkout-name').value;
         
+        // 🌟 المنطق الذكي للواتساب 🌟
+        const waContainer = document.getElementById('whatsapp-field-container');
+        const waInput = document.getElementById('checkout-whatsapp');
+        // إذا كان الحقل ظاهراً وفيه قيمة، خذها. وإلا استخدم رقم التواصل الأساسي
+        const whatsappNumber = (waContainer.style.display !== 'none' && waInput && waInput.value.trim() !== '') ? waInput.value.trim() : phone;
+        
         if(!address || !phone || !name) return showToast(currentLang === 'ar' ? 'أكمل بيانات التوصيل!' : 'Fill delivery details!', true);
         
         let cartTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         const finalAmount = cartTotal + deliveryCost;
-        // 🌟 جعلنا رقم الهاتف في البداية ليقرأه السيرفر وتطبيق المندوب كـ (واتساب) 🌟
-        const detailsStr = `${phone} | ${name} | ${areaText} | ${address}`;
-
+        
+        // 🌟 تمرير رقم الواتساب أولاً ليقرأه الكابتن (لزر 💬)، مع إبقاء رقم الاتصال العادي في النهاية (لزر 📞) 🌟
+        const detailsStr = `${whatsappNumber} | ${name} | ${areaText} | ${address} | هاتف للاتصال: ${phone}`;
 
         if (selectedPayment === 'wallet') {
             showCustomDialog('💳', currentLang === 'ar' ? 'تأكيد الدفع' : 'Confirm Payment', currentLang === 'ar' ? 'أدخل رمز PIN لتأكيد الشراء من محفظتك' : 'Enter PIN to confirm purchase', currentLang === 'ar' ? 'دفع الآن' : 'Pay Now', currentLang === 'ar' ? 'إلغاء' : 'Cancel', async (pinVal) => {
@@ -1936,7 +1987,6 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
                 } catch(e) { showToast(e.message, true); }
             }, true, true); 
         } else if (selectedPayment === 'cash') {
-            // إضافة الدفع كاش هنا
             showCustomDialog('💵', currentLang === 'ar' ? 'الدفع عند الاستلام' : 'Cash on Delivery', currentLang === 'ar' ? `تأكيد طلبك بقيمة ${finalAmount} SDG؟ (الدفع نقداً للمندوب)` : `Confirm order for ${finalAmount} SDG?`, currentLang === 'ar' ? 'تأكيد الطلب' : 'Confirm Order', currentLang === 'ar' ? 'إلغاء' : 'Cancel', async () => {
                 showToast(currentLang === 'ar' ? 'جاري إرسال الطلب...' : 'Sending order...');
                 try {
@@ -2093,7 +2143,7 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
         });
     }
 
-        async function submitDeposit() {
+    async function submitDeposit() {
         const amount = document.getElementById('dep-amount').value;
         const transactionId = document.getElementById('dep-txn-id').value.trim();
         
@@ -2158,7 +2208,7 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
         }, true, true);
     }
 
-        async function submitKYCDocs() {
+    async function submitKYCDocs() {
         const docType = document.getElementById('kyc-doc-type').value;
         const nationalId = document.getElementById('kyc-national-id').value.trim(); // 🌟 المتغير الجديد 🌟
         const docFile = document.getElementById('kyc-doc-img').files[0];
@@ -2312,7 +2362,7 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
         }
     }
 
-                async function submitVendorProduct() {
+    async function submitVendorProduct() {
         const categoryId = document.getElementById('v-cat').value;
         const brandName = document.getElementById('v-brand-name').value.trim();
         const arName = document.getElementById('v-name-ar').value.trim();
@@ -2370,8 +2420,6 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
             showToast('خطأ في الرفع', true);
         }
     }
-
-
 
     async function deleteVendorProduct(id) {
         if (!confirm('هل أنت متأكد من حذف المنتج نهائياً من المتجر؟')) return;
@@ -2440,14 +2488,14 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
 
     loadState(); applyLanguageShell(); renderCountriesDropdown(); applyLocalization(); renderAppDynamicContent(); setInterval(fetchUserNotifications, 15000);
 
-        function applyAppLogos() {
+    function applyAppLogos() {
         fetch(`${API_URL}/settings`)
         .then(res => res.json())
         .then(data => {
             if (!data || !data.uiSettings) return;
             const ui = data.uiSettings;
 
-            // 1. توحيد الشعار في جميع شاشات الحسابات (الدخول، التسجيل، وغيرها)
+            // 1. توحيد الشعار في جميع شاشات الحسابات
             const allAuthHeaders = document.querySelectorAll('.boma-logo-header-wrapper');
             allAuthHeaders.forEach(wrapper => {
                 wrapper.style.display = 'flex';
@@ -2459,19 +2507,15 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
                 if (ui.loginLogoType === 'image' && ui.loginLogoValue) {
                     logoHtml = `<img src="${ui.loginLogoValue}" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); background: #fff;">`;
                 } else {
-                    // السر هنا: إعطاء لون صريح للإيموجي حتى لا يختفي داخل الدائرة البيضاء
                     logoHtml = `<div style="width: 120px; height: 120px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-size: 60px; color: var(--primary-blue);">${ui.loginLogoValue || '🦉'}</div>`;
                 }
 
-                                // تطبيق استايل "برافو": النص الأساسي أبيض، مع تدرج لوني مخصص لحرف (O) وحرف (و)
                 let rawText = ui.loginBrandText || 'BOMA بومة';
                 let topCol = ui.loginBrandColorTop || '#ff6e40';
                 let botCol = ui.loginBrandColorBottom || '#d35400';
                 
-                // ستايل التدرج اللوني الذي سيتم تطبيقه على الحروف المحددة فقط
                 let gradientStyle = `background: linear-gradient(135deg, ${topCol}, ${botCol}); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;`;
 
-                // استبدال ذكي للحروف لتلوينها دون المساس بباقي النص
                 let styledText = rawText
                     .replace(/O/gi, `<span style="${gradientStyle}">$&</span>`)
                     .replace(/و/g, `<span style="${gradientStyle}">و</span>`);
@@ -2495,21 +2539,16 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
             });
 
             // 2. تحديث الأيقونات الصغيرة في الهيدر الداخلي للتطبيق
-                        // 2. تحديث الأيقونات الصغيرة في الهيدر الداخلي للتطبيق (تصميم عصري بدون خلفية)
-                        // 2. تحديث الأيقونات الصغيرة في الهيدر الداخلي للتطبيق (تصميم عصري وحركة احترافية)
             const headerLogos = document.querySelectorAll('.boma-fixed-icon');
             headerLogos.forEach(logo => {
-                // تصفير إعدادات الحاوية لضمان الشفافية
                 logo.style.background = 'transparent';
                 logo.style.padding = '0';
                 logo.style.border = 'none';
                 logo.style.boxShadow = 'none';
 
                 if (ui.homeLogoType === 'image' && ui.homeLogoValue) {
-                    // إضافة كلاس الحركة boma-pulse-anim للصورة
                     logo.innerHTML = `<img src="${ui.homeLogoValue}" class="boma-pulse-anim" style="width: 45px; height: 45px; object-fit: contain; background: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));">`;
                 } else {
-                    // إضافة كلاس الحركة boma-pulse-anim للنص/الإيموجي
                     logo.innerHTML = `<span class="boma-pulse-anim" style="font-size:26px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">${ui.homeLogoValue || '🦉'}</span>`;
                 }
             });
@@ -2520,75 +2559,71 @@ if (pin.length !== 6 || isAllSame || isSequential) { err.innerText = currentLang
 
 
     applyAppLogos();
-    // 👁️ دالة إظهار وإخفاء كلمات المرور
-// 👁️ دالة إظهار وإخفاء كلمات المرور
-function toggleVisibility(inputId, icon) {
-    const input = document.getElementById(inputId);
-    if (input.type === 'password') {
-        input.type = 'text';
-        icon.innerText = '🙈';
-    } else {
-        input.type = 'password';
-        icon.innerText = '👁️';
-    }
-}
 
-// 🛡️ المراقبة اللحظية لقوة كلمة المرور (أثناء الكتابة)
-document.getElementById('signup-pass')?.addEventListener('input', function() {
-    const pwd = this.value;
-    const hint = document.getElementById('pwd-hint');
-    hint.style.display = 'block';
-    const isValid = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,32}$/.test(pwd);
-    if (isValid) {
-        hint.className = 'validation-msg val-green';
-        hint.innerText = currentLang === 'ar' ? 'كلمة مرور قوية ومقبولة ✅' : 'Strong password ✅';
-    } else {
-        hint.className = 'validation-msg val-red';
-        hint.innerText = currentLang === 'ar' ? 'يجب أن تحتوي على 8 خانات (أحرف وأرقام) ❌' : 'Must be 8+ chars (letters & numbers) ❌';
+    function toggleVisibility(inputId, icon) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerText = '🙈';
+        } else {
+            input.type = 'password';
+            icon.innerText = '👁️';
+        }
     }
-});
 
-// 🛡️ المراقبة اللحظية لقوة رمز الـ PIN (أثناء الكتابة)
-document.getElementById('signup-pin')?.addEventListener('input', function() {
-    this.value = this.value.replace(/[^0-9]/g, ''); // منع كتابة الحروف نهائياً
-    const pin = this.value;
-    const hint = document.getElementById('pin-hint');
-    hint.style.display = 'block';
-    
-    if (pin.length !== 6) {
-        hint.className = 'validation-msg val-red';
-        hint.innerText = currentLang === 'ar' ? `اكتب 6 أرقام (متبقي ${6 - pin.length}) ❌` : `Enter 6 digits ❌`;
-        return;
-    }
-    
-    const isAllSame = pin.split('').every(char => char === pin[0]);
-    const seqUp = '0123456789';
-    const seqDown = '9876543210';
-    const isSequential = seqUp.includes(pin) || seqDown.includes(pin);
-    
-    if (isAllSame || isSequential) {
-        hint.className = 'validation-msg val-red';
-        hint.innerText = currentLang === 'ar' ? 'رمز ضعيف جداً (متطابق أو متسلسل) ❌' : 'Weak PIN ❌';
-    } else {
-        hint.className = 'validation-msg val-green';
-        hint.innerText = currentLang === 'ar' ? 'رمز PIN آمن وجاهز ✅' : 'Secure PIN ✅';
-    }
-});
-// 🛡️ المراقبة اللحظية لقوة كلمة المرور (أثناء الكتابة)
-document.getElementById('reg-password')?.addEventListener('input', function() {
-    const pwd = this.value;
-    const hint = document.getElementById('pwd-hint');
-    const isValid = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,32}$/.test(pwd);
-    if (isValid) {
-        hint.className = 'validation-msg val-green';
-        hint.innerText = 'كلمة مرور قوية ومقبولة ✅';
-    } else {
-        hint.className = 'validation-msg val-red';
-        hint.innerText = 'يجب أن تحتوي على 8 خانات (أحرف وأرقام) ❌';
-    }
-});
+    document.getElementById('signup-pass')?.addEventListener('input', function() {
+        const pwd = this.value;
+        const hint = document.getElementById('pwd-hint');
+        hint.style.display = 'block';
+        const isValid = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,32}$/.test(pwd);
+        if (isValid) {
+            hint.className = 'validation-msg val-green';
+            hint.innerText = currentLang === 'ar' ? 'كلمة مرور قوية ومقبولة ✅' : 'Strong password ✅';
+        } else {
+            hint.className = 'validation-msg val-red';
+            hint.innerText = currentLang === 'ar' ? 'يجب أن تحتوي على 8 خانات (أحرف وأرقام) ❌' : 'Must be 8+ chars (letters & numbers) ❌';
+        }
+    });
 
-    // 🌟 التعديل الثاني: تسجيل الـ Service Worker (PWA) 🌟
+    document.getElementById('signup-pin')?.addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, ''); 
+        const pin = this.value;
+        const hint = document.getElementById('pin-hint');
+        hint.style.display = 'block';
+        
+        if (pin.length !== 6) {
+            hint.className = 'validation-msg val-red';
+            hint.innerText = currentLang === 'ar' ? `اكتب 6 أرقام (متبقي ${6 - pin.length}) ❌` : `Enter 6 digits ❌`;
+            return;
+        }
+        
+        const isAllSame = pin.split('').every(char => char === pin[0]);
+        const seqUp = '0123456789';
+        const seqDown = '9876543210';
+        const isSequential = seqUp.includes(pin) || seqDown.includes(pin);
+        
+        if (isAllSame || isSequential) {
+            hint.className = 'validation-msg val-red';
+            hint.innerText = currentLang === 'ar' ? 'رمز ضعيف جداً (متطابق أو متسلسل) ❌' : 'Weak PIN ❌';
+        } else {
+            hint.className = 'validation-msg val-green';
+            hint.innerText = currentLang === 'ar' ? 'رمز PIN آمن وجاهز ✅' : 'Secure PIN ✅';
+        }
+    });
+
+    document.getElementById('reg-password')?.addEventListener('input', function() {
+        const pwd = this.value;
+        const hint = document.getElementById('pwd-hint');
+        const isValid = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,32}$/.test(pwd);
+        if (isValid) {
+            hint.className = 'validation-msg val-green';
+            hint.innerText = 'كلمة مرور قوية ومقبولة ✅';
+        } else {
+            hint.className = 'validation-msg val-red';
+            hint.innerText = 'يجب أن تحتوي على 8 خانات (أحرف وأرقام) ❌';
+        }
+    });
+
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js')
@@ -2600,7 +2635,21 @@ document.getElementById('reg-password')?.addEventListener('input', function() {
                 });
         });
     }
-    // =========================================================
+
+    function toggleWhatsappField() {
+        const waContainer = document.getElementById('whatsapp-field-container');
+        const waBtn = document.getElementById('toggle-wa-btn');
+        if (waContainer.style.display === 'none') {
+            waContainer.style.display = 'block';
+            waBtn.innerText = '- إلغاء الرقم الإضافي';
+            waBtn.style.color = 'var(--text-muted)';
+        } else {
+            waContainer.style.display = 'none';
+            document.getElementById('checkout-whatsapp').value = ''; 
+            waBtn.innerText = '+ إضافة رقم واتساب مختلف (اختياري)';
+            waBtn.style.color = 'var(--accent-orange)';
+        }
+    }
 
 </script>
 </body>
