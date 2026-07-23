@@ -238,6 +238,7 @@
 
 <script>
     const API_URL = 'https://api.boomapay.com/api';
+    const notificationSound = new Audio('https://actions.google.com/sounds/v1/alarms/notification_high_intensity.ogg'); // 🌟 إضافة الصوت هنا
 
     let courierToken = localStorage.getItem('boma_courier_token');
     let currentTab = 'available';
@@ -522,6 +523,8 @@
                 if (res.ok) {
                     const orders = await res.json();
                     if (orders.length > availableOrdersCount) {
+                        // 🌟 تشغيل الصوت هنا 🌟
+                        notificationSound.play().catch(e => console.log('المتصفح يمنع الصوت التلقائي'));
                         showToast('🚀 تنبيه: يوجد طلب جديد متاح للتوصيل!');
                         if (currentTab === 'available') loadOrders();
                     }
