@@ -114,7 +114,7 @@
     <div id="auth-overlay">
         <div class="auth-box" id="admin-login-box">
             <h2 style="color: var(--primary); margin-bottom: 10px;">لوحة إدارة بـــومـــة</h2>
-            <p style="color: var(--text-muted); font-size: 13px;">الرجاء إدخال الرمز السري للإدارة</p>
+            <p style="color: var(--text-muted); font-size: 13px;">الرجاء إدخال الرمز السري</p>
             <input type="password" id="admin-pass" placeholder="••••••••">
             <button onclick="loginAdmin()">دخول آمن 🛡️</button>
             <p style="margin-top: 15px; font-size: 12px; color: var(--accent); cursor: pointer; font-weight: bold;" onclick="showAdminForgotPass()">نسيت الرمز السري؟ (استعادة)</p>
@@ -130,29 +130,30 @@
 
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
+    <!-- 🌟 الشريط الجانبي مع إضافة كلاس master-only للقوائم الحساسة 🌟 -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>لوحة الإدارة</h2>
-            <small style="opacity: 0.8;">Boma Control Panel</small>
+            <small style="opacity: 0.8;" id="role-display-badge">Boma Control Panel</small>
         </div>
         <div class="nav-link active" onclick="switchTab('stats', this)">📊 الإحصائيات العامة</div>
-        <div class="nav-link" onclick="switchTab('appearance', this)">🎨 تخصيص المظهر (UI)</div>
-        <div class="nav-link" onclick="switchTab('banners', this)">🖼️ إدارة السلايدر والبنرات</div>
-        <div class="nav-link" onclick="switchTab('promocodes', this)">🎟️ إدارة كوبونات الخصم</div>
-        <div class="nav-link" onclick="switchTab('announcements', this)">📣 الإعلانات والتنبيهات</div>
-        <div class="nav-link" onclick="switchTab('decorations', this)">🎉 زينة المناسبات</div>
-        <div class="nav-link" onclick="switchTab('terms', this)">📜 الشروط والخصوصية</div>
-        <div class="nav-link" onclick="switchTab('settings', this)">⚙️ إعدادات وتشغيل الخدمات</div>
+        <div class="nav-link master-only" onclick="switchTab('appearance', this)">🎨 تخصيص المظهر (UI)</div>
+        <div class="nav-link master-only" onclick="switchTab('banners', this)">🖼️ إدارة السلايدر والبنرات</div>
+        <div class="nav-link master-only" onclick="switchTab('promocodes', this)">🎟️ إدارة كوبونات الخصم</div>
+        <div class="nav-link master-only" onclick="switchTab('announcements', this)">📣 الإعلانات والتنبيهات</div>
+        <div class="nav-link master-only" onclick="switchTab('decorations', this)">🎉 زينة المناسبات</div>
+        <div class="nav-link master-only" onclick="switchTab('terms', this)">📜 الشروط والخصوصية</div>
+        <div class="nav-link master-only" onclick="switchTab('settings', this)">⚙️ إعدادات وتشغيل الخدمات</div>
         <div class="nav-link" onclick="switchTab('search', this)">🔍 بحث وإدارة عميل</div>
-        <div class="nav-link" onclick="switchTab('finance', this)">💰 الشحن والسحب <span id="badge-finance" class="badge" style="display:none;">0</span></div>
+        <div class="nav-link master-only" onclick="switchTab('finance', this)">💰 الشحن والسحب <span id="badge-finance" class="badge" style="display:none;">0</span></div>
         <div class="nav-link" onclick="switchTab('orders', this)">🛒 طلبات المتجر <span id="badge-orders" class="badge" style="display:none;">0</span></div>
-        <div class="nav-link" onclick="switchTab('delivery', this)">🚚 مناطق التوصيل</div>
-        <div class="nav-link" onclick="switchTab('categories', this)">📁 إدارة أقسام المتجر</div>
+        <div class="nav-link master-only" onclick="switchTab('delivery', this)">🚚 مناطق التوصيل</div>
+        <div class="nav-link master-only" onclick="switchTab('categories', this)">📁 إدارة أقسام المتجر</div>
         <div class="nav-link" onclick="switchTab('products', this)">📦 إدارة المنتجات والتجار</div>
-        <div class="nav-link" onclick="switchTab('requests', this)">💼 طلبات المشاريع (الخدمات)</div>
+        <div class="nav-link master-only" onclick="switchTab('requests', this)">💼 طلبات المشاريع (الخدمات)</div>
         <div class="nav-link" onclick="switchTab('users', this)">👥 توثيق المستخدمين (KYC)</div>
         <div class="nav-link" onclick="switchTab('support', this)">🎧 تذاكر الدعم الفني <span id="badge-support" class="badge" style="display:none;">0</span></div>
-        <div class="nav-link" onclick="switchTab('password', this)">🔐 تغيير الرمز السري</div>
+        <div class="nav-link master-only" onclick="switchTab('password', this)">🔐 تغيير الرمز السري</div>
         <div class="nav-link" style="color: var(--red); margin-top: 20px;" onclick="logoutAdmin()">🚪 تسجيل خروج</div>
     </div>
 
@@ -164,8 +165,8 @@
             <h2 style="margin-bottom: 20px;">الإحصائيات العامة</h2>
             <div class="stats-grid">
                 <div class="card" style="text-align: center;"><h3 style="color: var(--text-muted);">إجمالي المستخدمين</h3><h1 id="stat-users" style="color: var(--primary); font-size: 40px;">0</h1></div>
-                <div class="card" style="text-align: center;"><h3 style="color: var(--text-muted);">أرصدة العملاء (SDG)</h3><h1 id="stat-sdg" style="color: var(--green); font-size: 35px;">0.00</h1></div>
                 <div class="card" style="text-align: center;"><h3 style="color: var(--text-muted);">طلبات متجر معلقة</h3><h1 id="stat-orders" style="color: var(--accent); font-size: 35px;">0</h1></div>
+                <div class="card master-only" id="finance-stat-card" style="text-align: center;"><h3 style="color: var(--text-muted);">أرصدة العملاء (SDG)</h3><h1 id="stat-sdg" style="color: var(--green); font-size: 35px;">0.00</h1></div>
             </div>
             <button class="btn btn-blue" onclick="loadStats()">تحديث الإحصائيات 🔄</button>
         </div>
@@ -173,179 +174,21 @@
         <!-- 🎨 تخصيص المظهر (UI) -->
         <div id="section-appearance" class="section">
             <h2 style="margin-bottom: 20px;">تخصيص مظهر التطبيق (UI Customization)</h2>
-            
             <div class="card">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">1. الشعار في صفحة الدخول (Login Screen)</h3>
-                <div class="search-flex">
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">نوع الشعار</label>
-                        <select id="ui-login-logo-type">
-                            <option value="emoji">إيموجي (Emoji)</option>
-                            <option value="image">صورة (Image URL)</option>
-                        </select>
-                    </div>
-                    <div style="flex: 2;">
-                        <label style="font-size: 12px; font-weight: bold;">القيمة (إيموجي أو رابط صورة)</label>
-                        <input type="text" id="ui-login-logo-val" placeholder="مثال: 🦉 أو https://...">
-                    </div>
-                </div>
-                <div style="margin-top: 15px;">
-                    <label style="font-size: 12px; font-weight: bold;">النص أسفل الشعار (Brand Text)</label>
-                    <input type="text" id="ui-login-brand-text" placeholder="مثال: بـــومـــة BOMA">
-                </div>
+                <h3 style="margin-bottom: 15px; color: var(--primary);">1. الشعار في صفحة الدخول</h3>
+                <div class="search-flex"><div style="flex: 1;"><label>نوع الشعار</label><select id="ui-login-logo-type"><option value="emoji">إيموجي</option><option value="image">صورة (رابط)</option></select></div><div style="flex: 2;"><label>القيمة</label><input type="text" id="ui-login-logo-val"></div></div>
+                <div style="margin-top: 15px;"><label>النص أسفل الشعار</label><input type="text" id="ui-login-brand-text"></div>
                 <div class="search-flex" style="margin-top: 10px;">
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">لون تدرج النص (العلوي)</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-login-brand-color-top-picker" value="#ff6e40" oninput="document.getElementById('ui-login-brand-color-top').value = this.value">
-                            <input type="text" id="ui-login-brand-color-top" value="#ff6e40" oninput="document.getElementById('ui-login-brand-color-top-picker').value = this.value">
-                        </div>
-                    </div>
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">لون تدرج النص (السفلي)</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-login-brand-color-bottom-picker" value="#ffffff" oninput="document.getElementById('ui-login-brand-color-bottom').value = this.value">
-                            <input type="text" id="ui-login-brand-color-bottom" value="#ffffff" oninput="document.getElementById('ui-login-brand-color-bottom-picker').value = this.value">
-                        </div>
-                    </div>
+                    <div style="flex: 1;"><label>لون تدرج النص (العلوي)</label><div class="color-input-wrapper"><input type="color" id="ui-login-brand-color-top-picker"><input type="text" id="ui-login-brand-color-top"></div></div>
+                    <div style="flex: 1;"><label>لون تدرج النص (السفلي)</label><div class="color-input-wrapper"><input type="color" id="ui-login-brand-color-bottom-picker"><input type="text" id="ui-login-brand-color-bottom"></div></div>
                 </div>
             </div>
-
-            <div class="card">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">2. الأيقونة في الشاشة الرئيسية (Home Header)</h3>
-                <div class="search-flex">
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">نوع الأيقونة العلوية</label>
-                        <select id="ui-home-logo-type">
-                            <option value="emoji">إيموجي (Emoji)</option>
-                            <option value="image">صورة (Image URL)</option>
-                        </select>
-                    </div>
-                    <div style="flex: 2;">
-                        <label style="font-size: 12px; font-weight: bold;">القيمة (إيموجي أو رابط صورة)</label>
-                        <input type="text" id="ui-home-logo-val" placeholder="مثال: 🦉 أو https://...">
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">3. تخصيص بطاقة العميل (Wallet Card)</h3>
-                <div class="form-group">
-                    <label>نوع الخلفية</label>
-                    <select id="ui-card-bg-type" onchange="toggleCardInputs()">
-                        <option value="gradient">تدرج لوني (Gradient)</option>
-                        <option value="solid">لون سادة (Solid)</option>
-                    </select>
-                </div>
-                <div class="search-flex" id="ui-card-colors">
-                    <div style="flex: 1;">
-                        <label style="font-size: 11px;">اللون الأول</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-card-color1-picker" value="#1e3d59" oninput="document.getElementById('ui-card-color1').value = this.value">
-                            <input type="text" id="ui-card-color1" value="#1e3d59" oninput="document.getElementById('ui-card-color1-picker').value = this.value">
-                        </div>
-                    </div>
-                    <div style="flex: 1;" id="card-color-2-wrapper">
-                        <label style="font-size: 11px;">اللون الثاني (للتدرج)</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-card-color2-picker" value="#2b567d" oninput="document.getElementById('ui-card-color2').value = this.value">
-                            <input type="text" id="ui-card-color2" value="#2b567d" oninput="document.getElementById('ui-card-color2-picker').value = this.value">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>لون النصوص داخل البطاقة</label>
-                    <div class="color-input-wrapper" style="max-width: 300px;">
-                        <input type="color" id="ui-card-text-color-picker" value="#ffffff" oninput="document.getElementById('ui-card-text-color').value = this.value">
-                        <input type="text" id="ui-card-text-color" value="#ffffff" oninput="document.getElementById('ui-card-text-color-picker').value = this.value">
-                    </div>
-                </div>
-                <label class="settings-label" style="margin-top: 10px;">
-                    <input type="checkbox" id="ui-card-decorations"> إظهار الزخارف التجميلية في البطاقة (الدوائر الشفافة)
-                </label>
-            </div>
-
-            <div class="card">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">4. تخصيص أزرار الأقسام</h3>
-                <div class="search-flex">
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">لون الخلفية</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-cat-bg-color-picker" value="#1e3d59" oninput="document.getElementById('ui-cat-bg-color').value = this.value">
-                            <input type="text" id="ui-cat-bg-color" value="#1e3d59" oninput="document.getElementById('ui-cat-bg-color-picker').value = this.value">
-                        </div>
-                    </div>
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">لون النص والأيقونة</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-cat-text-color-picker" value="#ffffff" oninput="document.getElementById('ui-cat-text-color').value = this.value">
-                            <input type="text" id="ui-cat-text-color" value="#ffffff" oninput="document.getElementById('ui-cat-text-color-picker').value = this.value">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>حجم الزر (الارتفاع)</label>
-                    <select id="ui-cat-size">
-                        <option value="70px">صغير (70px)</option>
-                        <option value="85px" selected>متوسط (85px)</option>
-                        <option value="100px">كبير (100px)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>درجة انحناء الحواف (Border Radius)</label>
-                    <input type="range" id="ui-cat-radius" min="0" max="40" value="12" oninput="document.getElementById('radius-val').innerText = this.value + 'px'">
-                    <span id="radius-val" style="font-weight: bold; color: var(--primary);">12px</span>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">5. تخصيص المساحة البيضاء والأزرار</h3>
-                <div class="search-flex">
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">لون المساحة (خلفية تسجيل الدخول)</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-auth-bg-color-picker" value="#ffffff" oninput="document.getElementById('ui-auth-bg-color').value = this.value">
-                            <input type="text" id="ui-auth-bg-color" value="#ffffff" oninput="document.getElementById('ui-auth-bg-color-picker').value = this.value">
-                        </div>
-                    </div>
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">انحناء المساحة البيضاء العلوية</label>
-                        <input type="range" id="ui-auth-radius" min="0" max="60" value="32" oninput="document.getElementById('auth-radius-val').innerText = this.value + 'px'">
-                        <span id="auth-radius-val" style="font-weight: bold; color: var(--primary);">32px</span>
-                    </div>
-                </div>
-                <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
-                <div class="search-flex">
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">لون خلفية الأزرار الرئيسية</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-btn-main-bg-picker" value="#1e3d59" oninput="document.getElementById('ui-btn-main-bg').value = this.value">
-                            <input type="text" id="ui-btn-main-bg" value="#1e3d59" oninput="document.getElementById('ui-btn-main-bg-picker').value = this.value">
-                        </div>
-                    </div>
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">لون النص بالأزرار الرئيسية</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-btn-main-text-picker" value="#ffffff" oninput="document.getElementById('ui-btn-main-text').value = this.value">
-                            <input type="text" id="ui-btn-main-text" value="#ffffff" oninput="document.getElementById('ui-btn-main-text-picker').value = this.value">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">6. حجم الخط العام للتطبيق (Zoom)</h3>
-                <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 15px;">يتحكم هذا المؤشر في تكبير وتصغير جميع النصوص داخل تطبيق العميل بشكل متناسق.</p>
-                <div class="search-flex">
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">نسبة تكبير/تصغير الخط</label>
-                        <input type="range" id="ui-global-font-size" min="80" max="130" value="100" oninput="document.getElementById('font-size-val').innerText = this.value + '%'">
-                        <span id="font-size-val" style="font-weight: bold; color: var(--primary); font-size: 16px;">100%</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-orange" style="padding: 14px; width: 100%; font-size: 16px;" onclick="saveSettings()">حفظ وتطبيق المظهر 💾</button>
+            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">2. الأيقونة العلوية</h3><div class="search-flex"><div style="flex: 1;"><label>نوع الأيقونة</label><select id="ui-home-logo-type"><option value="emoji">إيموجي</option><option value="image">صورة</option></select></div><div style="flex: 2;"><label>القيمة</label><input type="text" id="ui-home-logo-val"></div></div></div>
+            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">3. تخصيص المحفظة</h3><div class="form-group"><label>نوع الخلفية</label><select id="ui-card-bg-type" onchange="toggleCardInputs()"><option value="gradient">تدرج لوني</option><option value="solid">سادة</option></select></div><div class="search-flex" id="ui-card-colors"><div style="flex: 1;"><label>اللون الأول</label><div class="color-input-wrapper"><input type="color" id="ui-card-color1-picker"><input type="text" id="ui-card-color1"></div></div><div style="flex: 1;" id="card-color-2-wrapper"><label>اللون الثاني</label><div class="color-input-wrapper"><input type="color" id="ui-card-color2-picker"><input type="text" id="ui-card-color2"></div></div></div><div class="form-group"><label>لون النصوص</label><div class="color-input-wrapper" style="max-width: 300px;"><input type="color" id="ui-card-text-color-picker"><input type="text" id="ui-card-text-color"></div></div><label class="settings-label"><input type="checkbox" id="ui-card-decorations"> إظهار الزخارف</label></div>
+            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">4. الأزرار والأقسام</h3><div class="search-flex"><div style="flex: 1;"><label>لون الخلفية</label><div class="color-input-wrapper"><input type="color" id="ui-cat-bg-color-picker"><input type="text" id="ui-cat-bg-color"></div></div><div style="flex: 1;"><label>لون النص</label><div class="color-input-wrapper"><input type="color" id="ui-cat-text-color-picker"><input type="text" id="ui-cat-text-color"></div></div></div><div class="form-group"><label>حجم الزر</label><select id="ui-cat-size"><option value="70px">صغير</option><option value="85px">متوسط</option><option value="100px">كبير</option></select></div><div class="form-group"><label>الانحناء</label><input type="range" id="ui-cat-radius" min="0" max="40" oninput="document.getElementById('radius-val').innerText=this.value+'px'"><span id="radius-val">12px</span></div></div>
+            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">5. المساحات والأزرار</h3><div class="search-flex"><div style="flex: 1;"><label>لون مساحة الدخول</label><div class="color-input-wrapper"><input type="color" id="ui-auth-bg-color-picker"><input type="text" id="ui-auth-bg-color"></div></div><div style="flex: 1;"><label>الانحناء</label><input type="range" id="ui-auth-radius" min="0" max="60" oninput="document.getElementById('auth-radius-val').innerText=this.value+'px'"><span id="auth-radius-val">32px</span></div></div><div class="search-flex"><div style="flex: 1;"><label>خلفية الزر</label><div class="color-input-wrapper"><input type="color" id="ui-btn-main-bg-picker"><input type="text" id="ui-btn-main-bg"></div></div><div style="flex: 1;"><label>نص الزر</label><div class="color-input-wrapper"><input type="color" id="ui-btn-main-text-picker"><input type="text" id="ui-btn-main-text"></div></div></div></div>
+            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">6. الحجم (Zoom)</h3><input type="range" id="ui-global-font-size" min="80" max="130" oninput="document.getElementById('font-size-val').innerText=this.value+'%'"><span id="font-size-val">100%</span></div>
+            <button class="btn btn-orange" style="padding: 14px; width: 100%;" onclick="saveSettings()">حفظ وتطبيق المظهر 💾</button>
         </div>
 
         <!-- 🖼️ قسم إدارة البنرات والسلايدر -->
@@ -446,12 +289,22 @@
             </div>
         </div>
 
-        <!-- تغيير كلمة مرور الإدارة -->
+        <!-- تغيير كلمة مرور الإدارة (محدث ليدعم كلمتين) -->
         <div id="section-password" class="section">
-            <h2 style="margin-bottom: 20px;">تغيير الرمز السري للإدارة</h2>
+            <h2 style="margin-bottom: 20px;">تغيير الرمز السري وحسابات الدعم</h2>
             <div class="card" style="max-width: 500px;">
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">الرجاء إدخال الرمز السري القديم للتأكيد، ثم الرمز الجديد.</p>
-                <div class="form-group"><label>الرمز السري الحالي</label><input type="password" id="admin-old-pass" placeholder="••••••••"></div>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">الرجاء تحديد نوع الحساب المراد تغييره، ثم إدخال الرمز السري الأساسي الخاص بك (Master) للتأكيد.</p>
+                
+                <div class="form-group">
+                    <label>تحديد نوع الحساب المراد تغييره</label>
+                    <select id="admin-pass-type" style="font-weight:bold;">
+                        <option value="master">الإدارة العليا (Master Admin)</option>
+                        <option value="support">خدمة العملاء (Support)</option>
+                    </select>
+                    <small style="color:var(--text-muted); font-size:11px;">* لتعطيل حساب الدعم الفني، اختر (خدمة العملاء) واترك الرمز الجديد فارغاً.</small>
+                </div>
+
+                <div class="form-group"><label>الرمز السري للإدارة العليا (الحالي)</label><input type="password" id="admin-old-pass" placeholder="••••••••"></div>
                 <div class="form-group"><label>الرمز السري الجديد</label><input type="password" id="admin-new-pass" placeholder="••••••••"></div>
                 <div class="form-group"><label>تأكيد الرمز السري الجديد</label><input type="password" id="admin-confirm-pass" placeholder="••••••••"></div>
                 <button class="btn btn-blue" style="width: 100%; padding: 12px;" onclick="changeAdminPassword()">تحديث الرمز السري 🔐</button>
@@ -476,18 +329,9 @@
                 <h3 style="margin-bottom: 15px; color: var(--primary);">💰 إعدادات العمولات والرسوم (%)</h3>
                 <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">حدد نسبة الرسوم المئوية لكل عملية. (سيتم خصمها من حساب العميل لصالح الإدارة. ضع صفر 0 لجعلها مجانية)</p>
                 <div class="search-flex">
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">رسوم التغذية (الشحن) %</label>
-                        <input type="number" id="set-fee-deposit" placeholder="مثال: 0" min="0" max="100">
-                    </div>
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">رسوم التحويل الداخلي %</label>
-                        <input type="number" id="set-fee-transfer" placeholder="مثال: 1" min="0" max="100">
-                    </div>
-                    <div style="flex: 1;">
-                        <label style="font-size: 12px; font-weight: bold;">رسوم السحب (الكاش) %</label>
-                        <input type="number" id="set-fee-withdraw" placeholder="مثال: 2" min="0" max="100">
-                    </div>
+                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">رسوم التغذية (الشحن) %</label><input type="number" id="set-fee-deposit" placeholder="مثال: 0" min="0" max="100"></div>
+                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">رسوم التحويل الداخلي %</label><input type="number" id="set-fee-transfer" placeholder="مثال: 1" min="0" max="100"></div>
+                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">رسوم السحب (الكاش) %</label><input type="number" id="set-fee-withdraw" placeholder="مثال: 2" min="0" max="100"></div>
                 </div>
             </div>
 
@@ -518,7 +362,7 @@
             <div class="card table-responsive"><table><thead><tr><th>الأيقونة</th><th>الاسم (عربي)</th><th>الاسم (إنجليزي)</th><th>إجراء</th></tr></thead><tbody id="categories-tbody"></tbody></table></div>
         </div>
 
-        <!-- بحث وإدارة عميل -->
+        <!-- بحث وإدارة عميل (مع الطوارئ) -->
         <div id="section-search" class="section">
             <h2 style="margin-bottom: 20px;">البحث وإدارة عميل</h2>
             <div class="card">
@@ -526,7 +370,19 @@
                 <div id="search-result-box" style="display: none;">
                     <h3 style="margin-bottom: 15px; color: var(--primary);">بيانات العميل</h3>
                     <div class="user-details-grid" id="search-details-grid"></div>
-                    <div style="background: #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    
+                    <!-- 🌟 منطقة الأمان والطوارئ (تحديث الهوية وتصفير PIN) 🌟 -->
+                    <div style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ef4444;">
+                        <h4 style="margin-bottom: 10px; color: var(--red);">🛡️ إجراءات الأمان والطوارئ:</h4>
+                        <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">استخدم هذه الخيارات فقط إذا فقد العميل رقم هاتفه أو نسي الرمز المالي.</p>
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" id="manage-identity-input" placeholder="رقم الهاتف/البريد الجديد" style="width: 200px; margin: 0;">
+                            <button class="btn btn-blue" onclick="changeUserIdentity()">تحديث المعرف 📱</button>
+                            <button class="btn btn-orange" onclick="resetUserPin()">إصدار PIN مؤقت 🔑</button>
+                        </div>
+                    </div>
+
+                    <div style="background: #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px;" class="master-only">
                         <h4 style="margin-bottom: 10px;">إجراءات الإدارة:</h4>
                         <div class="manage-actions-flex" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                             <label style="font-size: 13px; font-weight: bold;">تجميد رصيد (SDG):</label>
@@ -534,7 +390,6 @@
                             <label style="font-size: 13px; font-weight: bold; margin-left: 10px;"><input type="checkbox" id="manage-suspend-input"> إيقاف الحساب نهائياً</label>
                             <button class="btn btn-red" onclick="saveUserManage()">حفظ التعديلات</button>
                             <button class="btn btn-blue" onclick="loadUserTxs()">كشف الحركات 📄</button>
-                            <button class="btn btn-orange" id="btn-toggle-role" style="display:none;"></button>
                         </div>
                     </div>
                     <div id="user-txs-box" style="display: none; max-height: 300px;" class="table-responsive"><table style="background: #fff;"><thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>البيان</th></tr></thead><tbody id="user-txs-tbody"></tbody></table></div>
@@ -563,7 +418,7 @@
                             <th>المندوب 🛵</th>
                             <th>الوقت</th>
                             <th>تحديث الحالة</th>
-                            <th>إجراء</th>
+                            <th class="master-only">إجراء</th>
                         </tr>
                     </thead>
                     <tbody id="orders-tbody"></tbody>
@@ -596,18 +451,8 @@
                 <input type="number" id="p-stock" placeholder="الكمية المتوفرة في المخزن">
                 <textarea id="p-ar-desc" placeholder="وصف المنتج (عربي)" rows="2"></textarea>
                 <textarea id="p-en-desc" placeholder="وصف المنتج (إنجليزي)" rows="2"></textarea>
-                
-                <div class="media-options-box" style="margin-top: 10px; border-color: var(--accent);">
-                    <label class="main-lbl">خيارات المنتج (ألوان، مقاسات، أشكال، مُدد):</label>
-                    <input type="text" id="p-variations" placeholder="مثال: شهر, 6 شهور (+5000), سنة (+10000)">
-                </div>
-                
-                <!-- 🌟 إضافة حقل نطاق التوصيل للإدارة 🌟 -->
-                <div class="media-options-box" style="margin-top: 10px; border-color: #f59e0b;">
-                    <label class="main-lbl">نطاق التوصيل (المدن المتاحة):</label>
-                    <input type="text" id="p-delivery-scope" placeholder="مثال: جميع المناطق، الخرطوم فقط...">
-                </div>
-
+                <div class="media-options-box" style="margin-top: 10px; border-color: var(--accent);"><label class="main-lbl">خيارات المنتج (ألوان، مقاسات، أشكال، مُدد):</label><input type="text" id="p-variations" placeholder="مثال: شهر, 6 شهور (+5000), سنة (+10000)"></div>
+                <div class="media-options-box" style="margin-top: 10px; border-color: #f59e0b;"><label class="main-lbl">نطاق التوصيل (المدن المتاحة):</label><input type="text" id="p-delivery-scope" placeholder="مثال: جميع المناطق، الخرطوم فقط..."></div>
                 <div class="media-options-box" style="margin-top: 10px; border-color: var(--blue-light);"><label class="main-lbl">معرض الصور الإضافية للمنتج (روابط متعددة للمنتج):</label><textarea id="p-gallery" placeholder="أدخل روابط الصور وافصل بفاصلة (,)..." rows="2" style="direction: ltr; text-align: left;"></textarea></div>
                 <div class="media-options-box"><label class="main-lbl">صورة أو أيقونة المنتج الرئيسية: <span id="img-hint" style="color:var(--red); font-size: 11px; font-weight:normal;"></span></label>
                     <div class="media-options-grid"><div class="media-option"><label>1. رفع صورة رئيسية:</label><input type="file" id="p-img" accept="image/*"></div><div class="media-option"><label>2. أو رابط صورة:</label><input type="text" id="p-img-url" placeholder="https://..." style="direction: ltr;"></div><div class="media-option"><label>3. أو إيموجي رئيسي:</label><input type="text" id="p-emoji" placeholder="مثال: 🎧 أو 📱" style="text-align: center; font-size: 20px;"></div></div>
@@ -646,6 +491,7 @@
     const API_URL = 'https://api.boomapay.com/api';
 
     let adminPass = '';
+    let currentAdminRole = 'master'; // 🛡️ نوع الصلاحية
     let currentSearchIdentity = ''; let currentSearchId = ''; 
     let adminCategories = []; let allAdminProducts = []; let allAdminOrders = []; let editingProductId = null; 
     let tempImages = {};
@@ -662,7 +508,6 @@
     document.addEventListener('mousemove', resetSessionTimeout);
     document.addEventListener('keypress', resetSessionTimeout);
 
-    // 🌟 نظام الرادار الذكي للتنبيهات 🌟
     let lastCounts = { orders: 0, deposits: 0, withdraws: 0, tickets: 0 };
     const alertSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
 
@@ -679,17 +524,20 @@
             let alertMessage = "";
 
             if (data.pendingOrders > lastCounts.orders) { hasNew = true; alertMessage = "🛒 طلب جديد في المتجر!"; }
-            if (data.pendingDeposits > lastCounts.deposits) { hasNew = true; alertMessage = "📥 طلب شحن محفظة جديد!"; }
-            if (data.pendingWithdraws > lastCounts.withdraws) { hasNew = true; alertMessage = "📤 طلب سحب أرباح جديد!"; }
             if (data.pendingTickets > lastCounts.tickets) { hasNew = true; alertMessage = "🎧 رسالة دعم فني جديدة!"; }
+            
+            if (currentAdminRole === 'master') {
+                if (data.pendingDeposits > lastCounts.deposits) { hasNew = true; alertMessage = "📥 طلب شحن محفظة جديد!"; }
+                if (data.pendingWithdraws > lastCounts.withdraws) { hasNew = true; alertMessage = "📤 طلب سحب أرباح جديد!"; }
+                lastCounts.deposits = data.pendingDeposits || 0;
+                lastCounts.withdraws = data.pendingWithdraws || 0;
+                updateSidebarBadge('badge-finance', lastCounts.deposits + lastCounts.withdraws);
+            }
 
             lastCounts.orders = data.pendingOrders || 0;
-            lastCounts.deposits = data.pendingDeposits || 0;
-            lastCounts.withdraws = data.pendingWithdraws || 0;
             lastCounts.tickets = data.pendingTickets || 0;
 
             updateSidebarBadge('badge-orders', lastCounts.orders);
-            updateSidebarBadge('badge-finance', lastCounts.deposits + lastCounts.withdraws);
             updateSidebarBadge('badge-support', lastCounts.tickets);
 
             if (hasNew) {
@@ -714,7 +562,7 @@
         }
     }
 
-    setInterval(checkAdminNotifications, 20000); // فحص كل 20 ثانية
+    setInterval(checkAdminNotifications, 20000);
 
     document.getElementById('set-deco-type').addEventListener('change', function() { document.getElementById('custom-deco-url-group').style.display = this.value === 'custom' ? 'block' : 'none'; });
 
@@ -750,10 +598,12 @@
     let isSettingsLoaded = false;
     function loadSettingsOnce() {
         if (!isSettingsLoaded) {
-            loadOriginalSettings();
+            if (currentAdminRole === 'master') {
+                loadOriginalSettings();
+                loadDecorations();
+            }
             loadCategoriesData();
             loadAnnouncements();
-            loadDecorations();
             isSettingsLoaded = true;
         }
     }
@@ -769,7 +619,7 @@
             if(test.ok) {
                 document.getElementById('auth-overlay').style.display = 'none';
                 resetSessionTimeout(); 
-                loadStats(); 
+                await loadStats(); // loadStats will define currentAdminRole
                 loadSettingsOnce(); 
                 checkAdminNotifications(); 
             } else if (test.status === 403) { 
@@ -784,6 +634,7 @@
         adminPass = ''; document.getElementById('admin-pass').value = '';
         clearTimeout(adminSessionTimeout);
         isSettingsLoaded = false;
+        currentAdminRole = 'master';
         document.getElementById('auth-overlay').style.display = 'flex';
         if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.remove('show'); document.getElementById('sidebar-overlay').classList.remove('show'); }
     }
@@ -798,16 +649,25 @@
         } catch(e) { showToast('خطأ اتصال بالسيرفر: ' + e.message, true); }
     }
 
+    // 🌟 التعديل الخاص بتغيير كلمة المرور لتشمل حساب الدعم 🌟
     async function changeAdminPassword() {
+        const passType = document.getElementById('admin-pass-type').value;
         const oldPass = document.getElementById('admin-old-pass').value;
         const newPass = document.getElementById('admin-new-pass').value;
         const confirmPass = document.getElementById('admin-confirm-pass').value;
-        if(!oldPass || !newPass || !confirmPass) return showToast('أكمل جميع الحقول!', true);
+        if(!oldPass) return showToast('أدخل الرمز الحالي للتأكيد!', true);
         if(newPass !== confirmPass) return showToast('كلمة المرور الجديدة غير متطابقة!', true);
+        
         showToast('جاري التحديث...');
         try {
-            const res = await authFetch(`${API_URL}/admin/change-password`, { method: 'POST', body: JSON.stringify({ oldPass, newPass }) });
-            if(res.ok) { showToast('تم تحديث الرمز السري للإدارة بنجاح ✅'); document.getElementById('admin-old-pass').value=''; document.getElementById('admin-new-pass').value=''; document.getElementById('admin-confirm-pass').value=''; }
+            const res = await authFetch(`${API_URL}/admin/change-password`, { method: 'POST', body: JSON.stringify({ oldPass, newPass, passType }) });
+            const data = await res.json();
+            if(res.ok) { 
+                showToast(data.message || 'تم التحديث بنجاح ✅'); 
+                document.getElementById('admin-old-pass').value=''; document.getElementById('admin-new-pass').value=''; document.getElementById('admin-confirm-pass').value=''; 
+            } else {
+                showToast(data.message, true);
+            }
         } catch(e) { showToast('خطأ! قد يكون الرمز القديم غير صحيح: ' + e.message, true); }
     }
 
@@ -836,28 +696,59 @@
         }
 
         if(tabId === 'stats') loadStats();
-        if(tabId === 'banners') loadAdminBannersTab(); 
-        if(tabId === 'promocodes') loadPromoCodes(); 
-        if(tabId === 'announcements') loadAnnouncements();
-        if(tabId === 'finance') loadFinance();
+        if(tabId === 'banners' && currentAdminRole === 'master') loadAdminBannersTab(); 
+        if(tabId === 'promocodes' && currentAdminRole === 'master') loadPromoCodes(); 
+        if(tabId === 'announcements' && currentAdminRole === 'master') loadAnnouncements();
+        if(tabId === 'finance' && currentAdminRole === 'master') loadFinance();
         if(tabId === 'users') loadUsers();
         if(tabId === 'support') loadSupport();
-        if(tabId === 'requests') loadServiceRequests();
+        if(tabId === 'requests' && currentAdminRole === 'master') loadServiceRequests();
         if(tabId === 'orders') loadOrders();
         if(tabId === 'products') loadProducts();
-        if(tabId === 'delivery') loadZones();
-        if(tabId === 'categories') loadCategories();
+        if(tabId === 'delivery' && currentAdminRole === 'master') loadZones();
+        if(tabId === 'categories' && currentAdminRole === 'master') loadCategories();
     }
 
     async function authFetch(url, options = {}) {
         options.headers = { ...options.headers, 'Content-Type': 'application/json', 'x-admin-pass': adminPass };
         try {
             const res = await fetch(url, options);
-            if(res.status === 403) { logoutAdmin(); showToast('كلمة المرور خاطئة أو لا تملك صلاحية!', true); throw new Error('Unauthorized'); }
+            if(res.status === 403) { logoutAdmin(); showToast('كلمة المرور خاطئة أو لا تملك صلاحية لهذه العملية!', true); throw new Error('Unauthorized'); }
             return res;
         } catch(e) { throw e; }
     }
 
+    // 🌟 جلب الإحصائيات وضبط الواجهة بناءً على الصلاحيات 🌟
+    async function loadStats() { 
+        try { 
+            const res = await authFetch(`${API_URL}/admin/stats`); 
+            const data = await res.json(); 
+            
+            currentAdminRole = data.role || 'master';
+            const roleBadge = document.getElementById('role-display-badge');
+            
+            // 🛡️ تفعيل الحماية في الواجهة وإخفاء العناصر الحساسة 🛡️
+            if (currentAdminRole === 'support') {
+                roleBadge.innerText = 'خدمة العملاء (Support)';
+                document.querySelectorAll('.master-only').forEach(el => el.style.display = 'none');
+                document.getElementById('finance-stat-card').style.display = 'none'; 
+            } else {
+                roleBadge.innerText = 'الإدارة العليا (Master)';
+                document.querySelectorAll('.master-only').forEach(el => {
+                    // إذا كان العنصر في جدول اجعله يظهر كـ table-cell وإلا flex أو block
+                    if(el.tagName === 'TH' || el.tagName === 'TD') el.style.display = 'table-cell';
+                    else el.style.display = ''; 
+                });
+                document.getElementById('finance-stat-card').style.display = 'block';
+                document.getElementById('stat-sdg').innerText = Number(data.totalSDG || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); 
+            }
+            
+            document.getElementById('stat-users').innerText = data.usersCount || 0; 
+            document.getElementById('stat-orders').innerText = data.pendingOrders || 0; 
+        } catch(e) {} 
+    }
+
+    // باقي الدوال كما هي...
     async function loadPromoCodes() {
         const tbody = document.getElementById('promocodes-tbody');
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">جاري التحميل...</td></tr>';
@@ -1110,10 +1001,8 @@
     async function loadCategories() { const tbody = document.getElementById('categories-tbody'); tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">جاري التحميل...</td></tr>'; try { await loadCategoriesData(); tbody.innerHTML = ''; if(adminCategories.length === 0) return tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">لا توجد أقسام.</td></tr>'; adminCategories.forEach(c => { tbody.innerHTML += `<tr><td style="font-size: 20px;">${c.icon || '📁'}</td><td><strong>${c.arName}</strong></td><td style="direction:ltr;">${c.enName}</td><td><button class="btn btn-red" onclick="deleteCategory('${c._id}')">حذف 🗑️</button></td></tr>`; }); } catch(e) {} }
     async function addCategory() { const arName = document.getElementById('cat-ar-name').value.trim(); const enName = document.getElementById('cat-en-name').value.trim(); const icon = document.getElementById('cat-icon').value.trim(); if(!arName || !enName) return showToast('أدخل الاسم باللغتين', true); showToast('جاري الحفظ...'); try { await authFetch(`${API_URL}/admin/categories`, { method: 'POST', body: JSON.stringify({ arName, enName, icon }) }); showToast('تمت الإضافة ✅'); document.getElementById('cat-ar-name').value = ''; document.getElementById('cat-en-name').value = ''; document.getElementById('cat-icon').value = ''; loadCategories(); } catch(e) { showToast('خطأ: ' + e.message, true); } }
     async function deleteCategory(id) { if(!confirm('حذف هذا القسم؟')) return; try { await authFetch(`${API_URL}/admin/categories/${id}`, { method: 'DELETE' }); showToast('تم الحذف'); loadCategories(); } catch(e) { showToast('خطأ: ' + e.message, true); } }
-
-    async function loadStats() { try { const res = await authFetch(`${API_URL}/admin/stats`); const data = await res.json(); document.getElementById('stat-users').innerText = data.usersCount || 0; document.getElementById('stat-sdg').innerText = Number(data.totalSDG || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); document.getElementById('stat-orders').innerText = data.pendingOrders || 0; } catch(e) {} }
     
-        async function searchUser() {
+    async function searchUser() {
         const accNum = document.getElementById('search-acc-input').value.trim();
         const resBox = document.getElementById('search-result-box');
         const grid = document.getElementById('search-details-grid');
@@ -1130,7 +1019,6 @@
             currentSearchIdentity = data.identity;
             currentSearchId = data._id;
             
-            // تحديد نوع الحساب بدقة
             let roleStr = 'عميل 👤';
             if (data.role === 'vendor') roleStr = 'تاجر 🏪';
             else if (data.role === 'courier') roleStr = 'مندوب توصيل 🛵';
@@ -1143,63 +1031,75 @@
                 <div class="detail-item"><span class="detail-lbl">الرصيد المتاح</span><div class="detail-val" style="color:var(--green);">${Number(data.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} SDG</div></div>
             `;
             
-            document.getElementById('manage-freeze-input').value = data.frozenBalance || 0;
-            document.getElementById('manage-suspend-input').checked = data.isSuspended;
-            
-            const actionsFlex = document.querySelector('.manage-actions-flex');
-            document.querySelectorAll('.role-btn-dynamic').forEach(btn => btn.remove());
-            
-            if (data.role !== 'vendor') {
-                const btnV = document.createElement('button');
-                btnV.className = 'btn btn-orange role-btn-dynamic';
-                btnV.innerText = 'ترقية لتاجر 🏪';
-                btnV.onclick = () => toggleUserRole('vendor');
-                actionsFlex.appendChild(btnV);
+            if (currentAdminRole === 'master') {
+                document.getElementById('manage-freeze-input').value = data.frozenBalance || 0;
+                document.getElementById('manage-suspend-input').checked = data.isSuspended;
+                const actionsFlex = document.querySelector('.manage-actions-flex');
+                document.querySelectorAll('.role-btn-dynamic').forEach(btn => btn.remove());
+                
+                if (data.role !== 'vendor') {
+                    const btnV = document.createElement('button'); btnV.className = 'btn btn-orange role-btn-dynamic'; btnV.innerText = 'ترقية لتاجر 🏪'; btnV.onclick = () => toggleUserRole('vendor'); actionsFlex.appendChild(btnV);
+                }
+                if (data.role !== 'courier') {
+                    const btnC = document.createElement('button'); btnC.className = 'btn btn-green role-btn-dynamic'; btnC.innerText = 'ترقية لمندوب 🛵'; btnC.onclick = () => toggleUserRole('courier'); actionsFlex.appendChild(btnC);
+                }
+                if (data.role !== 'user') {
+                    const btnU = document.createElement('button'); btnU.className = 'btn btn-red role-btn-dynamic'; btnU.innerText = 'سحب الصلاحيات ❌'; btnU.onclick = () => toggleUserRole('user'); actionsFlex.appendChild(btnU);
+                }
             }
-            if (data.role !== 'courier') {
-                const btnC = document.createElement('button');
-                btnC.className = 'btn btn-green role-btn-dynamic';
-                btnC.innerText = 'ترقية لمندوب توصيل 🛵';
-                btnC.onclick = () => toggleUserRole('courier');
-                actionsFlex.appendChild(btnC);
-            }
-            if (data.role !== 'user') {
-                const btnU = document.createElement('button');
-                btnU.className = 'btn btn-red role-btn-dynamic';
-                btnU.innerText = 'سحب الصلاحيات (إرجاع كعميل) ❌';
-                btnU.onclick = () => toggleUserRole('user');
-                actionsFlex.appendChild(btnU);
-            }
-            
-            const oldBtn = document.getElementById('btn-toggle-role');
-            if (oldBtn) oldBtn.style.display = 'none';
-            
             showToast('تم العثور');
         } catch (e) { showToast('خطأ: ' + e.message, true); }
+    }
+
+    // 🌟 دوال الأمان والطوارئ (تحديث الهوية وتصفير PIN) 🌟
+    async function changeUserIdentity() {
+        if(!currentSearchId) return;
+        const newId = document.getElementById('manage-identity-input').value.trim();
+        if(!newId) return showToast('أدخل رقم الهاتف أو البريد الجديد أولاً!', true);
+        if(!confirm('تأكيد تغيير رقم الهاتف/البريد للعميل؟ سيتم إخراجه من أجهزته الحالية.')) return;
+        
+        showToast('جاري التحديث...');
+        try {
+            const res = await authFetch(`${API_URL}/admin/users/${currentSearchId}/identity`, { 
+                method: 'PUT', body: JSON.stringify({ newIdentity: newId }) 
+            });
+            const data = await res.json();
+            if(!res.ok) return showToast(data.message, true);
+            
+            showToast('تم تحديث المعرف بنجاح!');
+            document.getElementById('search-acc-input').value = newId;
+            document.getElementById('manage-identity-input').value = '';
+            searchUser();
+        } catch(e) { showToast('خطأ: ' + e.message, true); }
+    }
+
+    async function resetUserPin() {
+        if(!currentSearchId) return;
+        if(!confirm('تأكيد إصدار وتصفير الـ PIN المالي للعميل؟')) return;
+        
+        showToast('جاري إصدار PIN مؤقت...');
+        try {
+            const res = await authFetch(`${API_URL}/admin/users/${currentSearchId}/reset-pin`, { method: 'PUT' });
+            const data = await res.json();
+            if(!res.ok) return showToast(data.message, true);
+            
+            alert(`تم تصفير الرمز بنجاح!\n\nالرمز المؤقت للعميل هو: [ ${data.tempPin} ]\n\nيرجى إعطاؤه للعميل وطلب تغييره فوراً من لوحة المحفظة.`);
+            showToast('تم التصفير ✅');
+        } catch(e) { showToast('خطأ: ' + e.message, true); }
     }
     
     async function toggleUserRole(newRole) {
         if (!currentSearchId) return;
-        
         let confirmMsg = 'هل أنت متأكد من تغيير صلاحية هذا الحساب؟';
         if (newRole === 'vendor') confirmMsg = 'ترقية هذا العميل إلى (تاجر)؟ ستظهر له لوحة رفع المنتجات.';
         else if (newRole === 'courier') confirmMsg = 'ترقية هذا العميل إلى (مندوب توصيل)؟ سيتمكن من الدخول لتطبيق الكباتن.';
         else if (newRole === 'user') confirmMsg = 'سحب الصلاحيات وإعادته كـ (عميل) عادي؟';
-        
         if (!confirm(confirmMsg)) return;
-        
         showToast('جاري التحديث...');
         try {
-            const res = await authFetch(`${API_URL}/admin/users/${currentSearchId}/role`, {
-                method: 'PUT',
-                body: JSON.stringify({ role: newRole })
-            });
-            const data = await res.json();
-            showToast(data.message || 'تم التحديث بنجاح');
-            searchUser(); 
-        } catch (e) {
-            showToast('خطأ: ' + e.message, true);
-        }
+            const res = await authFetch(`${API_URL}/admin/users/${currentSearchId}/role`, { method: 'PUT', body: JSON.stringify({ role: newRole }) });
+            const data = await res.json(); showToast(data.message || 'تم التحديث بنجاح'); searchUser(); 
+        } catch (e) { showToast('خطأ: ' + e.message, true); }
     }
     async function saveUserManage() { if(!currentSearchId) return; const freeze = document.getElementById('manage-freeze-input').value; const susp = document.getElementById('manage-suspend-input').checked; if(!confirm('حفظ التعديلات؟')) return; try { await authFetch(`${API_URL}/admin/users/${currentSearchId}/manage`, { method: 'PUT', body: JSON.stringify({ isSuspended: susp, frozenBalance: freeze }) }); showToast('تم التعديل!'); searchUser(); } catch(e) { showToast('خطأ: ' + e.message, true); } }
     async function loadUserTxs() { if(!currentSearchIdentity) return; const box = document.getElementById('user-txs-box'); const tbody = document.getElementById('user-txs-tbody'); box.style.display = 'block'; tbody.innerHTML = '<tr><td colspan="4">جاري التحميل...</td></tr>'; try { const res = await authFetch(`${API_URL}/admin/user-transactions`, { method: 'POST', body: JSON.stringify({ identity: currentSearchIdentity }) }); const txs = await res.json(); tbody.innerHTML = ''; if(txs.length === 0) return tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">لا حركات</td></tr>'; txs.forEach(t => { const isOut = t.type === 'out'; tbody.innerHTML += `<tr><td style="font-size:11px;">${new Date(t.date).toLocaleString('ar-EG')}</td><td style="color:${isOut ? 'var(--red)' : 'var(--green)'}; font-weight:bold;">${isOut ? 'سحب/صادر' : 'إيداع/وارد'}</td><td style="direction:ltr; font-weight:bold;">${Number(t.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} SDG</td><td style="font-size:12px;">${t.title}</td></tr>`; }); } catch(e) { showToast('خطأ: ' + e.message, true); } }
@@ -1207,7 +1107,7 @@
     async function loadFinance() { const dBody = document.getElementById('deposit-tbody'); const wBody = document.getElementById('withdraw-tbody'); try { const res = await authFetch(`${API_URL}/admin/finance`); const data = await res.json(); dBody.innerHTML = ''; wBody.innerHTML = ''; const pendingDep = data.deposits.filter(d => d.status === 'pending'); if(pendingDep.length === 0) dBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا إيداعات معلقة.</td></tr>'; pendingDep.forEach(d => { let receiptBtn = d.receipt ? `<button class="btn btn-blue" onclick="viewImage('${d._id}')">الرصيد/الإيصال 🖼️</button>` : `<span style="font-size:11px; color:var(--text-muted);">رقم عملية:<br>${d.bankTxnId || 'لا يوجد'}</span>`; tempImages[d._id] = d.receipt; dBody.innerHTML += `<tr><td style="direction:ltr;">${d.clientIdentity}</td><td style="font-weight:bold; color:var(--green); direction:ltr;">${Number(d.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} SDG</td><td>${receiptBtn}</td><td style="font-size:11px;">${new Date(d.date).toLocaleString('ar-EG')}</td><td><button class="btn btn-green" onclick="handleFinance('deposits', '${d._id}', 'approved')">قبول</button> <button class="btn btn-red" onclick="handleFinance('deposits', '${d._id}', 'rejected')">رفض</button></td></tr>`; }); const pendingWit = data.withdraws.filter(w => w.status === 'pending'); if(pendingWit.length === 0) wBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا سحوبات معلقة.</td></tr>'; pendingWit.forEach(w => { wBody.innerHTML += `<tr><td style="direction:ltr;">${w.clientIdentity}</td><td style="font-weight:bold; color:var(--red); direction:ltr;">${Number(w.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} SDG</td><td><textarea readonly style="width:100%; resize:none;">${w.bankDetails}</textarea></td><td style="font-size:11px;">${new Date(w.date).toLocaleString('ar-EG')}</td><td><button class="btn btn-green" onclick="handleFinance('withdraws', '${w._id}', 'approved')">تم التحويل</button> <button class="btn btn-red" onclick="handleFinance('withdraws', '${w._id}', 'rejected')">رفض وإرجاع</button></td></tr>`; }); } catch(e) { } }
     async function handleFinance(type, id, status) { if(!confirm('تأكيد الإجراء؟')) return; try { await authFetch(`${API_URL}/admin/${type}/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }); showToast('تم التحديث'); loadFinance(); checkAdminNotifications(); } catch(e) { showToast('خطأ: ' + e.message, true); } }
 
-    async function loadOrders() { const tbody = document.getElementById('orders-tbody'); tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">جاري التحميل...</td></tr>'; try { const res = await authFetch(`${API_URL}/orders`); let data = await res.json(); data.sort((a, b) => { const isABottom = (a.status === 'delivered' || a.status === 'approved' || a.status === 'rejected'); const isBBottom = (b.status === 'delivered' || b.status === 'approved' || b.status === 'rejected'); if (isABottom && !isBBottom) return 1; if (!isABottom && isBBottom) return -1; return new Date(b.date) - new Date(a.date); }); allAdminOrders = data; renderOrders(allAdminOrders); } catch(e) {} }
+    async function loadOrders() { const tbody = document.getElementById('orders-tbody'); tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">جاري التحميل...</td></tr>'; try { const res = await authFetch(`${API_URL}/orders`); let data = await res.json(); data.sort((a, b) => { const isABottom = (a.status === 'delivered' || a.status === 'approved' || a.status === 'rejected'); const isBBottom = (b.status === 'delivered' || b.status === 'approved' || b.status === 'rejected'); if (isABottom && !isBBottom) return 1; if (!isABottom && isBBottom) return -1; return new Date(b.date) - new Date(a.date); }); allAdminOrders = data; renderOrders(allAdminOrders); } catch(e) {} }
     function filterOrders() { const query = document.getElementById('search-orders-input').value.toLowerCase(); const filtered = allAdminOrders.filter(o => { const nameStr = (o.clientName || '').toLowerCase(); const idStr = (o.clientIdentity || '').toLowerCase(); const itemsStr = o.items ? o.items.map(i => i.arName || i.enName || i.name).join(' ').toLowerCase() : ''; return nameStr.includes(query) || idStr.includes(query) || itemsStr.includes(query); }); renderOrders(filtered); }
         function renderOrders(ordersArray) { 
         const tbody = document.getElementById('orders-tbody'); 
@@ -1216,10 +1116,11 @@
         
         ordersArray.forEach(o => { 
             let itemsListHtml = o.items ? o.items.map(i => `- ${i.arName || i.name} (x${i.qty || i.quantity || 1})`).join('<br>') : 'غير متوفر'; 
-            
             let courierBadge = o.courierIdentity 
                 ? `<div style="background:rgba(16,185,129,0.1); color:var(--green); padding:4px 8px; border-radius:6px; font-size:11px; font-weight:bold; direction:ltr; display:inline-block; border:1px solid rgba(16,185,129,0.2);">${o.courierIdentity}</div>` 
                 : `<span style="color:#94a3b8; font-size:11px; font-weight:bold;">في الانتظار ⏳</span>`;
+
+            let actionBtn = currentAdminRole === 'master' ? `<td><button class="btn btn-red" onclick="deleteOrder('${o._id}')">حذف</button></td>` : `<td class="master-only"></td>`;
 
             tbody.innerHTML += `<tr>
                 <td><strong>${o.clientName}</strong><br><small style="direction:ltr;">${o.clientIdentity}</small></td>
@@ -1236,7 +1137,7 @@
                         <option value="rejected" ${o.status==='rejected'?'selected':''}>ملغي / لم يوصل</option>
                     </select>
                 </td>
-                <td><button class="btn btn-red" onclick="deleteOrder('${o._id}')">حذف</button></td>
+                ${actionBtn}
             </tr>`; 
         }); 
     }
@@ -1275,7 +1176,6 @@
         }); 
     }
     
-    // 🌟 تعديل هنا لجلب قيمة نطاق التوصيل 🌟
     function startEditProduct(id) { 
         const p = allAdminProducts.find(item => item._id === id); 
         if(!p) return; 
@@ -1292,100 +1192,35 @@
         document.getElementById('p-ar-desc').value = p.arDesc || ''; 
         document.getElementById('p-en-desc').value = p.enDesc || ''; 
         document.getElementById('p-variations').value = (p.variations && p.variations.length > 0) ? p.variations.join(', ') : ''; 
-        
-        document.getElementById('p-delivery-scope').value = p.deliveryScope || 'جميع المناطق'; // <--- السطر المُضاف
-
+        document.getElementById('p-delivery-scope').value = p.deliveryScope || 'جميع المناطق'; 
         document.getElementById('p-gallery').value = (p.gallery && p.gallery.length > 0) ? p.gallery.join(', ') : ''; 
         
-        document.getElementById('p-img').value = ''; 
-        document.getElementById('p-img-url').value = ''; 
-        document.getElementById('p-emoji').value = ''; 
-        document.getElementById('img-hint').innerText = '(اتركه فارغاً للاحتفاظ بالصورة الحالية)'; 
+        document.getElementById('p-img').value = ''; document.getElementById('p-img-url').value = ''; document.getElementById('p-emoji').value = ''; document.getElementById('img-hint').innerText = '(اتركه فارغاً للاحتفاظ بالصورة الحالية)'; 
         
-        document.getElementById('btn-submit-product').innerText = 'حفظ التعديلات 💾'; 
-        document.getElementById('btn-cancel-edit').style.display = 'block'; 
-        document.getElementById('product-form-card').scrollIntoView({ behavior: 'smooth' }); 
+        document.getElementById('btn-submit-product').innerText = 'حفظ التعديلات 💾'; document.getElementById('btn-cancel-edit').style.display = 'block'; document.getElementById('product-form-card').scrollIntoView({ behavior: 'smooth' }); 
     }
     
-    // 🌟 تعديل هنا لتفريغ قيمة نطاق التوصيل 🌟
     function cancelEditProduct() { 
-        editingProductId = null; 
-        document.getElementById('product-form-title').innerText = 'إضافة منتج جديد 📦'; 
-        document.getElementById('p-cat').selectedIndex = 0; 
-        document.getElementById('p-ar-name').value = ''; 
-        document.getElementById('p-en-name').value = ''; 
-        document.getElementById('p-price').value = ''; 
-        document.getElementById('p-min-price').value = ''; 
-        document.getElementById('p-vendor-identity').value = ''; 
-        document.getElementById('p-stock').value = ''; 
-        document.getElementById('p-ar-desc').value = ''; 
-        document.getElementById('p-en-desc').value = ''; 
-        document.getElementById('p-variations').value = ''; 
-        
-        document.getElementById('p-delivery-scope').value = ''; // <--- السطر المُضاف
-
-        document.getElementById('p-gallery').value = ''; 
-        document.getElementById('p-img').value = ''; 
-        document.getElementById('p-img-url').value = ''; 
-        document.getElementById('p-emoji').value = ''; 
-        document.getElementById('img-hint').innerText = ''; 
-        
-        document.getElementById('btn-submit-product').innerText = 'حفظ وإضافة للمتجر'; 
-        document.getElementById('btn-cancel-edit').style.display = 'none'; 
+        editingProductId = null; document.getElementById('product-form-title').innerText = 'إضافة منتج جديد 📦'; document.getElementById('p-cat').selectedIndex = 0; 
+        document.getElementById('p-ar-name').value = ''; document.getElementById('p-en-name').value = ''; document.getElementById('p-price').value = ''; document.getElementById('p-min-price').value = ''; document.getElementById('p-vendor-identity').value = ''; document.getElementById('p-stock').value = ''; document.getElementById('p-ar-desc').value = ''; document.getElementById('p-en-desc').value = ''; document.getElementById('p-variations').value = ''; document.getElementById('p-delivery-scope').value = ''; document.getElementById('p-gallery').value = ''; document.getElementById('p-img').value = ''; document.getElementById('p-img-url').value = ''; document.getElementById('p-emoji').value = ''; document.getElementById('img-hint').innerText = ''; 
+        document.getElementById('btn-submit-product').innerText = 'حفظ وإضافة للمتجر'; document.getElementById('btn-cancel-edit').style.display = 'none'; 
     }
     
     function compressImage(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = event => { const img = new Image(); img.src = event.target.result; img.onload = () => { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let scale = Math.min(800 / img.width, 800 / img.height); if (scale > 1) scale = 1; canvas.width = img.width * scale; canvas.height = img.height * scale; ctx.drawImage(img, 0, 0, canvas.width, canvas.height); resolve(canvas.toDataURL('image/jpeg', 0.6)); }; img.onerror = () => reject('الصيغة غير مدعومة'); }; reader.onerror = () => reject('فشل القراءة'); }); }
     
-    // 🌟 تعديل هنا لحفظ قيمة نطاق التوصيل 🌟
     async function submitProduct() { 
-        const categoryId = document.getElementById('p-cat').value; 
-        const arName = document.getElementById('p-ar-name').value.trim(); 
-        const enName = document.getElementById('p-en-name').value.trim(); 
-        const price = Number(document.getElementById('p-price').value) || 0; 
+        const categoryId = document.getElementById('p-cat').value; const arName = document.getElementById('p-ar-name').value.trim(); const enName = document.getElementById('p-en-name').value.trim(); const price = Number(document.getElementById('p-price').value) || 0; const minPrice = Number(document.getElementById('p-min-price').value) || 0; const vendorRaw = document.getElementById('p-vendor-identity').value.trim(); const vendorIdentity = vendorRaw ? vendorRaw : 'admin'; const stock = Number(document.getElementById('p-stock').value) || 0; const arDesc = document.getElementById('p-ar-desc').value; const enDesc = document.getElementById('p-en-desc').value; const variationsRaw = document.getElementById('p-variations').value; const variations = variationsRaw ? variationsRaw.split(',').map(v => v.trim()).filter(v => v !== '') : []; const galleryRaw = document.getElementById('p-gallery').value; const gallery = galleryRaw ? galleryRaw.split(',').map(g => g.trim()).filter(g => g !== '') : []; 
+        const deliveryScope = document.getElementById('p-delivery-scope').value.trim() || 'جميع المناطق'; 
+        const file = document.getElementById('p-img').files[0]; const imgUrl = document.getElementById('p-img-url').value.trim(); const emoji = document.getElementById('p-emoji').value.trim(); 
         
-        const minPrice = Number(document.getElementById('p-min-price').value) || 0; 
-        const vendorRaw = document.getElementById('p-vendor-identity').value.trim(); 
-        const vendorIdentity = vendorRaw ? vendorRaw : 'admin'; 
-        
-        const stock = Number(document.getElementById('p-stock').value) || 0; 
-        const arDesc = document.getElementById('p-ar-desc').value; 
-        const enDesc = document.getElementById('p-en-desc').value; 
-        const variationsRaw = document.getElementById('p-variations').value; 
-        const variations = variationsRaw ? variationsRaw.split(',').map(v => v.trim()).filter(v => v !== '') : []; 
-        const galleryRaw = document.getElementById('p-gallery').value; 
-        const gallery = galleryRaw ? galleryRaw.split(',').map(g => g.trim()).filter(g => g !== '') : []; 
-        
-        const deliveryScope = document.getElementById('p-delivery-scope').value.trim() || 'جميع المناطق'; // <--- السطر المُضاف
-        
-        const file = document.getElementById('p-img').files[0]; 
-        const imgUrl = document.getElementById('p-img-url').value.trim(); 
-        const emoji = document.getElementById('p-emoji').value.trim(); 
-        
-        if(!arName || price <= 0) return showToast('أكمل البيانات الأساسية بشكل صحيح', true); 
-        if(!categoryId) return showToast('قم باختيار قسم', true); 
+        if(!arName || price <= 0) return showToast('أكمل البيانات الأساسية بشكل صحيح', true); if(!categoryId) return showToast('قم باختيار قسم', true); 
         
         showToast('جاري الحفظ... ⏳'); 
         try { 
-            let finalImg = null; 
-            if (file) finalImg = await compressImage(file); 
-            else if (imgUrl) finalImg = imgUrl; 
-            else if (emoji) finalImg = emoji; 
-            
-            // 🌟 إضافة نطاق التوصيل لبيانات المنتج المُرسلة 🌟
+            let finalImg = null; if (file) finalImg = await compressImage(file); else if (imgUrl) finalImg = imgUrl; else if (emoji) finalImg = emoji; 
             let bodyData = { categoryId, arName, enName, price, minPrice, vendorIdentity, stock, arDesc, enDesc, variations, gallery, deliveryScope }; 
-            
             if (finalImg) bodyData.img = finalImg; 
-            
-            if (editingProductId) { 
-                await authFetch(`${API_URL}/admin/products/${editingProductId}`, { method: 'PUT', body: JSON.stringify(bodyData) }); 
-                showToast('تم التعديل بنجاح! ✅'); 
-                cancelEditProduct(); 
-            } else { 
-                if(!finalImg) return showToast('الرجاء اختيار صورة رئيسية للمنتج الجديد', true); 
-                await authFetch(`${API_URL}/products`, { method: 'POST', body: JSON.stringify(bodyData) }); 
-                showToast('تم الإضافة بنجاح! ✅'); 
-                cancelEditProduct(); 
-            } 
+            if (editingProductId) { await authFetch(`${API_URL}/admin/products/${editingProductId}`, { method: 'PUT', body: JSON.stringify(bodyData) }); showToast('تم التعديل بنجاح! ✅'); cancelEditProduct(); } else { if(!finalImg) return showToast('الرجاء اختيار صورة رئيسية للمنتج الجديد', true); await authFetch(`${API_URL}/products`, { method: 'POST', body: JSON.stringify(bodyData) }); showToast('تم الإضافة بنجاح! ✅'); cancelEditProduct(); } 
             loadProducts(); 
         } catch(e) { showToast('خطأ في الحفظ: ' + e.message, true); } 
     }
