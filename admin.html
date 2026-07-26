@@ -25,7 +25,6 @@
         .nav-link:hover { background: #f8fafc; color: var(--accent); }
         .nav-link.active { background: rgba(255, 110, 64, 0.1); color: var(--accent); border-right: 4px solid var(--accent); }
 
-        /* 🌟 تنسيق شارة التنبيهات (البادج الأحمر) 🌟 */
         .badge { background-color: var(--red); color: white; padding: 2px 6px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-right: auto; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.4); animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
@@ -595,15 +594,16 @@
     function showAdminForgotPass() { document.getElementById('admin-login-box').style.display = 'none'; document.getElementById('admin-forgot-box').style.display = 'block'; }
     function hideAdminForgotPass() { document.getElementById('admin-forgot-box').style.display = 'none'; document.getElementById('admin-login-box').style.display = 'block'; }
 
+    // 🌟 التعديل الخاص بمسار الإعلانات هنا 🌟
     let isSettingsLoaded = false;
     function loadSettingsOnce() {
         if (!isSettingsLoaded) {
             if (currentAdminRole === 'master') {
                 loadOriginalSettings();
                 loadDecorations();
+                loadAnnouncements(); // 🛡️ تم نقل تحميل الإعلانات هنا حتى لا تعطي خطأ لموظف الدعم
             }
             loadCategoriesData();
-            loadAnnouncements();
             isSettingsLoaded = true;
         }
     }
@@ -649,7 +649,6 @@
         } catch(e) { showToast('خطأ اتصال بالسيرفر: ' + e.message, true); }
     }
 
-    // 🌟 التعديل الخاص بتغيير كلمة المرور لتشمل حساب الدعم 🌟
     async function changeAdminPassword() {
         const passType = document.getElementById('admin-pass-type').value;
         const oldPass = document.getElementById('admin-old-pass').value;
@@ -718,7 +717,6 @@
         } catch(e) { throw e; }
     }
 
-    // 🌟 جلب الإحصائيات وضبط الواجهة بناءً على الصلاحيات 🌟
     async function loadStats() { 
         try { 
             const res = await authFetch(`${API_URL}/admin/stats`); 
@@ -727,7 +725,6 @@
             currentAdminRole = data.role || 'master';
             const roleBadge = document.getElementById('role-display-badge');
             
-            // 🛡️ تفعيل الحماية في الواجهة وإخفاء العناصر الحساسة 🛡️
             if (currentAdminRole === 'support') {
                 roleBadge.innerText = 'خدمة العملاء (Support)';
                 document.querySelectorAll('.master-only').forEach(el => el.style.display = 'none');
@@ -735,7 +732,6 @@
             } else {
                 roleBadge.innerText = 'الإدارة العليا (Master)';
                 document.querySelectorAll('.master-only').forEach(el => {
-                    // إذا كان العنصر في جدول اجعله يظهر كـ table-cell وإلا flex أو block
                     if(el.tagName === 'TH' || el.tagName === 'TD') el.style.display = 'table-cell';
                     else el.style.display = ''; 
                 });
@@ -748,7 +744,6 @@
         } catch(e) {} 
     }
 
-    // باقي الدوال كما هي...
     async function loadPromoCodes() {
         const tbody = document.getElementById('promocodes-tbody');
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">جاري التحميل...</td></tr>';
@@ -1051,7 +1046,6 @@
         } catch (e) { showToast('خطأ: ' + e.message, true); }
     }
 
-    // 🌟 دوال الأمان والطوارئ (تحديث الهوية وتصفير PIN) 🌟
     async function changeUserIdentity() {
         if(!currentSearchId) return;
         const newId = document.getElementById('manage-identity-input').value.trim();
