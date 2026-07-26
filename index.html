@@ -389,7 +389,7 @@
         <button class="btn-lang" onclick="toggleLanguage()" id="lang-btn">EN</button>
     </div>
 
-    <!-- 🌟 شاشة تسجيل الدخول المحدثة 🌟 -->
+    <!-- 🌟 شاشة تسجيل الدخول 🌟 -->
     <div id="login-screen" class="screen account-screen active">
         <div class="boma-logo-header-wrapper">
             <div class="login-logo" id="dynamic-login-logo" style="display:flex; justify-content:center; align-items:center; overflow:hidden; background:transparent;">🦉</div>
@@ -520,7 +520,6 @@
         </div>
     </div>
 
-    <!-- 🌟 شاشة استعادة كلمة المرور المحدثة 🌟 -->
     <div id="forgot-screen" class="screen account-screen">
         <div class="boma-logo-header-wrapper">
             <div class="logo-image-container">
@@ -568,7 +567,6 @@
             </div>
         </div>
         <div class="app-content">
-
             <div class="search-box-wrapper">
                 <div class="search-right-icons">🎤 📷</div>
                 <label for="home-search-bar" class="sr-only" style="display:none;">بحث</label>
@@ -577,20 +575,16 @@
             </div>
             <div class="carousel-wrapper"><div class="carousel-container" id="main-carousel"></div></div>
             <div id="static-banner-container"></div>
-            
             <div class="grid-section-title"><span data-key="shop_by_cat">التسوق حسب الفئة</span></div>
             <div id="cat-grid-container" class="categories-scroll-wrapper"></div>
-            
             <div class="grid-section-title" style="margin-top: 25px;"><span data-key="exclusive_offers">عروض ومنتجات مميزة</span></div>
             <div class="shop-products-grid" id="home-products-container"></div>
         </div>
     </div>
     
-    <!-- 🌟 شاشة المحفظة 🌟 -->
     <div id="wallet-screen" class="screen">
         <div class="app-header">
             <div class="boma-fixed-icon" id="dynamic-home-logo" style="display:flex; justify-content:center; align-items:center; overflow:hidden; background:transparent; border-radius:50%;" tabindex="0" role="button" aria-label="شعار المحفظة">🦉</div>
-
             <div class="app-header-title" data-key="nav_wallet">المحفظة</div>
             <div style="display: flex; gap: 12px; align-items: center;">
                 <div class="bell-icon-wrapper" style="display:flex;" onclick="switchScreen('wishlist-screen')" tabindex="0" role="button" aria-label="المحفوظات">🔖</div>
@@ -667,6 +661,7 @@
         </div>
     </div>
 
+    <!-- 🌟 شاشة تفاصيل المنتج (تمت إضافة شارة نطاق التوصيل) 🌟 -->
     <div id="details-screen" class="screen">
         <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة التفاصيل"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="det_title">تفاصيل المنتج</div><button class="back-btn" onclick="switchScreen('shop-screen',1)">↩</button></div>
         <div class="app-content">
@@ -675,8 +670,13 @@
             </div>
             <div class="det-gallery-scroll" id="det-gallery"></div>
             <h3 id="det-name" style="color:var(--primary-blue); margin-bottom:8px; font-size: 20px; font-weight: 900;"></h3>
-            <div style="display: inline-block; padding: 4px 10px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 12px;">
-                🏪 البائع: <span id="det-vendor-name" style="color: var(--primary-blue); font-weight: 900;">بومة</span>
+            
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
+                <div style="padding: 4px 10px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; font-weight: bold; color: var(--text-muted);">
+                    🏪 البائع: <span id="det-vendor-name" style="color: var(--primary-blue); font-weight: 900;">بومة</span>
+                </div>
+                <!-- 🌟 بطاقة نطاق التوصيل 🌟 -->
+                <div id="det-delivery-scope-badge" style="font-size: 12px; font-weight: 900; padding: 4px 10px; border-radius: 8px; display: inline-block;">🌍 شحن متاح لجميع المناطق</div>
             </div>
 
             <div id="det-stock-badge" style="font-size: 14px; font-weight: 900; margin-bottom: 15px; display: inline-block; padding: 6px 14px; border-radius: 10px;"></div>
@@ -811,7 +811,7 @@
         </div>
     </div>
 
-    <!-- 🌟 شاشة لوحة التاجر المدمجة 🌟 -->
+    <!-- 🌟 شاشة لوحة التاجر المدمجة (مع التعديل لإضافة نطاق التوصيل) 🌟 -->
     <div id="vendor-screen" class="screen">
         <div class="app-header">
             <div class="boma-fixed-icon" style="border-radius:50%; background:var(--card-bg); color:var(--primary-blue); font-size:20px;" tabindex="0" role="button" aria-label="أيقونة التاجر">🏪</div>
@@ -862,6 +862,10 @@
                 <label for="v-variations" class="sr-only" style="display: none;">خيارات</label>
                 <input type="text" id="v-variations" placeholder="خيارات (ألوان/مقاسات) افصل بينها بفاصلة ،" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);">
                 
+                <!-- 🌟 حقل نطاق التوصيل 🌟 -->
+                <label for="v-delivery-scope" class="sr-only" style="display: none;">نطاق التوصيل المتاح</label>
+                <input type="text" id="v-delivery-scope" placeholder="نطاق التوصيل (مثال: جميع المناطق، الخرطوم فقط)" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);">
+                
                 <label for="v-img-url" class="sr-only" style="display: none;">رابط الصورة الأساسية</label>
                 <input type="text" id="v-img-url" placeholder="رابط الصورة الأساسية (أو إيموجي 🎧)" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg); direction:ltr; text-align:right;">
                 <label for="v-gallery" class="sr-only" style="display: none;">روابط صور إضافية</label>
@@ -876,6 +880,7 @@
         </div>
     </div>
 
+    <!-- باقي الشاشات -->
     <div id="transfer-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة التحويل"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="transfer_title">تحويل أموال BOMA</div><button class="back-btn" onclick="switchScreen('home-screen',0)">↩</button></div><div class="app-content"><div class="grid-section-title" data-key="transfer_info">بيانات التحويل</div><div class="form-group"><label for="transfer-receiver" data-key="receiver_acc">رقم حساب المستلم (10 أرقام)</label><input type="number" id="transfer-receiver" oninput="checkReceiverName()"><div id="receiver-name-display" style="color: var(--accent-green); font-size: 15px; font-weight: 900; margin-top: 10px; display: none;"></div></div><div class="form-group"><label for="transfer-amount" data-key="amount_sdg">المبلغ المراد تحويله (SDG)</label><input type="number" id="transfer-amount" placeholder="0.00"></div><div id="transfer-error" class="error-message"></div><button class="btn-main" onclick="handleTransfer()" data-key="btn_send_money" style="border:none;">إرسال الأموال 💸</button></div></div>
     <div id="deposit-screen" class="screen">
         <div class="app-header">
@@ -922,7 +927,7 @@
     </div>
 </div>
 <script>
-    const STORE_KEY = 'boma_app_client_v52';
+    const STORE_KEY = 'boma_app_client_v53';
     const API_URL = 'https://api.boomapay.com/api';
 
     let customDialogConfirmCallback = null;
@@ -1110,14 +1115,12 @@
     let slideInterval; 
     let selectedPayment = 'wallet';
 
-    // 🌟 ميزة التعبئة التلقائية عند فتح التطبيق 🌟
     window.addEventListener('DOMContentLoaded', () => {
         const savedIdentity = localStorage.getItem('boma_saved_identity');
         if(savedIdentity) {
             const emailInput = document.getElementById('login-email');
             if(emailInput) {
                 emailInput.value = savedIdentity;
-                // التركيز التلقائي على حقل كلمة المرور إذا كان الحساب محفوظاً
                 setTimeout(() => {
                     const passInput = document.getElementById('login-pass');
                     if(passInput) passInput.focus();
@@ -1442,7 +1445,6 @@
         } catch (error) { err.innerText = (currentLang === 'ar' ? 'خطأ: ' : 'Error: ') + error.message; err.style.display = 'block'; }
     }
 
-    // 🌟 ميزة الدخول الذكي وحفظ الحساب 🌟
     async function handleLogin() {
         const pass = document.getElementById('login-pass').value; 
         const identity = getIdentity('login', true); 
@@ -1465,7 +1467,6 @@
                 if (data.fallbackOtp) { showCustomDialog('🔐', currentLang === 'ar' ? 'جهاز جديد' : 'New Device', `OTP:<br><strong style="font-size:32px; color:var(--accent-orange); letter-spacing:8px; display:block; margin-top:15px;">${data.fallbackOtp}</strong>`, currentLang === 'ar' ? 'حسناً' : 'OK', null, null, false); } else { showToast(currentLang === 'ar' ? 'تم إرسال الرمز للبريد!' : 'OTP sent to email!'); } return;
             }
             
-            // حفظ الحساب المدخل لتسهيل الدخول في المرات القادمة
             const inputVal = document.getElementById('login-email').value.trim();
             localStorage.setItem('boma_saved_identity', inputVal);
 
@@ -1487,7 +1488,6 @@
             cart = []; 
             wishlist = []; 
             localStorage.removeItem('boma_token'); 
-            // لا نحذف boma_saved_identity لكي يجده المستخدم جاهزاً في الشاشة
             saveState(); 
             switchScreen('login-screen', undefined); 
         }); 
@@ -1714,7 +1714,6 @@
         resetSliderPosition();
     }
 
-
     function renderCountriesDropdown() { ['login', 'signup', 'forgot'].forEach(screen => { const select = document.getElementById(`${screen}-country-select`); if (!select) return; const curr = countryRules[screen]?.index || 0; select.innerHTML = countriesDatabase.map((c, i) => `<option value="${i}">${currentLang === 'ar' ? c.ar : c.en}</option>`).join(''); select.selectedIndex = curr; updateCountryRules(select, screen); }); }
     function updateCountryRules(selectNode, screen) { if (!selectNode || selectNode.options.length === 0) return; const idx = parseInt(selectNode.value || '0'); const c = countriesDatabase[idx]; countryRules[screen] = { code: c.key, len: c.len, index: idx }; const input = document.getElementById(`${screen}-phone`); if (input) { input.maxLength = c.len; input.placeholder = currentLang === 'ar' ? `مطلوب ${c.len} أرقام...` : `Exactly ${c.len} digits...`; } }
 
@@ -1744,11 +1743,9 @@
 
     function switchAuthMethod(screen, method) { selectedAuthMethod[screen] = method; ['email', 'phone'].forEach(m => { document.getElementById(`${screen}-tab-${m}`).classList.toggle('active', m === method); document.getElementById(`${screen}-group-${m}`).style.display = m === method ? 'block' : 'none'; }); if (method === 'phone') updateCountryRules(document.getElementById(`${screen}-country-select`), screen); }
     
-    // 🌟 ميزة التوافق للبحث بالبريد أو رقم الحساب البنكي 🌟
     function getIdentity(screen, showError = false) { 
         if (selectedAuthMethod[screen] === 'email') { 
             const val = document.getElementById(`${screen}-email`).value.trim().toLowerCase(); 
-            // إذا كانت شاشة دخول أو استعادة، اقبل الـ 10 أرقام (حساب بنكي) أو الإيميل
             if (screen === 'login' || screen === 'forgot') {
                 return (isEmail(val) || /^\d{10}$/.test(val)) ? val : '';
             }
@@ -1798,10 +1795,19 @@
         document.getElementById('det-img').innerHTML = `${safeImg} <div class="wishlist-icon ${isFav ? 'active' : ''}" onclick="toggleWishlist('${pId}', this)">🔖</div>`;
     };
 
+    // 🌟 تم تحديث الدالة لاستخراج ועرض نطاق التوصيل 🌟
     function openProductByID(index) {
         if (index < 0 || !productsData[index]) return;
         const p = productsData[index];
-        currentSelectedProduct = { id: p._id, arName: p.arName, enName: p.enName, price: p.price, img: p.img, stock: p.stock || 0 };
+        currentSelectedProduct = { 
+            id: p._id, 
+            arName: p.arName, 
+            enName: p.enName, 
+            price: p.price, 
+            img: p.img, 
+            stock: p.stock || 0,
+            deliveryScope: p.deliveryScope || 'جميع المناطق' // إضافة نطاق التوصيل للعنصر المحدد
+        };
         
         document.getElementById('det-name').innerText = currentLang === 'ar' ? p.arName : p.enName;
         document.getElementById('det-desc').innerText = currentLang === 'ar' ? p.arDesc : p.enDesc;
@@ -1809,8 +1815,21 @@
         let vendorDisplayName = (p.vendorIdentity && p.vendorIdentity !== 'admin') ? (p.vendorName || 'تاجر شريك') : (currentLang === 'ar' ? 'مستودعات بومة' : 'BOMA Store');
         document.getElementById('det-vendor-name').innerText = vendorDisplayName;
 
-        document.getElementById('det-desc').innerText = currentLang === 'ar' ? p.arDesc : p.enDesc;
-        
+        // 🌟 إظهار شارة نطاق التوصيل بذكاء 🌟
+        const scopeBadge = document.getElementById('det-delivery-scope-badge');
+        const scopeText = currentSelectedProduct.deliveryScope.trim();
+        if (scopeText && scopeText !== 'جميع المناطق' && scopeText !== 'All Areas') {
+            scopeBadge.innerText = currentLang === 'ar' ? `📍 التوصيل متاح في: ${scopeText}` : `📍 Delivery only in: ${scopeText}`;
+            scopeBadge.style.background = 'rgba(255, 110, 64, 0.1)';
+            scopeBadge.style.color = 'var(--accent-orange)';
+            scopeBadge.style.border = '1px solid rgba(255, 110, 64, 0.2)';
+        } else {
+            scopeBadge.innerText = currentLang === 'ar' ? '🌍 شحن متاح لجميع المناطق' : '🌍 Shipping to all areas';
+            scopeBadge.style.background = 'var(--input-bg)';
+            scopeBadge.style.color = 'var(--text-muted)';
+            scopeBadge.style.border = '1px solid var(--border)';
+        }
+
         const safeImg = p.img || '📦';
         const imgDisplay = (safeImg.includes('http') || safeImg.includes('data:') || safeImg.includes('Files/')) ? `<img src="${safeImg}" style="width:100%; height:100%; object-fit:contain; border-radius:20px;">` : safeImg;
         
@@ -1885,9 +1904,6 @@
         switchScreen('details-screen', 1);
     }
 
-    // ==========================================
-    // 🌟 منطق المفاوض الذكي 🌟
-    // ==========================================
     let currentNegotiationProductId = null;
     let isNegotiationSuccess = false;
     let agreedPrice = 0;
@@ -1968,6 +1984,7 @@
         }
     }
 
+    // 🌟 تم إضافة deliveryScope للصنف المضاف عبر التفاوض 🌟
     function addNegotiatedItem() {
         let baseNameAr = currentSelectedProduct.arName;
         let baseNameEn = currentSelectedProduct.enName;
@@ -1983,7 +2000,8 @@
                 arName: baseNameAr + ' (سعر خاص)', 
                 enName: baseNameEn + ' (Special Price)', 
                 price: agreedPrice, 
-                qty: currentDetQty 
+                qty: currentDetQty,
+                deliveryScope: currentSelectedProduct.deliveryScope // إضافة النطاق هنا
             });
         }
         saveState();
@@ -1992,6 +2010,7 @@
         switchScreen('shop-screen', 1);
     }
 
+    // 🌟 تم إضافة deliveryScope للصنف المضاف عبر العربة المباشرة 🌟
     function triggerAddToCart() { 
         let varText = ''; let extraPrice = 0; const varContainer = document.getElementById('det-variations-container');
         if (varContainer.style.display === 'block') { varText = document.getElementById('det-variation-select').value; let match = varText.match(/\(\+(\d+)\)/); if (match) extraPrice = parseInt(match[1]); }
@@ -1999,7 +2018,19 @@
         if (varText) { finalItemName += ` (${varText})`; baseNameAr += ` (${varText})`; baseNameEn += ` (${varText})`; }
         let finalUnitPrice = currentSelectedProduct.price + extraPrice; const existing = cart.find(i => i.id === currentSelectedProduct.id && i.name === finalItemName); 
         let newQty = existing ? existing.qty + currentDetQty : currentDetQty; if (newQty > currentSelectedProduct.stock) { return showToast(currentLang === 'ar' ? `الكمية المتاحة لا تكفي!` : `Not enough stock!`, true); }
-        if (existing) { existing.qty += currentDetQty; } else { cart.push({ id: currentSelectedProduct.id, name: finalItemName, arName: baseNameAr, enName: baseNameEn, price: finalUnitPrice, qty: currentDetQty }); }
+        if (existing) { 
+            existing.qty += currentDetQty; 
+        } else { 
+            cart.push({ 
+                id: currentSelectedProduct.id, 
+                name: finalItemName, 
+                arName: baseNameAr, 
+                enName: baseNameEn, 
+                price: finalUnitPrice, 
+                qty: currentDetQty,
+                deliveryScope: currentSelectedProduct.deliveryScope // إضافة النطاق هنا
+            }); 
+        }
         saveState(); showToast(languages[currentLang].alert_add); switchScreen('shop-screen', 1); 
     }
 
@@ -2143,16 +2174,38 @@
             setTimeout(fetchUserNotifications, 500);
         } catch(e) {}
     }
+
+    // 🌟 ميزة الفحص الذكي لنطاق التوصيل أثناء الدفع 🌟
     async function triggerCheckout() {
         if(!registeredUser || !registeredUser.active) return showToast(currentLang === 'ar' ? 'يجب تسجيل الدخول لإتمام الشراء!' : 'Must login to checkout!', true);
         if(cart.length === 0) return showToast(currentLang === 'ar' ? 'العربة فارغة!' : 'Cart is empty!', true);
         
-        const deliveryCost = Number(document.getElementById('checkout-area').value) || 0; 
-        const areaText = document.getElementById('checkout-area').options[document.getElementById('checkout-area').selectedIndex].text;
+        const areaSelect = document.getElementById('checkout-area');
+        const areaValue = areaSelect.value;
+        const deliveryCost = Number(areaValue) || 0; 
+        const areaText = areaSelect.options[areaSelect.selectedIndex].text;
+        
         const address = document.getElementById('checkout-address').value;
         const phone = document.getElementById('checkout-phone').value;
         const name = document.getElementById('checkout-name').value;
         
+        // --- 🛡️ التحقق من نطاق التوصيل 🛡️ ---
+        if (areaValue !== "0") { // إذا لم يختر (استلام من المتجر)
+            for (let item of cart) {
+                if (item.deliveryScope && item.deliveryScope !== 'جميع المناطق' && item.deliveryScope !== 'All Areas') {
+                    const scopeCheck = item.deliveryScope.toLowerCase();
+                    // إذا كان اسم المنطقة المختارة لا يحتوي على اسم نطاق التوصيل المقيد
+                    if (!areaText.toLowerCase().includes(scopeCheck) && !scopeCheck.includes(areaText.toLowerCase())) {
+                        const warnMsg = currentLang === 'ar' 
+                            ? `عذراً، المنتج (${item.arName}) متاح للتوصيل في [${item.deliveryScope}] فقط. يرجى حذفه أو اختيار منطقة صحيحة.` 
+                            : `Sorry, (${item.enName}) is only available for delivery in [${item.deliveryScope}].`;
+                        return showToast(warnMsg, true);
+                    }
+                }
+            }
+        }
+        // -------------------------------------
+
         const waContainer = document.getElementById('whatsapp-field-container');
         const waInput = document.getElementById('checkout-whatsapp');
         const whatsappNumber = (waContainer.style.display !== 'none' && waInput && waInput.value.trim() !== '') ? waInput.value.trim() : phone;
@@ -2556,6 +2609,7 @@
         }
     }
 
+    // 🌟 إضافة نطاق التوصيل في رفع المنتج 🌟
     async function submitVendorProduct() {
         const categoryId = document.getElementById('v-cat').value;
         const brandName = document.getElementById('v-brand-name').value.trim();
@@ -2569,6 +2623,7 @@
         const variations = document.getElementById('v-variations').value.trim();
         const imgUrl = document.getElementById('v-img-url').value.trim();
         const gallery = document.getElementById('v-gallery').value.trim();
+        const deliveryScope = document.getElementById('v-delivery-scope').value.trim() || 'جميع المناطق'; // إضافة نطاق التوصيل
 
         if (!categoryId || !brandName || !arName || !price || !imgUrl) {
             return showToast('الرجاء إدخال العلامة التجارية وجميع الحقول الأساسية بشكل صحيح!', true);
@@ -2586,7 +2641,7 @@
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ 
                     categoryId, brandName, arName, enName: enName || arName, price, minPrice, stock, 
-                    arDesc, enDesc: enDesc || arDesc, variations, img: imgUrl, gallery 
+                    arDesc, enDesc: enDesc || arDesc, variations, img: imgUrl, gallery, deliveryScope // إرسال النطاق للسيرفر
                 })
             });
             const data = await res.json();
@@ -2603,6 +2658,7 @@
                 document.getElementById('v-variations').value = '';
                 document.getElementById('v-img-url').value = '';
                 document.getElementById('v-gallery').value = '';
+                document.getElementById('v-delivery-scope').value = ''; // تصفير حقل النطاق
                 
                 loadVendorStats();
                 loadVendorProducts();
