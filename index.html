@@ -1248,6 +1248,19 @@
             .glass-card { background: ${ui.authBgColor || 'var(--card-bg)'} !important; border-radius: ${ui.authRadius !== undefined ? ui.authRadius : '40'}px ${ui.authRadius !== undefined ? ui.authRadius : '40'}px 0 0 !important; }
             .btn-main { background: linear-gradient(135deg, ${ui.btnMainBg || 'var(--primary-blue-shine)'}, var(--primary-blue)) !important; color: ${ui.btnMainText || '#ffffff'} !important; }
         `;
+
+        // 🌟 التعديل الخاص بألوان البار العلوي (App Header) 🌟
+        let headerBg = (ui.appHeaderBgType === 'solid') 
+            ? (ui.appHeaderColor1 || 'var(--accent-orange)') 
+            : `linear-gradient(135deg, ${ui.appHeaderColor1 || 'var(--accent-orange)'}, ${ui.appHeaderColor2 || '#f25522'})`;
+        
+        let headerTextColor = ui.appHeaderTextColor || '#ffffff';
+
+        style.innerHTML += `
+            .app-header { background: ${headerBg} !important; border-bottom-color: ${headerTextColor}20 !important; }
+            .app-header-title, .bell-icon-wrapper { color: ${headerTextColor} !important; }
+            .back-btn { color: ${headerTextColor} !important; border-color: ${headerTextColor}80 !important; background: ${headerTextColor}15 !important; }
+        `;
     }
 
     function applyDecorations() {
@@ -1795,7 +1808,6 @@
         document.getElementById('det-img').innerHTML = `${safeImg} <div class="wishlist-icon ${isFav ? 'active' : ''}" onclick="toggleWishlist('${pId}', this)">🔖</div>`;
     };
 
-    // 🌟 تم تحديث الدالة لاستخراج ועرض نطاق التوصيل 🌟
     function openProductByID(index) {
         if (index < 0 || !productsData[index]) return;
         const p = productsData[index];
@@ -1806,7 +1818,7 @@
             price: p.price, 
             img: p.img, 
             stock: p.stock || 0,
-            deliveryScope: p.deliveryScope || 'جميع المناطق' // إضافة نطاق التوصيل للعنصر المحدد
+            deliveryScope: p.deliveryScope || 'جميع المناطق'
         };
         
         document.getElementById('det-name').innerText = currentLang === 'ar' ? p.arName : p.enName;
@@ -1815,7 +1827,6 @@
         let vendorDisplayName = (p.vendorIdentity && p.vendorIdentity !== 'admin') ? (p.vendorName || 'تاجر شريك') : (currentLang === 'ar' ? 'مستودعات بومة' : 'BOMA Store');
         document.getElementById('det-vendor-name').innerText = vendorDisplayName;
 
-        // 🌟 إظهار شارة نطاق التوصيل بذكاء 🌟
         const scopeBadge = document.getElementById('det-delivery-scope-badge');
         const scopeText = currentSelectedProduct.deliveryScope.trim();
         if (scopeText && scopeText !== 'جميع المناطق' && scopeText !== 'All Areas') {
@@ -1984,7 +1995,6 @@
         }
     }
 
-    // 🌟 تم إضافة deliveryScope للصنف المضاف عبر التفاوض 🌟
     function addNegotiatedItem() {
         let baseNameAr = currentSelectedProduct.arName;
         let baseNameEn = currentSelectedProduct.enName;
@@ -2001,7 +2011,7 @@
                 enName: baseNameEn + ' (Special Price)', 
                 price: agreedPrice, 
                 qty: currentDetQty,
-                deliveryScope: currentSelectedProduct.deliveryScope // إضافة النطاق هنا
+                deliveryScope: currentSelectedProduct.deliveryScope 
             });
         }
         saveState();
@@ -2010,7 +2020,6 @@
         switchScreen('shop-screen', 1);
     }
 
-    // 🌟 تم إضافة deliveryScope للصنف المضاف عبر العربة المباشرة 🌟
     function triggerAddToCart() { 
         let varText = ''; let extraPrice = 0; const varContainer = document.getElementById('det-variations-container');
         if (varContainer.style.display === 'block') { varText = document.getElementById('det-variation-select').value; let match = varText.match(/\(\+(\d+)\)/); if (match) extraPrice = parseInt(match[1]); }
@@ -2028,7 +2037,7 @@
                 enName: baseNameEn, 
                 price: finalUnitPrice, 
                 qty: currentDetQty,
-                deliveryScope: currentSelectedProduct.deliveryScope // إضافة النطاق هنا
+                deliveryScope: currentSelectedProduct.deliveryScope 
             }); 
         }
         saveState(); showToast(languages[currentLang].alert_add); switchScreen('shop-screen', 1); 
@@ -2175,7 +2184,6 @@
         } catch(e) {}
     }
 
-    // 🌟 ميزة الفحص الذكي لنطاق التوصيل أثناء الدفع 🌟
     async function triggerCheckout() {
         if(!registeredUser || !registeredUser.active) return showToast(currentLang === 'ar' ? 'يجب تسجيل الدخول لإتمام الشراء!' : 'Must login to checkout!', true);
         if(cart.length === 0) return showToast(currentLang === 'ar' ? 'العربة فارغة!' : 'Cart is empty!', true);
@@ -2189,12 +2197,10 @@
         const phone = document.getElementById('checkout-phone').value;
         const name = document.getElementById('checkout-name').value;
         
-        // --- 🛡️ التحقق من نطاق التوصيل 🛡️ ---
-        if (areaValue !== "0") { // إذا لم يختر (استلام من المتجر)
+        if (areaValue !== "0") {
             for (let item of cart) {
                 if (item.deliveryScope && item.deliveryScope !== 'جميع المناطق' && item.deliveryScope !== 'All Areas') {
                     const scopeCheck = item.deliveryScope.toLowerCase();
-                    // إذا كان اسم المنطقة المختارة لا يحتوي على اسم نطاق التوصيل المقيد
                     if (!areaText.toLowerCase().includes(scopeCheck) && !scopeCheck.includes(areaText.toLowerCase())) {
                         const warnMsg = currentLang === 'ar' 
                             ? `عذراً، المنتج (${item.arName}) متاح للتوصيل في [${item.deliveryScope}] فقط. يرجى حذفه أو اختيار منطقة صحيحة.` 
@@ -2204,7 +2210,6 @@
                 }
             }
         }
-        // -------------------------------------
 
         const waContainer = document.getElementById('whatsapp-field-container');
         const waInput = document.getElementById('checkout-whatsapp');
@@ -2609,7 +2614,6 @@
         }
     }
 
-    // 🌟 إضافة نطاق التوصيل في رفع المنتج 🌟
     async function submitVendorProduct() {
         const categoryId = document.getElementById('v-cat').value;
         const brandName = document.getElementById('v-brand-name').value.trim();
@@ -2623,7 +2627,7 @@
         const variations = document.getElementById('v-variations').value.trim();
         const imgUrl = document.getElementById('v-img-url').value.trim();
         const gallery = document.getElementById('v-gallery').value.trim();
-        const deliveryScope = document.getElementById('v-delivery-scope').value.trim() || 'جميع المناطق'; // إضافة نطاق التوصيل
+        const deliveryScope = document.getElementById('v-delivery-scope').value.trim() || 'جميع المناطق'; 
 
         if (!categoryId || !brandName || !arName || !price || !imgUrl) {
             return showToast('الرجاء إدخال العلامة التجارية وجميع الحقول الأساسية بشكل صحيح!', true);
@@ -2641,7 +2645,7 @@
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ 
                     categoryId, brandName, arName, enName: enName || arName, price, minPrice, stock, 
-                    arDesc, enDesc: enDesc || arDesc, variations, img: imgUrl, gallery, deliveryScope // إرسال النطاق للسيرفر
+                    arDesc, enDesc: enDesc || arDesc, variations, img: imgUrl, gallery, deliveryScope 
                 })
             });
             const data = await res.json();
@@ -2658,7 +2662,7 @@
                 document.getElementById('v-variations').value = '';
                 document.getElementById('v-img-url').value = '';
                 document.getElementById('v-gallery').value = '';
-                document.getElementById('v-delivery-scope').value = ''; // تصفير حقل النطاق
+                document.getElementById('v-delivery-scope').value = ''; 
                 
                 loadVendorStats();
                 loadVendorProducts();
