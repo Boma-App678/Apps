@@ -71,8 +71,7 @@
         .detail-val { font-size: 15px; font-weight: 900; color: var(--primary); }
 
         .search-flex { display: flex; gap: 10px; max-width: 800px; margin-bottom: 20px; flex-wrap: wrap; }
-        .search-flex input { flex: 1; min-width: 200px; margin-bottom: 0; }
-        .search-flex select { flex: 1; min-width: 150px; margin-bottom: 0; }
+        .search-flex input, .search-flex select { flex: 1; min-width: 150px; margin-bottom: 0; }
 
         .media-options-box { background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #cbd5e1; }
         .media-options-box label.main-lbl { font-size: 13px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 10px; }
@@ -129,7 +128,6 @@
 
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <!-- 🌟 الشريط الجانبي مع إضافة كلاس master-only للقوائم الحساسة 🌟 -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>لوحة الإدارة</h2>
@@ -145,6 +143,8 @@
         <div class="nav-link master-only" onclick="switchTab('settings', this)">⚙️ إعدادات وتشغيل الخدمات</div>
         <div class="nav-link" onclick="switchTab('search', this)">🔍 بحث وإدارة عميل</div>
         <div class="nav-link master-only" onclick="switchTab('finance', this)">💰 الشحن والسحب <span id="badge-finance" class="badge" style="display:none;">0</span></div>
+        <div class="nav-link master-only" onclick="switchTab('banks', this)">🏦 البنوك وشركاء الدفع</div>
+        <div class="nav-link master-only" onclick="switchTab('cashier-logs', this)">🗄️ جرد الصناديق</div>
         <div class="nav-link" onclick="switchTab('orders', this)">🛒 طلبات المتجر <span id="badge-orders" class="badge" style="display:none;">0</span></div>
         <div class="nav-link master-only" onclick="switchTab('delivery', this)">🚚 مناطق التوصيل</div>
         <div class="nav-link master-only" onclick="switchTab('categories', this)">📁 إدارة أقسام المتجر</div>
@@ -170,7 +170,7 @@
             <button class="btn btn-blue" onclick="loadStats()">تحديث الإحصائيات 🔄</button>
         </div>
 
-        <!-- 🎨 تخصيص المظهر (UI) -->
+        <!-- 🎨 تخصيص المظهر -->
         <div id="section-appearance" class="section">
             <h2 style="margin-bottom: 20px;">تخصيص مظهر التطبيق (UI Customization)</h2>
             <div class="card">
@@ -182,44 +182,16 @@
                     <div style="flex: 1;"><label>لون تدرج النص (السفلي)</label><div class="color-input-wrapper"><input type="color" id="ui-login-brand-color-bottom-picker"><input type="text" id="ui-login-brand-color-bottom"></div></div>
                 </div>
             </div>
-            
             <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">2. الأيقونة العلوية</h3><div class="search-flex"><div style="flex: 1;"><label>نوع الأيقونة</label><select id="ui-home-logo-type"><option value="emoji">إيموجي</option><option value="image">صورة</option></select></div><div style="flex: 2;"><label>القيمة</label><input type="text" id="ui-home-logo-val"></div></div></div>
-            
-            <!-- 🌟 تخصيص البار العلوي (جديد) 🌟 -->
             <div class="card">
                 <h3 style="margin-bottom: 15px; color: var(--primary);">3. تخصيص البار العلوي للتطبيق (App Header)</h3>
-                <div class="form-group">
-                    <label>نوع الخلفية</label>
-                    <select id="ui-header-bg-type" onchange="toggleHeaderCardInputs()">
-                        <option value="gradient">تدرج لوني (Gradient)</option>
-                        <option value="solid">لون سادة (Solid)</option>
-                    </select>
-                </div>
+                <div class="form-group"><label>نوع الخلفية</label><select id="ui-header-bg-type" onchange="toggleHeaderCardInputs()"><option value="gradient">تدرج لوني (Gradient)</option><option value="solid">لون سادة (Solid)</option></select></div>
                 <div class="search-flex" id="ui-header-colors">
-                    <div style="flex: 1;">
-                        <label style="font-size: 11px;">اللون الأول</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-header-color1-picker" value="#ff6e40" oninput="document.getElementById('ui-header-color1').value = this.value">
-                            <input type="text" id="ui-header-color1" value="#ff6e40" oninput="document.getElementById('ui-header-color1-picker').value = this.value">
-                        </div>
-                    </div>
-                    <div style="flex: 1;" id="header-color-2-wrapper">
-                        <label style="font-size: 11px;">اللون الثاني (للتدرج)</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="ui-header-color2-picker" value="#f25522" oninput="document.getElementById('ui-header-color2').value = this.value">
-                            <input type="text" id="ui-header-color2" value="#f25522" oninput="document.getElementById('ui-header-color2-picker').value = this.value">
-                        </div>
-                    </div>
+                    <div style="flex: 1;"><label style="font-size: 11px;">اللون الأول</label><div class="color-input-wrapper"><input type="color" id="ui-header-color1-picker" value="#ff6e40" oninput="document.getElementById('ui-header-color1').value = this.value"><input type="text" id="ui-header-color1" value="#ff6e40" oninput="document.getElementById('ui-header-color1-picker').value = this.value"></div></div>
+                    <div style="flex: 1;" id="header-color-2-wrapper"><label style="font-size: 11px;">اللون الثاني (للتدرج)</label><div class="color-input-wrapper"><input type="color" id="ui-header-color2-picker" value="#f25522" oninput="document.getElementById('ui-header-color2').value = this.value"><input type="text" id="ui-header-color2" value="#f25522" oninput="document.getElementById('ui-header-color2-picker').value = this.value"></div></div>
                 </div>
-                <div class="form-group">
-                    <label>لون النصوص والأيقونات في البار</label>
-                    <div class="color-input-wrapper" style="max-width: 300px;">
-                        <input type="color" id="ui-header-text-color-picker" value="#ffffff" oninput="document.getElementById('ui-header-text-color').value = this.value">
-                        <input type="text" id="ui-header-text-color" value="#ffffff" oninput="document.getElementById('ui-header-text-color-picker').value = this.value">
-                    </div>
-                </div>
+                <div class="form-group"><label>لون النصوص والأيقونات في البار</label><div class="color-input-wrapper" style="max-width: 300px;"><input type="color" id="ui-header-text-color-picker" value="#ffffff" oninput="document.getElementById('ui-header-text-color').value = this.value"><input type="text" id="ui-header-text-color" value="#ffffff" oninput="document.getElementById('ui-header-text-color-picker').value = this.value"></div></div>
             </div>
-
             <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">4. تخصيص المحفظة</h3><div class="form-group"><label>نوع الخلفية</label><select id="ui-card-bg-type" onchange="toggleCardInputs()"><option value="gradient">تدرج لوني</option><option value="solid">سادة</option></select></div><div class="search-flex" id="ui-card-colors"><div style="flex: 1;"><label>اللون الأول</label><div class="color-input-wrapper"><input type="color" id="ui-card-color1-picker"><input type="text" id="ui-card-color1"></div></div><div style="flex: 1;" id="card-color-2-wrapper"><label>اللون الثاني</label><div class="color-input-wrapper"><input type="color" id="ui-card-color2-picker"><input type="text" id="ui-card-color2"></div></div></div><div class="form-group"><label>لون النصوص</label><div class="color-input-wrapper" style="max-width: 300px;"><input type="color" id="ui-card-text-color-picker"><input type="text" id="ui-card-text-color"></div></div><label class="settings-label"><input type="checkbox" id="ui-card-decorations"> إظهار الزخارف</label></div>
             <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">5. الأزرار والأقسام</h3><div class="search-flex"><div style="flex: 1;"><label>لون الخلفية</label><div class="color-input-wrapper"><input type="color" id="ui-cat-bg-color-picker"><input type="text" id="ui-cat-bg-color"></div></div><div style="flex: 1;"><label>لون النص</label><div class="color-input-wrapper"><input type="color" id="ui-cat-text-color-picker"><input type="text" id="ui-cat-text-color"></div></div></div><div class="form-group"><label>حجم الزر</label><select id="ui-cat-size"><option value="70px">صغير</option><option value="85px">متوسط</option><option value="100px">كبير</option></select></div><div class="form-group"><label>الانحناء</label><input type="range" id="ui-cat-radius" min="0" max="40" oninput="document.getElementById('radius-val').innerText=this.value+'px'"><span id="radius-val">12px</span></div></div>
             <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">6. المساحات والأزرار</h3><div class="search-flex"><div style="flex: 1;"><label>لون مساحة الدخول</label><div class="color-input-wrapper"><input type="color" id="ui-auth-bg-color-picker"><input type="text" id="ui-auth-bg-color"></div></div><div style="flex: 1;"><label>الانحناء</label><input type="range" id="ui-auth-radius" min="0" max="60" oninput="document.getElementById('auth-radius-val').innerText=this.value+'px'"><span id="auth-radius-val">32px</span></div></div><div class="search-flex"><div style="flex: 1;"><label>خلفية الزر</label><div class="color-input-wrapper"><input type="color" id="ui-btn-main-bg-picker"><input type="text" id="ui-btn-main-bg"></div></div><div style="flex: 1;"><label>نص الزر</label><div class="color-input-wrapper"><input type="color" id="ui-btn-main-text-picker"><input type="text" id="ui-btn-main-text"></div></div></div></div>
@@ -227,164 +199,129 @@
             <button class="btn btn-orange" style="padding: 14px; width: 100%;" onclick="saveSettings()">حفظ وتطبيق المظهر 💾</button>
         </div>
 
-        <!-- 🖼️ قسم إدارة البنرات والسلايدر -->
+        <!-- 🖼️ البنرات والسلايدر -->
         <div id="section-banners" class="section">
-            <div class="card-header"><h2>إدارة السلايدر والبنرات الإعلانية بالمنصة</h2><button class="btn btn-blue" onclick="loadAdminBannersTab()">تحديث 🔄</button></div>
+            <div class="card-header"><h2>إدارة السلايدر والبنرات الإعلانية</h2><button class="btn btn-blue" onclick="loadAdminBannersTab()">تحديث 🔄</button></div>
             <div class="products-grid">
                 <div class="card">
                     <h3>إضافة بنر أو سلايدر جديد 🖼️</h3>
                     <select id="b-place"><option value="carousel">سلايدر متحرك (أعلى الحساب)</option><option value="static">بنر ثابت (وسط الشاشة)</option></select>
                     <input type="text" id="b-ar-title" placeholder="العنوان الرئيسي (عربي)"><input type="text" id="b-en-title" placeholder="العنوان الرئيسي (إنجليزي)">
                     <input type="text" id="b-ar-desc" placeholder="النص الفرعي (عربي)"><input type="text" id="b-en-desc" placeholder="النص الفرعي (إنجليزي)">
-                    <div class="media-options-box"><label class="main-lbl">خلفية البنر (اختر نوعاً واحداً فقط):</label>
+                    <div class="media-options-box"><label class="main-lbl">خلفية البنر (اختر نوعاً واحداً):</label>
                         <div class="media-options-grid">
                             <div class="media-option"><label>1. رفع صورة من جهازك:</label><input type="file" id="b-img" accept="image/*"></div>
                             <div class="media-option"><label>2. أو وضع رابط صورة مباشر:</label><input type="text" id="b-img-url" placeholder="https://..." style="direction: ltr;"></div>
                             <div class="media-option"><label>3. أو كود لون HEX سادة:</label><input type="text" id="b-color" placeholder="مثال: #1e3d59" style="direction: ltr;"></div>
                         </div>
                     </div>
-                    <button class="btn btn-blue" style="width: 100%; padding: 12px; margin-top: 10px;" onclick="addBanner()">حفظ ونشر البنر الإعلاني 🚀</button>
+                    <button class="btn btn-blue" style="width: 100%; padding: 12px; margin-top: 10px;" onclick="addBanner()">حفظ ونشر البنر 🚀</button>
                 </div>
                 <div class="card table-responsive">
-                    <h3>البنرات النشطة حالياً بالتطبيق</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>العنوان الأساسي</th>
-                                <th>مكان الظهور</th>
-                                <th>خلفية الإعلان</th>
-                                <th>إجراء</th>
-                            </tr>
-                        </thead>
-                        <tbody id="banners-tbody"></tbody>
-                    </table>
+                    <h3>البنرات النشطة</h3>
+                    <table><thead><tr><th>العنوان الأساسي</th><th>المكان</th><th>الخلفية</th><th>إجراء</th></tr></thead><tbody id="banners-tbody"></tbody></table>
                 </div>
             </div>
         </div>
 
-        <!-- 🎟️ إدارة كوبونات الخصم 🎟️ -->
+        <!-- 🎟️ كوبونات الخصم -->
         <div id="section-promocodes" class="section">
-            <div class="card-header"><h2>إدارة كوبونات الخصم (Promo Codes)</h2><button class="btn btn-blue" onclick="loadPromoCodes()">تحديث 🔄</button></div>
+            <div class="card-header"><h2>إدارة كوبونات الخصم</h2><button class="btn btn-blue" onclick="loadPromoCodes()">تحديث 🔄</button></div>
             <div class="card">
                 <h3 style="margin-bottom: 15px; color: var(--primary);">إضافة كوبون جديد</h3>
-                <div class="search-flex">
-                    <input type="text" id="promo-code-val" placeholder="كود الخصم (مثال: BOMA20)">
-                    <input type="number" id="promo-discount-val" placeholder="نسبة الخصم % (مثال: 20)">
-                    <button class="btn btn-green" onclick="addPromoCode()">حفظ الكوبون 🎟️</button>
-                </div>
+                <div class="search-flex"><input type="text" id="promo-code-val" placeholder="كود الخصم (مثال: BOMA20)"><input type="number" id="promo-discount-val" placeholder="نسبة الخصم %"><button class="btn btn-green" onclick="addPromoCode()">حفظ الكوبون 🎟️</button></div>
             </div>
-            <div class="card table-responsive">
-                <table>
-                    <thead><tr><th>الكود</th><th>نسبة الخصم</th><th>تاريخ الإضافة</th><th>إجراء</th></tr></thead>
-                    <tbody id="promocodes-tbody"></tbody>
-                </table>
-            </div>
+            <div class="card table-responsive"><table><thead><tr><th>الكود</th><th>نسبة الخصم</th><th>التاريخ</th><th>إجراء</th></tr></thead><tbody id="promocodes-tbody"></tbody></table></div>
         </div>
 
         <!-- الإعلانات المنبثقة -->
         <div id="section-announcements" class="section">
-            <h2 style="margin-bottom: 20px;">إرسال الإعلانات والتنبيهات العامة</h2>
+            <h2 style="margin-bottom: 20px;">إرسال التنبيهات العامة</h2>
             <div class="card">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">إرسال إشعار جديد لجميع العملاء</h3>
-                <div class="form-group"><label>عنوان الإشعار</label><input type="text" id="ann-title" placeholder="مثال: تحديث هام لخدمة التحويل"></div>
-                <div class="form-group"><label>نص الإشعار</label><textarea id="ann-message" rows="3" placeholder="اكتب تفاصيل التنبيه أو الخبر الجديد هنا..."></textarea></div>
-                <div class="products-grid">
-                    <div class="form-group"><label>مكان الظهور</label><select id="ann-type"><option value="popup">نافذة منبثقة (دخول التطبيق)</option><option value="notification">رسالة في جرس الإشعارات</option></select></div>
-                    <div class="form-group"><label>مرات الظهور</label><select id="ann-count"><option value="1">مرة واحدة فقط</option><option value="3">3 مرات</option><option value="always">دائماً</option></select></div>
-                </div>
-                <button class="btn btn-orange" style="padding: 12px; width: 100%; font-size: 15px;" onclick="sendAnnouncement()">نشر الإشعار العام 🚀</button>
+                <div class="form-group"><label>عنوان الإشعار</label><input type="text" id="ann-title" placeholder="مثال: تحديث هام"></div>
+                <div class="form-group"><label>نص الإشعار</label><textarea id="ann-message" rows="3"></textarea></div>
+                <div class="products-grid"><div class="form-group"><label>مكان الظهور</label><select id="ann-type"><option value="popup">نافذة منبثقة</option><option value="notification">رسالة في الإشعارات</option></select></div><div class="form-group"><label>مرات الظهور</label><select id="ann-count"><option value="1">مرة واحدة</option><option value="3">3 مرات</option><option value="always">دائماً</option></select></div></div>
+                <button class="btn btn-orange" style="padding: 12px; width: 100%;" onclick="sendAnnouncement()">نشر الإشعار 🚀</button>
             </div>
-            <div class="card table-responsive">
-                <h3 style="margin-bottom: 15px;">الإعلانات النشطة</h3>
-                <table><thead><tr><th>النوع</th><th>العنوان</th><th>مرات الظهور</th><th>التاريخ</th><th>إجراء</th></tr></thead><tbody id="announcements-tbody"></tbody></table>
-            </div>
+            <div class="card table-responsive"><table><thead><tr><th>النوع</th><th>العنوان</th><th>المرات</th><th>التاريخ</th><th>إجراء</th></tr></thead><tbody id="announcements-tbody"></tbody></table></div>
         </div>
 
         <!-- الزينة -->
         <div id="section-decorations" class="section">
-            <h2 style="margin-bottom: 20px;">زينة التطبيق والمناسبات</h2>
+            <h2 style="margin-bottom: 20px;">زينة التطبيق</h2>
             <div class="card">
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">قم بتفعيل الزينة الخاصة بالمناسبات. ستظهر الزينة تلقائياً أعلى شاشات التطبيق لجميع العملاء.</p>
-                <div class="form-group"><label>اختر نوع الزينة</label><select id="set-deco-type"><option value="none">بدون زينة (إيقاف)</option><option value="ramadan">🌙 زينة وفوانيس رمضان</option><option value="eid-adha">🐑 خروف العيد (عيد الأضحى)</option><option value="eid-fitr">🎉 بالونات واحتفالات</option><option value="custom">🔗 زينة مخصصة (رابط صورة)</option></select></div>
-                <div class="form-group" id="custom-deco-url-group" style="display: none;"><label>رابط الزينة (URL)</label><input type="text" id="set-deco-url" placeholder="https://..."></div>
-                <label class="settings-label" style="margin-top: 15px; border-color: var(--accent);"><input type="checkbox" id="set-deco-active"> تفعيل ظهور الزينة في التطبيق الآن</label>
-                <button class="btn btn-green" style="padding: 12px; margin-top: 20px; width: 100%; font-size: 15px;" onclick="saveDecorations()">حفظ وتطبيق الزينة ✨</button>
+                <div class="form-group"><label>اختر نوع الزينة</label><select id="set-deco-type"><option value="none">بدون زينة (إيقاف)</option><option value="ramadan">🌙 رمضان</option><option value="eid-adha">🐑 الأضحى</option><option value="eid-fitr">🎉 الفطر</option><option value="custom">🔗 رابط مخصص</option></select></div>
+                <div class="form-group" id="custom-deco-url-group" style="display: none;"><label>رابط الزينة</label><input type="text" id="set-deco-url" placeholder="https://..."></div>
+                <label class="settings-label"><input type="checkbox" id="set-deco-active"> تفعيل ظهور الزينة الآن</label>
+                <button class="btn btn-green" style="padding: 12px; margin-top: 20px; width: 100%;" onclick="saveDecorations()">حفظ وتطبيق الزينة ✨</button>
             </div>
         </div>
 
         <!-- الشروط والخصوصية -->
         <div id="section-terms" class="section">
-            <h2 style="margin-bottom: 20px;">إدارة الشروط والأحكام (الخصوصية)</h2>
+            <h2 style="margin-bottom: 20px;">الشروط والخصوصية</h2>
             <div class="card">
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">قم بكتابة وتحديث الشروط والأحكام وسياسة الخصوصية التي تظهر للعملاء. (يمكنك استخدام لغة HTML للتنسيق مثل &lt;br&gt; و &lt;b&gt;).</p>
-                <div class="form-group">
-                    <label>النص الكامل للشروط والخصوصية:</label>
-                    <textarea id="set-terms-text" rows="15" placeholder="اكتب الشروط والأحكام هنا..."></textarea>
-                </div>
-                <button class="btn btn-orange" style="padding: 14px; width: 100%; font-size: 16px;" onclick="saveTerms()">حفظ ونشر الشروط 💾</button>
+                <div class="form-group"><textarea id="set-terms-text" rows="15" placeholder="اكتب الشروط هنا..."></textarea></div>
+                <button class="btn btn-orange" style="padding: 14px; width: 100%;" onclick="saveTerms()">حفظ ونشر الشروط 💾</button>
             </div>
         </div>
 
         <!-- تغيير كلمة مرور الإدارة -->
         <div id="section-password" class="section">
-            <h2 style="margin-bottom: 20px;">تغيير الرمز السري وحسابات الدعم</h2>
+            <h2 style="margin-bottom: 20px;">تغيير الرمز السري</h2>
             <div class="card" style="max-width: 500px;">
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">الرجاء تحديد نوع الحساب المراد تغييره، ثم إدخال الرمز السري الأساسي الخاص بك (Master) للتأكيد.</p>
-                
-                <div class="form-group">
-                    <label>تحديد نوع الحساب المراد تغييره</label>
-                    <select id="admin-pass-type" style="font-weight:bold;">
-                        <option value="master">الإدارة العليا (Master Admin)</option>
-                        <option value="support">خدمة العملاء (Support)</option>
-                    </select>
-                    <small style="color:var(--text-muted); font-size:11px;">* لتعطيل حساب الدعم الفني، اختر (خدمة العملاء) واترك الرمز الجديد فارغاً.</small>
-                </div>
-
-                <div class="form-group"><label>الرمز السري للإدارة العليا (الحالي)</label><input type="password" id="admin-old-pass" placeholder="••••••••"></div>
-                <div class="form-group"><label>الرمز السري الجديد</label><input type="password" id="admin-new-pass" placeholder="••••••••"></div>
-                <div class="form-group"><label>تأكيد الرمز السري الجديد</label><input type="password" id="admin-confirm-pass" placeholder="••••••••"></div>
-                <button class="btn btn-blue" style="width: 100%; padding: 12px;" onclick="changeAdminPassword()">تحديث الرمز السري 🔐</button>
+                <div class="form-group"><label>نوع الحساب</label><select id="admin-pass-type"><option value="master">المدير الرئيسي (Master)</option><option value="support">خدمة العملاء (Support)</option></select></div>
+                <div class="form-group"><label>الرمز السري للإدارة (الحالي)</label><input type="password" id="admin-old-pass"></div>
+                <div class="form-group"><label>الرمز السري الجديد</label><input type="password" id="admin-new-pass"></div>
+                <div class="form-group"><label>تأكيد الرمز السري الجديد</label><input type="password" id="admin-confirm-pass"></div>
+                <button class="btn btn-blue" style="width: 100%; padding: 12px;" onclick="changeAdminPassword()">تحديث 🔐</button>
             </div>
         </div>
 
-        <!-- تشغيل الخدمات وبنكك -->
+        <!-- إعدادات النظام -->
         <div id="section-settings" class="section">
             <h2 style="margin-bottom: 20px;">إعدادات النظام والخدمات</h2>
+            <div class="card" style="border-top: 4px solid var(--accent);">
+                <h3 style="margin-bottom: 15px; color: var(--primary);">🎁 إعدادات الهدية الترحيبية</h3>
+                <label class="settings-label" style="margin-bottom: 15px;"><input type="checkbox" id="set-welcome-enabled"> تفعيل الهدية</label>
+                <div class="form-group"><label>مبلغ الهدية (SDG)</label><input type="number" id="set-welcome-amount"></div>
+            </div>
+
             <div class="card">
                 <h3 style="margin-bottom: 15px; color: var(--primary);">تشغيل/إيقاف الخدمات</h3>
                 <div style="display: flex; flex-direction: column; gap: 15px;">
-                    <label class="settings-label"><input type="checkbox" id="set-transfer"> خدمة التحويل المالي</label>
-                    <label class="settings-label"><input type="checkbox" id="set-withdraw"> خدمة سحب الأرباح</label>
-                    <label class="settings-label"><input type="checkbox" id="set-deposit"> خدمة شحن المحفظة</label>
-                    <label class="settings-label"><input type="checkbox" id="set-store"> عمليات الشراء من المتجر</label>
-                    <label class="settings-label"><input type="checkbox" id="set-services"> طلبات الخدمات والمشاريع</label>
+                    <label class="settings-label"><input type="checkbox" id="set-transfer"> التحويل المالي</label>
+                    <label class="settings-label"><input type="checkbox" id="set-withdraw"> سحب الأرباح</label>
+                    <label class="settings-label"><input type="checkbox" id="set-deposit"> التغذية (الشحن)</label>
+                    <label class="settings-label"><input type="checkbox" id="set-store"> المتجر</label>
+                    <label class="settings-label"><input type="checkbox" id="set-services"> طلبات الخدمات</label>
                 </div>
             </div>
             
             <div class="card" style="margin-top: 20px;">
                 <h3 style="margin-bottom: 15px; color: var(--primary);">💰 إعدادات العمولات والرسوم (%)</h3>
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">حدد نسبة الرسوم المئوية لكل عملية. (سيتم خصمها من حساب العميل لصالح الإدارة. ضع صفر 0 لجعلها مجانية)</p>
                 <div class="search-flex">
-                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">رسوم التغذية (الشحن) %</label><input type="number" id="set-fee-deposit" placeholder="مثال: 0" min="0" max="100"></div>
-                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">رسوم التحويل الداخلي %</label><input type="number" id="set-fee-transfer" placeholder="مثال: 1" min="0" max="100"></div>
-                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">رسوم السحب (الكاش) %</label><input type="number" id="set-fee-withdraw" placeholder="مثال: 2" min="0" max="100"></div>
+                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">رسوم التغذية %</label><input type="number" id="set-fee-deposit" min="0" max="100"></div>
+                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">رسوم التحويل %</label><input type="number" id="set-fee-transfer" min="0" max="100"></div>
+                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">رسوم السحب %</label><input type="number" id="set-fee-withdraw" min="0" max="100"></div>
+                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">عمولة المتجر %</label><input type="number" id="set-fee-vendor" min="0" max="100"></div>
                 </div>
             </div>
 
             <div class="card" style="margin-top: 20px;">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">إعدادات الدفع (بنكك Bankak)</h3>
-                <div class="form-group"><label>رقم حساب بنكك</label><input type="number" id="set-bankak-acc"></div>
+                <h3 style="margin-bottom: 15px; color: var(--primary);">إعدادات بنكك (Bankak)</h3>
+                <div class="form-group"><label>رقم الحساب</label><input type="number" id="set-bankak-acc"></div>
                 <div class="form-group"><label>اسم الحساب</label><input type="text" id="set-bankak-name"></div>
-                <div class="form-group"><label>رقم الواتساب للإشعارات (بدون +)</label><input type="tel" id="set-bankak-phone" style="direction: ltr; text-align: left;"></div>
-                <label class="settings-label" style="margin-top: 15px; border-color: var(--accent);"><input type="checkbox" id="set-bankak-enabled"> تفعيل الدفع المباشر عبر (بنكك) للعملاء</label>
+                <div class="form-group"><label>رقم الواتساب</label><input type="tel" id="set-bankak-phone" style="direction: ltr; text-align: left;"></div>
+                <label class="settings-label"><input type="checkbox" id="set-bankak-enabled"> تفعيل بنكك</label>
             </div>
             
             <button class="btn btn-orange" style="padding: 14px; width: 100%; font-size: 16px;" onclick="saveSettings()">حفظ وتطبيق الإعدادات 💾</button>
             
             <div class="card" style="margin-top: 30px; border: 2px solid var(--red); background: #fef2f2;">
-                <h3 style="margin-bottom: 15px; color: var(--red);">⚠️ منطقة الخطر (تهيئة الإطلاق الفعلي)</h3>
-                <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:bold;">هذا الزر سيقوم بمسح جميع (حسابات العملاء، الطلبات، الحركات المالية، ومحافظ BOMA).<br><span style="color:var(--primary);">* سيتم الاحتفاظ بـ: المنتجات، الإعدادات، وحسابات الإدارة.</span></p>
-                <button class="btn btn-red" style="padding: 14px; width: 100%; font-size: 16px; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);" onclick="factoryResetSystem()">تصفير النظام وبدء العمل الفعلي 🚀</button>
+                <h3 style="margin-bottom: 15px; color: var(--red);">⚠️ منطقة الخطر</h3>
+                <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:bold;">هذا الزر سيقوم بمسح جميع بيانات النظام وبدء العمل الفعلي من الصفر.</p>
+                <button class="btn btn-red" style="padding: 14px; width: 100%;" onclick="factoryResetSystem()">تصفير النظام بالكامل 🚀</button>
             </div>
         </div>
 
@@ -392,38 +329,65 @@
         <div id="section-categories" class="section">
             <div class="card-header"><h2>إدارة أقسام المتجر</h2><button class="btn btn-blue" onclick="loadCategories()">تحديث 🔄</button></div>
             <div class="card">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">إضافة قسم جديد</h3>
-                <div class="search-flex"><input type="text" id="cat-ar-name" placeholder="اسم القسم (عربي)"><input type="text" id="cat-en-name" placeholder="اسم القسم (إنجليزي)"><input type="text" id="cat-icon" placeholder="إيموجي (مثال: 👕)" style="max-width: 120px;"><button class="btn btn-green" onclick="addCategory()">إضافة ➕</button></div>
+                <div class="search-flex"><input type="text" id="cat-ar-name" placeholder="عربي"><input type="text" id="cat-en-name" placeholder="إنجليزي"><input type="text" id="cat-icon" placeholder="إيموجي" style="max-width: 120px;"><button class="btn btn-green" onclick="addCategory()">إضافة ➕</button></div>
             </div>
             <div class="card table-responsive"><table><thead><tr><th>الأيقونة</th><th>الاسم (عربي)</th><th>الاسم (إنجليزي)</th><th>إجراء</th></tr></thead><tbody id="categories-tbody"></tbody></table></div>
         </div>
 
-        <!-- بحث وإدارة عميل (مع الطوارئ) -->
+        <!-- 🌟 بحث وإنشاء عميل وتعيين موظف الخزينة 🌟 -->
         <div id="section-search" class="section">
-            <h2 style="margin-bottom: 20px;">البحث وإدارة عميل</h2>
+            <h2 style="margin-bottom: 20px;">البحث وإدارة المستخدمين</h2>
+
+            <div class="card" style="border-top: 4px solid var(--green);">
+                <h3 style="margin-bottom: 15px; color: var(--green);">➕ إنشاء حساب جديد فوراً</h3>
+                <div class="search-flex">
+                    <input type="text" id="create-u-name" placeholder="الاسم الكامل (رباعي)">
+                    <input type="text" id="create-u-id" placeholder="رقم الهاتف أو البريد (المعرف)">
+                    <select id="create-u-role" onchange="toggleBranchInput(this.value)">
+                        <option value="user">عميل عادي</option>
+                        <option value="vendor">تاجر 🏪</option>
+                        <option value="courier">مندوب توصيل 🛵</option>
+                        <option value="cashier">أمين صندوق (للفروع)</option>
+                    </select>
+                </div>
+                <div class="search-flex" style="margin-top: 10px;">
+                    <input type="password" id="create-u-pass" placeholder="كلمة المرور (8 خانات)">
+                    <input type="text" id="create-u-pin" placeholder="رمز PIN المالي (6 أرقام)" maxlength="6">
+                    <input type="text" id="create-u-branch" placeholder="اسم الفرع (مطلوب للصرافين)" style="display:none; border-color:var(--accent);">
+                    <button class="btn btn-green" onclick="createNewUser()">إنشاء وتفعيل الحساب 🚀</button>
+                </div>
+            </div>
+
             <div class="card">
-                <div class="search-flex"><input type="number" id="search-acc-input" placeholder="أدخل رقم الحساب (مثال: 1000000001)"><button class="btn btn-orange" onclick="searchUser()">بحث 🔍</button></div>
+                <div class="search-flex"><input type="number" id="search-acc-input" placeholder="رقم الحساب"><button class="btn btn-orange" onclick="searchUser()">بحث 🔍</button></div>
                 <div id="search-result-box" style="display: none;">
-                    <h3 style="margin-bottom: 15px; color: var(--primary);">بيانات العميل</h3>
+                    <h3 style="margin-bottom: 15px; color: var(--primary);">بيانات الحساب</h3>
                     <div class="user-details-grid" id="search-details-grid"></div>
                     
-                    <!-- 🌟 منطقة الأمان والطوارئ (تحديث الهوية وتصفير PIN) 🌟 -->
-                    <div style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ef4444;">
-                        <h4 style="margin-bottom: 10px; color: var(--red);">🛡️ إجراءات الأمان والطوارئ:</h4>
-                        <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">استخدم هذه الخيارات فقط إذا فقد العميل رقم هاتفه أو نسي الرمز المالي.</p>
+                    <div style="background: #eef2ff; padding: 15px; border-radius: 8px; margin-bottom: 15px;" class="master-only">
+                        <h4 style="margin-bottom: 10px; color: var(--blue-light);">💸 عمليات الخزينة المباشرة (إدارة):</h4>
                         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                            <input type="text" id="manage-identity-input" placeholder="رقم الهاتف/البريد الجديد" style="width: 200px; margin: 0;">
+                            <input type="number" id="direct-amount-input" placeholder="المبلغ (SDG)" style="width: 150px; margin: 0;">
+                            <input type="text" id="direct-notes-input" placeholder="البيان / السبب" style="width: 200px; margin: 0;">
+                            <button class="btn btn-green" onclick="directDeposit()">إيداع نقدي 📥</button>
+                            <button class="btn btn-red" onclick="directWithdraw()">سحب نقدي 📤</button>
+                        </div>
+                    </div>
+
+                    <div style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ef4444;">
+                        <h4 style="margin-bottom: 10px; color: var(--red);">🛡️ إجراءات الأمان:</h4>
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" id="manage-identity-input" placeholder="المعرف الجديد" style="width: 200px; margin: 0;">
                             <button class="btn btn-blue" onclick="changeUserIdentity()">تحديث المعرف 📱</button>
                             <button class="btn btn-orange" onclick="resetUserPin()">إصدار PIN مؤقت 🔑</button>
                         </div>
                     </div>
 
                     <div style="background: #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px;" class="master-only">
-                        <h4 style="margin-bottom: 10px;">إجراءات الإدارة:</h4>
+                        <h4 style="margin-bottom: 10px;">إدارة وحظر:</h4>
                         <div class="manage-actions-flex" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                            <label style="font-size: 13px; font-weight: bold;">تجميد رصيد (SDG):</label>
-                            <input type="number" id="manage-freeze-input" style="width: 150px; margin: 0;">
-                            <label style="font-size: 13px; font-weight: bold; margin-left: 10px;"><input type="checkbox" id="manage-suspend-input"> إيقاف الحساب نهائياً</label>
+                            <label>تجميد رصيد:</label><input type="number" id="manage-freeze-input" style="width: 150px; margin: 0;">
+                            <label style="margin-left: 10px;"><input type="checkbox" id="manage-suspend-input"> إيقاف الحساب</label>
                             <button class="btn btn-red" onclick="saveUserManage()">حفظ التعديلات</button>
                             <button class="btn btn-blue" onclick="loadUserTxs()">كشف الحركات 📄</button>
                         </div>
@@ -433,86 +397,116 @@
             </div>
         </div>
 
+        <!-- 🌟 قسم جرد الصناديق 🌟 -->
+        <div id="section-cashier-logs" class="section">
+            <div class="card-header"><h2>جرد الصناديق (حركات الفروع)</h2><button class="btn btn-blue" onclick="loadCashierLogs()">تحديث 🔄</button></div>
+            <div class="card table-responsive">
+                <table>
+                    <thead><tr><th>التاريخ</th><th>الموظف / الفرع</th><th>حساب العميل</th><th>نوع العملية</th><th>المبلغ</th><th>البيان</th></tr></thead>
+                    <tbody id="cashier-logs-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 🌟 قسم إدارة البنوك وشركاء الدفع 🌟 -->
+        <div id="section-banks" class="section">
+            <div class="card-header">
+                <h2>إدارة البنوك وشركاء الدفع (شعارات المحفظة)</h2>
+                <button class="btn btn-blue" onclick="loadAdminBanks()">تحديث 🔄</button>
+            </div>
+            
+            <div class="products-grid">
+                <div class="card">
+                    <h3 style="margin-bottom: 15px; color: var(--primary);">إضافة بنك أو محفظة جديدة 🏦</h3>
+                    <div class="form-group">
+                        <label>اسم البنك أو المحفظة</label>
+                        <input type="text" id="bank-name-input" placeholder="مثال: تطبيق بنكك / أوكاش / فوري">
+                    </div>
+                    
+                    <div class="media-options-box">
+                        <label class="main-lbl">شعار البنك (اختر نوعاً واحداً):</label>
+                        <div class="media-options-grid">
+                            <div class="media-option"><label>1. رفع صورة الشعار من جهازك:</label><input type="file" id="bank-logo-file" accept="image/*"></div>
+                            <div class="media-option"><label>2. أو وضع رابط صورة مباشر:</label><input type="text" id="bank-logo-url" placeholder="https://..." style="direction: ltr;"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-green" style="width: 100%; padding: 12px; margin-top: 10px;" onclick="addSupportedBank()">حفظ وإضافة الشعار 🚀</button>
+                </div>
+                
+                <div class="card table-responsive">
+                    <h3>البنوك والشعارات المعروضة للعملاء</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الشعار</th>
+                                <th>اسم البنك</th>
+                                <th>إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-banks-tbody">
+                            <tr><td colspan="3" style="text-align:center;">جاري التحميل...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- الشحن والسحب -->
         <div id="section-finance" class="section">
             <div class="card-header"><h2>طلبات الشحن والسحب</h2><button class="btn btn-blue" onclick="loadFinance()">تحديث 🔄</button></div>
-            <div class="card table-responsive"><h3 style="color: var(--green); margin-bottom: 10px;">📥 طلبات الإيداع (شحن)</h3><table><thead><tr><th>رقم العميل</th><th>المبلغ</th><th>صورة الإيصال / رقم العملية</th><th>الوقت</th><th>إجراء</th></tr></thead><tbody id="deposit-tbody"></tbody></table></div>
-            <div class="card table-responsive"><h3 style="color: var(--red); margin-bottom: 10px;">📤 طلبات السحب للبنك</h3><table><thead><tr><th>رقم العميل</th><th>المبلغ</th><th>بيانات البنك</th><th>الوقت</th><th>إجراء</th></tr></thead><tbody id="withdraw-tbody"></tbody></table></div>
+            <div class="card table-responsive"><h3 style="color: var(--green); margin-bottom: 10px;">📥 الشحن</h3><table><thead><tr><th>العميل</th><th>المبلغ</th><th>الإيصال</th><th>الوقت</th><th>إجراء</th></tr></thead><tbody id="deposit-tbody"></tbody></table></div>
+            <div class="card table-responsive"><h3 style="color: var(--red); margin-bottom: 10px;">📤 السحب</h3><table><thead><tr><th>العميل</th><th>المبلغ</th><th>البنك</th><th>الوقت</th><th>إجراء</th></tr></thead><tbody id="withdraw-tbody"></tbody></table></div>
         </div>
 
         <!-- طلبات المتجر -->
         <div id="section-orders" class="section">
-            <div class="card-header"><h2>طلبات الشراء من المتجر</h2><button class="btn btn-blue" onclick="loadOrders()">تحديث 🔄</button></div>
-            <div class="card"><input type="text" class="search-bar-modern" id="search-orders-input" placeholder="🔍 البحث باسم العميل، المعرف، أو اسم المنتج..." oninput="filterOrders()"><div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>العميل</th>
-                            <th>المنتجات المطلوبة</th>
-                            <th>المبلغ الإجمالي</th>
-                            <th>الدفع / التوصيل</th>
-                            <th>المندوب 🛵</th>
-                            <th>الوقت</th>
-                            <th>تحديث الحالة</th>
-                            <th class="master-only">إجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody id="orders-tbody"></tbody>
-                </table>
+            <div class="card-header"><h2>طلبات الشراء</h2><button class="btn btn-blue" onclick="loadOrders()">تحديث 🔄</button></div>
+            <div class="card"><input type="text" class="search-bar-modern" id="search-orders-input" placeholder="🔍 بحث..." oninput="filterOrders()"><div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                <table><thead><tr><th>العميل</th><th>المنتجات</th><th>المبلغ</th><th>الدفع</th><th>المندوب</th><th>الوقت</th><th>تحديث الحالة</th><th class="master-only">إجراء</th></tr></thead><tbody id="orders-tbody"></tbody></table>
             </div></div>
         </div>
 
-        <!-- توصيل ومناطق -->
+        <!-- مناطق التوصيل -->
         <div id="section-delivery" class="section">
-            <div class="card-header"><h2>إدارة مناطق التوصيل</h2><button class="btn btn-blue" onclick="loadZones()">تحديث 🔄</button></div>
-            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">إضافة منطقة جديدة</h3><div class="search-flex"><input type="text" id="z-name" placeholder="اسم المنطقة (مثال: بحري)"><input type="number" id="z-price" placeholder="سعر التوصيل (SDG)"><button class="btn btn-green" onclick="addDeliveryZone()">حفظ المنطقة 🚚</button></div></div>
+            <div class="card-header"><h2>مناطق التوصيل</h2><button class="btn btn-blue" onclick="loadZones()">تحديث 🔄</button></div>
+            <div class="card"><div class="search-flex"><input type="text" id="z-name" placeholder="اسم المنطقة"><input type="number" id="z-price" placeholder="سعر التوصيل"><button class="btn btn-green" onclick="addDeliveryZone()">حفظ 🚚</button></div></div>
             <div class="card table-responsive"><table><thead><tr><th>المنطقة</th><th>سعر التوصيل</th><th>إجراء</th></tr></thead><tbody id="zones-tbody"></tbody></table></div>
         </div>
 
-        <!-- المنتجات الحالية -->
+        <!-- إدارة المنتجات -->
         <div id="section-products" class="section">
-            <div class="card-header"><h2>إدارة منتجات المتجر</h2><button class="btn btn-blue" onclick="loadProducts()">تحديث 🔄</button></div>
+            <div class="card-header"><h2>إدارة المنتجات</h2><button class="btn btn-blue" onclick="loadProducts()">تحديث 🔄</button></div>
             <div class="card" id="product-form-card" style="max-width: 600px;">
-                <h3 style="margin-bottom: 15px; color: var(--primary);" id="product-form-title">إضافة منتج جديد 📦</h3>
-                <div class="form-group"><label>القسم</label><select id="p-cat"><option value="">جاري تحميل الأقسام...</option></select></div>
-                <input type="text" id="p-ar-name" placeholder="اسم المنتج (عربي)">
-                <input type="text" id="p-en-name" placeholder="اسم المنتج (إنجليزي)">
-                
-                <div class="search-flex" style="margin-bottom:10px;">
-                    <input type="number" id="p-price" placeholder="السعر الأساسي (SDG)">
-                    <input type="number" id="p-min-price" placeholder="الحد الأدنى السري (للتفاوض)">
+                <h3 style="margin-bottom: 15px; color: var(--primary);" id="product-form-title">إضافة منتج 📦</h3>
+                <div class="form-group"><select id="p-cat"><option value="">جاري تحميل الأقسام...</option></select></div>
+                <input type="text" id="p-ar-name" placeholder="الاسم (عربي)"><input type="text" id="p-en-name" placeholder="الاسم (إنجليزي)">
+                <div class="search-flex" style="margin-bottom:10px;"><input type="number" id="p-price" placeholder="السعر الأساسي"><input type="number" id="p-min-price" placeholder="الحد الأدنى للتفاوض"></div>
+                <input type="text" id="p-vendor-identity" placeholder="معرف التاجر (اتركه فارغاً لمنتجات المنصة)">
+                <input type="number" id="p-stock" placeholder="المخزون">
+                <textarea id="p-ar-desc" placeholder="وصف (عربي)" rows="2"></textarea><textarea id="p-en-desc" placeholder="وصف (إنجليزي)" rows="2"></textarea>
+                <div class="media-options-box"><label class="main-lbl">خيارات:</label><input type="text" id="p-variations" placeholder="مثال: أحمر, أزرق (+1000)"></div>
+                <div class="media-options-box"><label class="main-lbl">نطاق التوصيل:</label><input type="text" id="p-delivery-scope" placeholder="مثال: جميع المناطق"></div>
+                <div class="media-options-box"><label class="main-lbl">معرض الصور:</label><textarea id="p-gallery" placeholder="روابط مفصولة بفاصلة" rows="2"></textarea></div>
+                <div class="media-options-box"><label class="main-lbl">الصورة الرئيسية: <span id="img-hint"></span></label>
+                    <div class="media-options-grid"><div class="media-option"><input type="file" id="p-img" accept="image/*"></div><div class="media-option"><input type="text" id="p-img-url" placeholder="رابط مباشر"></div><div class="media-option"><input type="text" id="p-emoji" placeholder="إيموجي"></div></div>
                 </div>
-                <input type="text" id="p-vendor-identity" placeholder="هوية التاجر (مثال: بريد أو هاتف، اتركه فارغاً لمنتجات المنصة)">
-                
-                <input type="number" id="p-stock" placeholder="الكمية المتوفرة في المخزن">
-                <textarea id="p-ar-desc" placeholder="وصف المنتج (عربي)" rows="2"></textarea>
-                <textarea id="p-en-desc" placeholder="وصف المنتج (إنجليزي)" rows="2"></textarea>
-                <div class="media-options-box" style="margin-top: 10px; border-color: var(--accent);"><label class="main-lbl">خيارات المنتج (ألوان، مقاسات، أشكال، مُدد):</label><input type="text" id="p-variations" placeholder="مثال: شهر, 6 شهور (+5000), سنة (+10000)"></div>
-                <div class="media-options-box" style="margin-top: 10px; border-color: #f59e0b;"><label class="main-lbl">نطاق التوصيل (المدن المتاحة):</label><input type="text" id="p-delivery-scope" placeholder="مثال: جميع المناطق، الخرطوم فقط..."></div>
-                <div class="media-options-box" style="margin-top: 10px; border-color: var(--blue-light);"><label class="main-lbl">معرض الصور الإضافية للمنتج (روابط متعددة للمنتج):</label><textarea id="p-gallery" placeholder="أدخل روابط الصور وافصل بفاصلة (,)..." rows="2" style="direction: ltr; text-align: left;"></textarea></div>
-                <div class="media-options-box"><label class="main-lbl">صورة أو أيقونة المنتج الرئيسية: <span id="img-hint" style="color:var(--red); font-size: 11px; font-weight:normal;"></span></label>
-                    <div class="media-options-grid"><div class="media-option"><label>1. رفع صورة رئيسية:</label><input type="file" id="p-img" accept="image/*"></div><div class="media-option"><label>2. أو رابط صورة:</label><input type="text" id="p-img-url" placeholder="https://..." style="direction: ltr;"></div><div class="media-option"><label>3. أو إيموجي رئيسي:</label><input type="text" id="p-emoji" placeholder="مثال: 🎧 أو 📱" style="text-align: center; font-size: 20px;"></div></div>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 10px;"><button class="btn btn-green" id="btn-submit-product" style="flex: 1; padding: 12px;" onclick="submitProduct()">حفظ وإضافة للمتجر</button><button class="btn btn-gray" id="btn-cancel-edit" style="display: none; padding: 12px;" onclick="cancelEditProduct()">إلغاء التعديل</button></div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;"><button class="btn btn-green" id="btn-submit-product" style="flex: 1;" onclick="submitProduct()">حفظ للمتجر</button><button class="btn btn-gray" id="btn-cancel-edit" style="display: none;" onclick="cancelEditProduct()">إلغاء التعديل</button></div>
             </div>
-            <div class="card"><input type="text" class="search-bar-modern" id="search-products-input" placeholder="🔍 البحث عن اسم منتج..." oninput="filterAdminProducts()"><div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                <table>
-                    <thead><tr><th>المنتج</th><th>السعر (الأساسي/الأدنى)</th><th>التاجر/المخزون</th><th>الخيارات</th><th>إجراء</th></tr></thead>
-                    <tbody id="products-tbody"></tbody>
-                </table>
+            <div class="card"><input type="text" class="search-bar-modern" id="search-products-input" placeholder="🔍 بحث..." oninput="filterAdminProducts()"><div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table><thead><tr><th>المنتج</th><th>السعر</th><th>المخزون/التاجر</th><th>الخيارات</th><th>إجراء</th></tr></thead><tbody id="products-tbody"></tbody></table>
             </div></div>
         </div>
 
         <!-- طلبات المشاريع -->
         <div id="section-requests" class="section">
-            <div class="card-header"><h2>طلبات مشاريع الخدمات المخصصة</h2><button class="btn btn-blue" onclick="loadServiceRequests()">تحديث 🔄</button></div>
-            <div class="card table-responsive"><table><thead><tr><th>الخدمة المطلوبة</th><th>اسم المشروع</th><th>المتطلبات</th><th>العميل</th><th>التاريخ</th></tr></thead><tbody id="requests-tbody"></tbody></table></div>
+            <div class="card-header"><h2>مشاريع الخدمات المخصصة</h2><button class="btn btn-blue" onclick="loadServiceRequests()">تحديث 🔄</button></div>
+            <div class="card table-responsive"><table><thead><tr><th>الخدمة</th><th>المشروع</th><th>المتطلبات</th><th>العميل</th><th>التاريخ</th></tr></thead><tbody id="requests-tbody"></tbody></table></div>
         </div>
 
         <!-- التوثيق -->
         <div id="section-users" class="section">
             <div class="card-header"><h2>توثيق الهوية (KYC)</h2><button class="btn btn-blue" onclick="loadUsers()">تحديث 🔄</button></div>
-            <div class="card table-responsive"><table><thead><tr><th>الحساب</th><th>الاسم</th><th>المعرف</th><th>التوثيق (KYC)</th><th>المستندات</th></tr></thead><tbody id="users-tbody"></tbody></table></div>
+            <div class="card table-responsive"><table><thead><tr><th>الحساب</th><th>الاسم</th><th>المعرف</th><th>التوثيق</th><th>المستندات</th></tr></thead><tbody id="users-tbody"></tbody></table></div>
         </div>
 
         <!-- الدعم الفني -->
@@ -527,7 +521,7 @@
     const API_URL = 'https://api.boomapay.com/api';
 
     let adminPass = '';
-    let currentAdminRole = 'master'; // 🛡️ نوع الصلاحية
+    let currentAdminRole = 'master'; 
     let currentSearchIdentity = ''; let currentSearchId = ''; 
     let adminCategories = []; let allAdminProducts = []; let allAdminOrders = []; let editingProductId = null; 
     let tempImages = {};
@@ -616,7 +610,6 @@
         document.getElementById('card-color-2-wrapper').style.display = type === 'solid' ? 'none' : 'block';
     }
     
-    // 🌟 إظهار/إخفاء الحقل الثاني للبار العلوي 🌟
     function toggleHeaderCardInputs() {
         const type = document.getElementById('ui-header-bg-type').value;
         document.getElementById('header-color-2-wrapper').style.display = type === 'solid' ? 'none' : 'block';
@@ -740,6 +733,8 @@
         if(tabId === 'promocodes' && currentAdminRole === 'master') loadPromoCodes(); 
         if(tabId === 'announcements' && currentAdminRole === 'master') loadAnnouncements();
         if(tabId === 'finance' && currentAdminRole === 'master') loadFinance();
+        if(tabId === 'banks' && currentAdminRole === 'master') loadAdminBanks();
+        if(tabId === 'cashier-logs' && currentAdminRole === 'master') loadCashierLogs();
         if(tabId === 'users') loadUsers();
         if(tabId === 'support') loadSupport();
         if(tabId === 'requests' && currentAdminRole === 'master') loadServiceRequests();
@@ -783,6 +778,73 @@
             document.getElementById('stat-users').innerText = data.usersCount || 0; 
             document.getElementById('stat-orders').innerText = data.pendingOrders || 0; 
         } catch(e) {} 
+    }
+
+    async function loadAdminBanks() {
+        const tbody = document.getElementById('admin-banks-tbody');
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">جاري التحميل...</td></tr>';
+        try {
+            const res = await fetch(`${API_URL}/banks`);
+            const banks = await res.json();
+            tbody.innerHTML = '';
+            if(banks.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">لا توجد بنوك مسجلة حالياً.</td></tr>';
+                return;
+            }
+            banks.forEach(b => {
+                const logoImg = `<img src="${b.logo}" style="width:40px; height:40px; object-fit:contain; border-radius:8px; background:#fff; border:1px solid #e2e8f0; padding:2px;">`;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${logoImg}</td>
+                        <td><strong>${b.name}</strong></td>
+                        <td><button class="btn btn-red" onclick="deleteSupportedBank('${b._id}')">حذف 🗑️</button></td>
+                    </tr>
+                `;
+            });
+        } catch(e) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--red);">خطأ في تحميل البنوك</td></tr>';
+        }
+    }
+
+    async function addSupportedBank() {
+        const name = document.getElementById('bank-name-input').value.trim();
+        const file = document.getElementById('bank-logo-file').files[0];
+        const url = document.getElementById('bank-logo-url').value.trim();
+        
+        if(!name) return showToast('أدخل اسم البنك أو التطبيق!', true);
+        if(!file && !url) return showToast('الرجاء رفع شعار البنك أو إدخال رابطه!', true);
+        
+        showToast('جاري الحفظ... ⏳');
+        try {
+            let logoData = url ? url : await compressImage(file);
+            const res = await authFetch(`${API_URL}/admin/banks`, {
+                method: 'POST',
+                body: JSON.stringify({ name, logo: logoData })
+            });
+            const data = await res.json();
+            if(!res.ok) return showToast(data.message, true);
+            
+            showToast('تمت إضافة البنك بنجاح ✅');
+            document.getElementById('bank-name-input').value = '';
+            document.getElementById('bank-logo-file').value = '';
+            document.getElementById('bank-logo-url').value = '';
+            loadAdminBanks();
+        } catch(e) {
+            showToast('خطأ: ' + e.message, true);
+        }
+    }
+
+    async function deleteSupportedBank(id) {
+        if(!confirm('هل أنت متأكد من حذف هذا البنك من قائمة العرض للعملاء؟')) return;
+        showToast('جاري الحذف... ⏳');
+        try {
+            const res = await authFetch(`${API_URL}/admin/banks/${id}`, { method: 'DELETE' });
+            if(!res.ok) return showToast('خطأ أثناء الحذف', true);
+            showToast('تم الحذف بنجاح 🗑️');
+            loadAdminBanks();
+        } catch(e) {
+            showToast('خطأ: ' + e.message, true);
+        }
     }
 
     async function loadPromoCodes() {
@@ -928,7 +990,6 @@
             const res = await authFetch(`${API_URL}/admin/settings`); const data = await res.json();
             const ui = data.uiSettings || {};
             if(document.getElementById('ui-login-logo-type')) {
-                // الشعار والدخول
                 document.getElementById('ui-login-logo-type').value = ui.loginLogoType || 'emoji';
                 document.getElementById('ui-login-logo-val').value = ui.loginLogoValue || '🦉';
                 document.getElementById('ui-login-brand-text').value = ui.loginBrandText || 'بـــومـــة BOMA';
@@ -937,11 +998,9 @@
                 document.getElementById('ui-login-brand-color-bottom').value = ui.loginBrandColorBottom || '#ffffff';
                 document.getElementById('ui-login-brand-color-bottom-picker').value = ui.loginBrandColorBottom || '#ffffff';
                 
-                // الأيقونة العلوية
                 document.getElementById('ui-home-logo-type').value = ui.homeLogoType || 'emoji';
                 document.getElementById('ui-home-logo-val').value = ui.homeLogoValue || '🦉';
                 
-                // 🌟 إعدادات البار العلوي (جديد) 🌟
                 document.getElementById('ui-header-bg-type').value = ui.appHeaderBgType || 'gradient';
                 document.getElementById('ui-header-color1').value = ui.appHeaderColor1 || '#ff6e40';
                 document.getElementById('ui-header-color1-picker').value = ui.appHeaderColor1 || '#ff6e40';
@@ -949,9 +1008,8 @@
                 document.getElementById('ui-header-color2-picker').value = ui.appHeaderColor2 || '#f25522';
                 document.getElementById('ui-header-text-color').value = ui.appHeaderTextColor || '#ffffff';
                 document.getElementById('ui-header-text-color-picker').value = ui.appHeaderTextColor || '#ffffff';
-                toggleHeaderCardInputs(); // لضبط إخفاء اللون الثاني
+                toggleHeaderCardInputs(); 
                 
-                // المحفظة
                 document.getElementById('ui-card-bg-type').value = ui.cardBgType || 'gradient';
                 document.getElementById('ui-card-color1').value = ui.cardColor1 || '#1e3d59';
                 document.getElementById('ui-card-color1-picker').value = ui.cardColor1 || '#1e3d59';
@@ -961,7 +1019,6 @@
                 document.getElementById('ui-card-text-color-picker').value = ui.cardTextColor || '#ffffff';
                 document.getElementById('ui-card-decorations').checked = ui.cardDecorations !== false;
                 
-                // الأقسام
                 document.getElementById('ui-cat-bg-color').value = ui.catBgColor || '#1e3d59';
                 document.getElementById('ui-cat-bg-color-picker').value = ui.catBgColor || '#1e3d59';
                 document.getElementById('ui-cat-text-color').value = ui.catTextColor || '#ffffff';
@@ -970,7 +1027,6 @@
                 document.getElementById('ui-cat-radius').value = ui.catRadius || '12';
                 document.getElementById('radius-val').innerText = (ui.catRadius || '12') + 'px';
                 
-                // المساحات البيضاء
                 document.getElementById('ui-auth-bg-color').value = ui.authBgColor || '#ffffff';
                 document.getElementById('ui-auth-bg-color-picker').value = ui.authBgColor || '#ffffff';
                 document.getElementById('ui-auth-radius').value = ui.authRadius || '32';
@@ -987,6 +1043,11 @@
 
                 toggleCardInputs();
             }
+            
+            document.getElementById('set-welcome-enabled').checked = data.isWelcomeBonusEnabled !== false;
+            document.getElementById('set-welcome-amount').value = data.welcomeBonusAmount !== undefined ? data.welcomeBonusAmount : 5000;
+            document.getElementById('set-fee-vendor').value = data.vendorCommissionPct !== undefined ? data.vendorCommissionPct : 7;
+
             document.getElementById('set-transfer').checked = data.isTransferEnabled !== false; document.getElementById('set-withdraw').checked = data.isWithdrawEnabled !== false; document.getElementById('set-deposit').checked = data.isDepositEnabled !== false; document.getElementById('set-store').checked = data.isStoreEnabled !== false; document.getElementById('set-services').checked = data.isServicesEnabled !== false;
             document.getElementById('set-bankak-acc').value = data.bankakAccount || ''; document.getElementById('set-bankak-name').value = data.bankakName || ''; document.getElementById('set-bankak-phone').value = data.bankakWhatsApp || ''; document.getElementById('set-bankak-enabled').checked = data.isBankakEnabled !== false;
             document.getElementById('set-terms-text').value = data.termsText || '';
@@ -1008,7 +1069,6 @@
             homeLogoType: document.getElementById('ui-home-logo-type').value,
             homeLogoValue: document.getElementById('ui-home-logo-val').value,
             
-            // 🌟 إعدادات البار العلوي (جديد) 🌟
             appHeaderBgType: document.getElementById('ui-header-bg-type').value,
             appHeaderColor1: document.getElementById('ui-header-color1').value,
             appHeaderColor2: document.getElementById('ui-header-color2').value,
@@ -1038,6 +1098,10 @@
         const depositFeePct = document.getElementById('set-fee-deposit').value;
         const transferFeePct = document.getElementById('set-fee-transfer').value;
         const withdrawFeePct = document.getElementById('set-fee-withdraw').value;
+        
+        const isWelcomeBonusEnabled = document.getElementById('set-welcome-enabled').checked;
+        const welcomeBonusAmount = Number(document.getElementById('set-welcome-amount').value) || 0;
+        const vendorCommissionPct = Number(document.getElementById('set-fee-vendor').value) || 0;
 
         showToast('جاري الحفظ...');
         try { 
@@ -1045,7 +1109,8 @@
                 method: 'PUT', 
                 body: JSON.stringify({ 
                     uiSettings, isTransferEnabled, isWithdrawEnabled, isDepositEnabled, isStoreEnabled, isServicesEnabled, bankakAccount, bankakName, bankakWhatsApp, isBankakEnabled,
-                    depositFeePct, transferFeePct, withdrawFeePct 
+                    depositFeePct, transferFeePct, withdrawFeePct,
+                    vendorCommissionPct, isWelcomeBonusEnabled, welcomeBonusAmount
                 }) 
             }); 
             showToast('تم الحفظ ✅'); 
@@ -1067,6 +1132,52 @@
     async function addCategory() { const arName = document.getElementById('cat-ar-name').value.trim(); const enName = document.getElementById('cat-en-name').value.trim(); const icon = document.getElementById('cat-icon').value.trim(); if(!arName || !enName) return showToast('أدخل الاسم باللغتين', true); showToast('جاري الحفظ...'); try { await authFetch(`${API_URL}/admin/categories`, { method: 'POST', body: JSON.stringify({ arName, enName, icon }) }); showToast('تمت الإضافة ✅'); document.getElementById('cat-ar-name').value = ''; document.getElementById('cat-en-name').value = ''; document.getElementById('cat-icon').value = ''; loadCategories(); } catch(e) { showToast('خطأ: ' + e.message, true); } }
     async function deleteCategory(id) { if(!confirm('حذف هذا القسم؟')) return; try { await authFetch(`${API_URL}/admin/categories/${id}`, { method: 'DELETE' }); showToast('تم الحذف'); loadCategories(); } catch(e) { showToast('خطأ: ' + e.message, true); } }
     
+    function toggleBranchInput(role) {
+        const branchInput = document.getElementById('create-u-branch');
+        if(role === 'cashier') {
+            branchInput.style.display = 'block';
+        } else {
+            branchInput.style.display = 'none';
+            branchInput.value = '';
+        }
+    }
+
+    async function createNewUser() {
+        const fullName = document.getElementById('create-u-name').value.trim();
+        const identity = document.getElementById('create-u-id').value.trim();
+        const role = document.getElementById('create-u-role').value;
+        const password = document.getElementById('create-u-pass').value;
+        const pin = document.getElementById('create-u-pin').value;
+        const branchName = document.getElementById('create-u-branch').value.trim();
+        
+        if(!fullName || !identity || !password || !pin) return showToast('الرجاء إكمال جميع بيانات الحساب!', true);
+        if(role === 'cashier' && !branchName) return showToast('الرجاء إدخال اسم الفرع لأمين الصندوق!', true);
+        
+        showToast('جاري إنشاء الحساب... ⏳');
+        try {
+            const res = await authFetch(`${API_URL}/admin/users/create`, {
+                method: 'POST',
+                body: JSON.stringify({ fullName, identity, role, password, pin, branchName })
+            });
+            const data = await res.json();
+            if(!res.ok) return showToast(data.message, true);
+            
+            showToast(`تم إنشاء الحساب بنجاح! 🎉\nرقم الحساب: ${data.accountNumber}`);
+            document.getElementById('create-u-name').value = '';
+            document.getElementById('create-u-id').value = '';
+            document.getElementById('create-u-pass').value = '';
+            document.getElementById('create-u-pin').value = '';
+            document.getElementById('create-u-branch').value = '';
+            toggleBranchInput('user');
+            document.getElementById('create-u-role').value = 'user';
+            
+            document.getElementById('search-acc-input').value = data.accountNumber;
+            searchUser();
+        } catch(e) {
+            showToast('خطأ في الاتصال: ' + e.message, true);
+        }
+    }
+
     async function searchUser() {
         const accNum = document.getElementById('search-acc-input').value.trim();
         const resBox = document.getElementById('search-result-box');
@@ -1087,6 +1198,7 @@
             let roleStr = 'عميل 👤';
             if (data.role === 'vendor') roleStr = 'تاجر 🏪';
             else if (data.role === 'courier') roleStr = 'مندوب توصيل 🛵';
+            else if (data.role === 'cashier') roleStr = 'أمين صندوق 🗄️';
             
             grid.innerHTML = `
                 <div class="detail-item"><span class="detail-lbl">الاسم</span><div class="detail-val">${data.fullName}</div></div>
@@ -1114,6 +1226,54 @@
             }
             showToast('تم العثور');
         } catch (e) { showToast('خطأ: ' + e.message, true); }
+    }
+
+    async function directDeposit() {
+        if(!currentSearchId) return;
+        const amount = document.getElementById('direct-amount-input').value;
+        const notes = document.getElementById('direct-notes-input').value;
+        const clientAccount = document.getElementById('search-acc-input').value; 
+        
+        if(!amount || amount <= 0) return showToast('الرجاء إدخال مبلغ صالح!', true);
+        if(!confirm(`هل أنت متأكد من إيداع مبلغ ${amount} SDG في حساب العميل؟`)) return;
+
+        showToast('جاري تنفيذ الإيداع...');
+        try {
+            const res = await authFetch(`${API_URL}/admin/direct-deposit`, {
+                method: 'POST',
+                body: JSON.stringify({ clientAccount, amount, notes })
+            });
+            const data = await res.json();
+            if(!res.ok) return showToast(data.message, true);
+            showToast('تم الإيداع بنجاح ✅');
+            document.getElementById('direct-amount-input').value = '';
+            document.getElementById('direct-notes-input').value = '';
+            searchUser(); 
+        } catch(e) { showToast('خطأ: ' + e.message, true); }
+    }
+
+    async function directWithdraw() {
+        if(!currentSearchId) return;
+        const amount = document.getElementById('direct-amount-input').value;
+        const notes = document.getElementById('direct-notes-input').value;
+        const clientAccount = document.getElementById('search-acc-input').value; 
+        
+        if(!amount || amount <= 0) return showToast('الرجاء إدخال مبلغ صالح!', true);
+        if(!confirm(`هل أنت متأكد من سحب مبلغ ${amount} SDG من حساب العميل؟`)) return;
+
+        showToast('جاري تنفيذ السحب...');
+        try {
+            const res = await authFetch(`${API_URL}/admin/direct-withdraw`, {
+                method: 'POST',
+                body: JSON.stringify({ clientAccount, amount, notes })
+            });
+            const data = await res.json();
+            if(!res.ok) return showToast(data.message, true);
+            showToast('تم السحب بنجاح ✅');
+            document.getElementById('direct-amount-input').value = '';
+            document.getElementById('direct-notes-input').value = '';
+            searchUser(); 
+        } catch(e) { showToast('خطأ: ' + e.message, true); }
     }
 
     async function changeUserIdentity() {
@@ -1167,6 +1327,29 @@
     }
     async function saveUserManage() { if(!currentSearchId) return; const freeze = document.getElementById('manage-freeze-input').value; const susp = document.getElementById('manage-suspend-input').checked; if(!confirm('حفظ التعديلات؟')) return; try { await authFetch(`${API_URL}/admin/users/${currentSearchId}/manage`, { method: 'PUT', body: JSON.stringify({ isSuspended: susp, frozenBalance: freeze }) }); showToast('تم التعديل!'); searchUser(); } catch(e) { showToast('خطأ: ' + e.message, true); } }
     async function loadUserTxs() { if(!currentSearchIdentity) return; const box = document.getElementById('user-txs-box'); const tbody = document.getElementById('user-txs-tbody'); box.style.display = 'block'; tbody.innerHTML = '<tr><td colspan="4">جاري التحميل...</td></tr>'; try { const res = await authFetch(`${API_URL}/admin/user-transactions`, { method: 'POST', body: JSON.stringify({ identity: currentSearchIdentity }) }); const txs = await res.json(); tbody.innerHTML = ''; if(txs.length === 0) return tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">لا حركات</td></tr>'; txs.forEach(t => { const isOut = t.type === 'out'; tbody.innerHTML += `<tr><td style="font-size:11px;">${new Date(t.date).toLocaleString('ar-EG')}</td><td style="color:${isOut ? 'var(--red)' : 'var(--green)'}; font-weight:bold;">${isOut ? 'سحب/صادر' : 'إيداع/وارد'}</td><td style="direction:ltr; font-weight:bold;">${Number(t.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} SDG</td><td style="font-size:12px;">${t.title}</td></tr>`; }); } catch(e) { showToast('خطأ: ' + e.message, true); } }
+
+    async function loadCashierLogs() {
+        const tbody = document.getElementById('cashier-logs-tbody');
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري التحميل...</td></tr>';
+        try {
+            const res = await authFetch(`${API_URL}/admin/cashier-logs`);
+            const data = await res.json();
+            tbody.innerHTML = '';
+            if(data.length === 0) return tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">لا توجد حركات مسجلة.</td></tr>';
+            data.forEach(log => {
+                const isOut = log.type === 'out';
+                const typeStr = isOut ? '<span style="color:var(--red); font-weight:bold;">سحب 📤</span>' : '<span style="color:var(--green); font-weight:bold;">إيداع 📥</span>';
+                tbody.innerHTML += `<tr>
+                    <td style="font-size:11px;">${new Date(log.date).toLocaleString('ar-EG')}</td>
+                    <td><strong>${log.executedBy}</strong><br><small style="color:var(--primary);">${log.branchName || 'فرع غير محدد'}</small></td>
+                    <td style="direction:ltr; font-size:12px;">${log.clientIdentity}</td>
+                    <td>${typeStr}</td>
+                    <td style="font-weight:bold; direction:ltr;">${Number(log.amount).toLocaleString()} SDG</td>
+                    <td style="font-size:12px;">${log.title}</td>
+                </tr>`;
+            });
+        } catch(e) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--red);">خطأ: ${e.message}</td></tr>`; }
+    }
 
     async function loadFinance() { const dBody = document.getElementById('deposit-tbody'); const wBody = document.getElementById('withdraw-tbody'); try { const res = await authFetch(`${API_URL}/admin/finance`); const data = await res.json(); dBody.innerHTML = ''; wBody.innerHTML = ''; const pendingDep = data.deposits.filter(d => d.status === 'pending'); if(pendingDep.length === 0) dBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا إيداعات معلقة.</td></tr>'; pendingDep.forEach(d => { let receiptBtn = d.receipt ? `<button class="btn btn-blue" onclick="viewImage('${d._id}')">الرصيد/الإيصال 🖼️</button>` : `<span style="font-size:11px; color:var(--text-muted);">رقم عملية:<br>${d.bankTxnId || 'لا يوجد'}</span>`; tempImages[d._id] = d.receipt; dBody.innerHTML += `<tr><td style="direction:ltr;">${d.clientIdentity}</td><td style="font-weight:bold; color:var(--green); direction:ltr;">${Number(d.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} SDG</td><td>${receiptBtn}</td><td style="font-size:11px;">${new Date(d.date).toLocaleString('ar-EG')}</td><td><button class="btn btn-green" onclick="handleFinance('deposits', '${d._id}', 'approved')">قبول</button> <button class="btn btn-red" onclick="handleFinance('deposits', '${d._id}', 'rejected')">رفض</button></td></tr>`; }); const pendingWit = data.withdraws.filter(w => w.status === 'pending'); if(pendingWit.length === 0) wBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا سحوبات معلقة.</td></tr>'; pendingWit.forEach(w => { wBody.innerHTML += `<tr><td style="direction:ltr;">${w.clientIdentity}</td><td style="font-weight:bold; color:var(--red); direction:ltr;">${Number(w.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} SDG</td><td><textarea readonly style="width:100%; resize:none;">${w.bankDetails}</textarea></td><td style="font-size:11px;">${new Date(w.date).toLocaleString('ar-EG')}</td><td><button class="btn btn-green" onclick="handleFinance('withdraws', '${w._id}', 'approved')">تم التحويل</button> <button class="btn btn-red" onclick="handleFinance('withdraws', '${w._id}', 'rejected')">رفض وإرجاع</button></td></tr>`; }); } catch(e) { } }
     async function handleFinance(type, id, status) { if(!confirm('تأكيد الإجراء؟')) return; try { await authFetch(`${API_URL}/admin/${type}/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }); showToast('تم التحديث'); loadFinance(); checkAdminNotifications(); } catch(e) { showToast('خطأ: ' + e.message, true); } }
