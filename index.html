@@ -209,9 +209,7 @@
         .cat-title-new { font-size: 13px; font-weight: 900; color: #fff; margin-top: 8px; z-index: 2; text-shadow: 0 1px 3px rgba(0,0,0,0.3); } 
         .cat-media-new { font-size: 32px; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
         
-        /* 🔖 العلامة المرجعية 🔖 */
         .wishlist-icon { position: absolute; top: 12px; left: 12px; font-size: 24px; cursor: pointer; z-index: 2; transition: 0.2s; filter: grayscale(100%) opacity(0.5) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
-
         .wishlist-icon.active { filter: grayscale(0%) opacity(1) drop-shadow(0 4px 6px rgba(0,0,0,0.3)); transform: scale(1.15); }
         html[dir="ltr"] .wishlist-icon { left: auto; right: 12px; }
 
@@ -301,15 +299,13 @@
         .neg-input-area button:active { transform: scale(0.95); }
 
         @media (max-width: 430px) { body { padding: 0; margin: 0; background: var(--card-bg); overflow: hidden; } .phone-container { width: 100vw; height: 100dvh; border: 0; border-radius: 0; box-shadow: none; margin: 0; } }
-        /* تنسيقات حماية كلمة المرور والـ PIN */
         .password-wrapper { position: relative; width: 100%; margin-bottom: 5px; }
         .password-wrapper input { width: 100%; padding-left: 40px; margin-bottom: 0; }
         .toggle-eye { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: var(--text-muted); opacity: 0.7; transition: 0.2s; }
         .toggle-eye:hover { opacity: 1; }
         .validation-msg { font-size: 11px; font-weight: bold; margin-bottom: 12px; display: block; text-align: right; transition: color 0.3s; }
-        .val-red { color: var(--red); }
-        .val-green { color: var(--green); }
-        /* 🌟 حركة الشعار الداخلي (نبض احترافي) 🌟 */
+        .val-red { color: var(--danger); }
+        .val-green { color: var(--accent-green); }
         @keyframes bomaProfessionalPulse {
             0%, 100% { transform: scale(1); }
             5% { transform: scale(1.1); filter: drop-shadow(0 6px 8px rgba(0,0,0,0.25)); }
@@ -317,11 +313,7 @@
             15% { transform: scale(1.05); }
             20% { transform: scale(1); }
         }
-        .boma-pulse-anim {
-            animation: bomaProfessionalPulse 5s infinite ease-in-out;
-            display: inline-block;
-            transform-origin: center;
-        }
+        .boma-pulse-anim { animation: bomaProfessionalPulse 5s infinite ease-in-out; display: inline-block; transform-origin: center; }
 
     </style>
 </head>
@@ -329,7 +321,6 @@
 
 <div class="phone-container">
     
-    <!-- 🌟 شاشة المفاوض الذكي 🌟 -->
     <div class="negotiation-overlay" id="negotiation-modal">
         <div class="negotiation-box">
             <div class="neg-header">
@@ -364,6 +355,7 @@
         </div>
     </div>
 
+    <!-- 🌟 تحديث: إيصال الدفع مع إضافة زر المشاركة 🌟 -->
     <div class="custom-dialog-overlay" id="receipt-modal">
         <div class="custom-dialog-box" style="padding: 0; background: transparent; box-shadow: none; border: none;">
             <div class="receipt-box" id="receipt-content-box">
@@ -379,8 +371,9 @@
                 <div style="margin-top: 20px; font-size: 12px; font-weight: 900; color: var(--text-muted);">تم التنفيذ عبر محفظة BOMA Pay</div>
             </div>
             <div style="display: flex; gap: 12px; margin-top: 15px;">
-                <button class="btn-main" style="background: var(--accent-orange); margin: 0; flex: 1; border:none;" onclick="downloadReceipt()" data-key="btn_download">تحميل 📥</button>
-                <button class="btn-main" style="margin: 0; flex: 1; border:none;" onclick="closeReceiptModal()" data-key="btn_close">إغلاق ✖</button>
+                <button class="btn-main" style="background: var(--primary-blue); margin: 0; flex: 1; border:none; padding:12px; font-size:14px;" onclick="shareReceipt()">مشاركة 🔗</button>
+                <button class="btn-main" style="background: var(--accent-orange); margin: 0; flex: 1; border:none; padding:12px; font-size:14px;" onclick="downloadReceipt()" data-key="btn_download">تحميل 📥</button>
+                <button class="btn-main" style="margin: 0; flex: 1; border:none; padding:12px; font-size:14px;" onclick="closeReceiptModal()" data-key="btn_close">إغلاق ✖</button>
             </div>
         </div>
     </div>
@@ -389,7 +382,6 @@
         <button class="btn-lang" onclick="toggleLanguage()" id="lang-btn">EN</button>
     </div>
 
-    <!-- 🌟 شاشة تسجيل الدخول 🌟 -->
     <div id="login-screen" class="screen account-screen active">
         <div class="boma-logo-header-wrapper">
             <div class="login-logo" id="dynamic-login-logo" style="display:flex; justify-content:center; align-items:center; overflow:hidden; background:transparent;">🦉</div>
@@ -471,7 +463,6 @@
             <p style="text-align:center; font-size:14px; margin-top:25px; color:var(--text-dark); font-weight:900;" id="login-prompt-text"></p>
         </div>
     </div>
-
     <div id="pin-reset-screen" class="screen account-screen">
         <div class="boma-logo-header-wrapper">
             <div class="logo-image-container">
@@ -661,7 +652,6 @@
         </div>
     </div>
 
-    <!-- 🌟 شاشة تفاصيل المنتج (تمت إضافة شارة نطاق التوصيل) 🌟 -->
     <div id="details-screen" class="screen">
         <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة التفاصيل"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="det_title">تفاصيل المنتج</div><button class="back-btn" onclick="switchScreen('shop-screen',1)">↩</button></div>
         <div class="app-content">
@@ -675,7 +665,6 @@
                 <div style="padding: 4px 10px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; font-weight: bold; color: var(--text-muted);">
                     🏪 البائع: <span id="det-vendor-name" style="color: var(--primary-blue); font-weight: 900;">بومة</span>
                 </div>
-                <!-- 🌟 بطاقة نطاق التوصيل 🌟 -->
                 <div id="det-delivery-scope-badge" style="font-size: 12px; font-weight: 900; padding: 4px 10px; border-radius: 8px; display: inline-block;">🌍 شحن متاح لجميع المناطق</div>
             </div>
 
@@ -735,6 +724,15 @@
                 <canvas id="expenseChart" style="width:100%; max-height:200px;"></canvas>
             </div>
             <div id="transactions-list-container"></div>
+                        <!-- 🌟 قسم شركاء الدفع والبنوك المدعومة 🌟 -->
+            <div style="margin-bottom: 90px; padding: 0 5px;">
+                <h3 style="color:var(--primary-blue); font-size:14px; margin-bottom:12px; font-weight:900;">بنوك ومحافظ ندعمها 🏦</h3>
+                <div id="client-banks-container" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none;">
+                    <!-- سيتم جلب الشعارات هنا برمجياً -->
+                </div>
+                <style>#client-banks-container::-webkit-scrollbar { display: none; }</style>
+            </div>
+
         </div>
     </div>
 
@@ -799,7 +797,8 @@
             <div class="grid-section-title" data-key="settings_general">إعدادات عامة</div>
             
             <button id="btn-vendor-panel" class="btn-main" style="display: none; background: var(--accent-green); border: none; margin-bottom: 25px;" onclick="openVendorPanel()">🏪 إدارة متجري (لوحة التاجر)</button>
-            
+            <button id="btn-cashier-panel" class="btn-main" style="display: none; background: var(--blue-light); border: none; margin-bottom: 25px;" onclick="switchScreen('cashier-screen', 5)">🗄️ لوحة الخزينة (للصرافين)</button>
+
             <div style="background: var(--card-bg); border-radius: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.03); overflow: hidden; margin-bottom: 25px; border: 1px solid var(--border);">
                 <div onclick="toggleTheme()" tabindex="0" role="button" aria-pressed="false" onkeydown="if(event.key==='Enter'||event.key===' ') toggleTheme()" style="padding: 20px; border-bottom: 2px solid var(--input-bg); display: flex; justify-content: space-between; align-items: center; cursor: pointer;"><strong style="font-size: 15px; color: var(--text-dark);">الوضع الداكن (Dark Mode)</strong><span style="font-size: 22px;" id="theme-icon-display">🌙</span></div>
                 
@@ -811,7 +810,7 @@
         </div>
     </div>
 
-    <!-- 🌟 شاشة لوحة التاجر المدمجة (مع التعديل لإضافة نطاق التوصيل) 🌟 -->
+    <!-- 🌟 شاشة لوحة التاجر المدمجة مع زري التعديل 🌟 -->
     <div id="vendor-screen" class="screen">
         <div class="app-header">
             <div class="boma-fixed-icon" style="border-radius:50%; background:var(--card-bg); color:var(--primary-blue); font-size:20px;" tabindex="0" role="button" aria-label="أيقونة التاجر">🏪</div>
@@ -831,7 +830,7 @@
             </div>
             
             <div style="background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--accent-orange); margin-bottom:20px; box-shadow:0 6px 15px rgba(255,110,64,0.05);">
-                <h3 style="color:var(--accent-orange); font-size:16px; margin-bottom:15px; font-weight:900;">➕ إضافة منتج جديد</h3>
+                <h3 style="color:var(--accent-orange); font-size:16px; margin-bottom:15px; font-weight:900;">➕ إضافة / تعديل منتج</h3>
                 
                 <label for="v-cat" class="sr-only" style="display: none;">القسم</label>
                 <select id="v-cat" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg); font-weight:bold;"></select>
@@ -862,7 +861,6 @@
                 <label for="v-variations" class="sr-only" style="display: none;">خيارات</label>
                 <input type="text" id="v-variations" placeholder="خيارات (ألوان/مقاسات) افصل بينها بفاصلة ،" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);">
                 
-                <!-- 🌟 حقل نطاق التوصيل 🌟 -->
                 <label for="v-delivery-scope" class="sr-only" style="display: none;">نطاق التوصيل المتاح</label>
                 <input type="text" id="v-delivery-scope" placeholder="نطاق التوصيل (مثال: جميع المناطق، الخرطوم فقط)" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);">
                 
@@ -871,7 +869,10 @@
                 <label for="v-gallery" class="sr-only" style="display: none;">روابط صور إضافية</label>
                 <input type="text" id="v-gallery" placeholder="روابط صور إضافية (افصل بينها بفاصلة ،)" style="width:100%; padding:14px; border-radius:12px; margin-bottom:15px; border:2px solid var(--border); background:var(--input-bg); direction:ltr; text-align:right;">
                 
-                <button class="btn-main" onclick="submitVendorProduct()" style="border:none;">نشر في متجر بومة 🚀</button>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button class="btn-main" id="btn-submit-vendor-product" onclick="submitVendorProduct()" style="border:none; flex:1;">نشر في متجر بومة 🚀</button>
+                    <button class="btn-main" id="btn-cancel-vendor-edit" onclick="cancelEditVendorProduct()" style="border:none; flex:1; background:var(--text-muted); display:none;">إلغاء التعديل</button>
+                </div>
             </div>
 
             <h3 style="font-size:16px; margin-bottom:15px; color:var(--text-dark); font-weight:900;">📦 منتجاتي الحالية</h3>
@@ -879,43 +880,46 @@
             
         </div>
     </div>
-
-    <!-- باقي الشاشات -->
-    <div id="transfer-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة التحويل"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="transfer_title">تحويل أموال BOMA</div><button class="back-btn" onclick="switchScreen('home-screen',0)">↩</button></div><div class="app-content"><div class="grid-section-title" data-key="transfer_info">بيانات التحويل</div><div class="form-group"><label for="transfer-receiver" data-key="receiver_acc">رقم حساب المستلم (10 أرقام)</label><input type="number" id="transfer-receiver" oninput="checkReceiverName()"><div id="receiver-name-display" style="color: var(--accent-green); font-size: 15px; font-weight: 900; margin-top: 10px; display: none;"></div></div><div class="form-group"><label for="transfer-amount" data-key="amount_sdg">المبلغ المراد تحويله (SDG)</label><input type="number" id="transfer-amount" placeholder="0.00"></div><div id="transfer-error" class="error-message"></div><button class="btn-main" onclick="handleTransfer()" data-key="btn_send_money" style="border:none;">إرسال الأموال 💸</button></div></div>
-    <div id="deposit-screen" class="screen">
+    <!-- 🌟 شاشة أمين الصندوق (Cashier Panel) 🌟 -->
+    <div id="cashier-screen" class="screen">
         <div class="app-header">
-            <div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة الإيداع"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div>
-            <div class="app-header-title" data-key="deposit_title">شحن المحفظة (إيداع)</div>
-            <button class="back-btn" onclick="switchScreen('home-screen',0)">↩</button>
+            <div class="boma-fixed-icon" style="border-radius:50%; background:var(--card-bg); color:var(--primary-blue); font-size:20px;" tabindex="0" role="button" aria-label="أيقونة الخزينة">🗄️</div>
+            <div class="app-header-title">لوحة الخزينة</div>
+            <button class="back-btn" onclick="switchScreen('settings-screen', 5)">↩</button>
         </div>
         <div class="app-content">
-            <div style="background: var(--card-bg); padding: 25px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.03); border:1px solid var(--border);">
-                <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.8; font-weight: bold;">
-                    قم بتحويل المبلغ لحسابنا في (بنكك) أولاً، ثم أدخل المبلغ ورقم العملية لتتم التغذية الفورية لمحفظتك.
-                </p>
-                <div class="form-group">
-                    <label for="dep-amount" data-key="dep_amount">المبلغ المودع (SDG)</label>
-                    <input type="number" id="dep-amount" placeholder="5000">
+            <div class="card" style="background:var(--card-bg); padding:20px; border-radius:20px; box-shadow:0 6px 15px rgba(0,0,0,0.05); border:1px solid var(--border); margin-bottom:20px;">
+                <h3 style="color:var(--primary-blue); font-size:16px; margin-bottom:15px; font-weight:900;">🔍 البحث عن حساب عميل</h3>
+                <div style="display:flex; gap:10px;">
+                    <input type="number" id="cashier-search-input" placeholder="رقم حساب العميل (مثال: 1000000001)" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg); margin:0;">
+                    <button class="btn-main" style="width:auto; padding:0 20px; margin:0; border:none;" onclick="searchUserForCashier()">بحث</button>
                 </div>
-                <div class="form-group">
-                    <label for="dep-txn-id">رقم العملية (Transaction ID)</label>
-                    <input type="text" id="dep-txn-id" placeholder="أدخل رقم عملية بنكك المكون من أرقام" style="direction: ltr; text-align: right; font-family: monospace; letter-spacing: 1px;">
+            </div>
+
+            <div id="cashier-result-box" style="display:none; background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--accent-green); box-shadow:0 6px 15px rgba(16,185,129,0.05);">
+                <h3 style="color:var(--accent-green); font-size:16px; margin-bottom:15px; font-weight:900;">👤 بيانات العميل</h3>
+                <div style="background:var(--input-bg); padding:15px; border-radius:12px; margin-bottom:15px; font-weight:bold; font-size:14px; color:var(--text-dark); line-height:1.8;">
+                    <div>الاسم: <span id="c-user-name" style="color:var(--primary-blue);">---</span></div>
+                    <div>الحساب: <span id="c-user-acc" style="color:var(--primary-blue);">---</span></div>
+                    <div>المعرف: <span id="c-user-id" style="color:var(--primary-blue); direction:ltr; display:inline-block;">---</span></div>
                 </div>
-                <button class="btn-main" style="background: var(--accent-green); border: none;" onclick="submitDeposit()">تأكيد وشحن المحفظة 🚀</button>
+
+                <h4 style="font-size:14px; color:var(--text-dark); margin-bottom:10px; font-weight:900;">💸 تنفيذ عملية مالية</h4>
+                <div style="display:flex; gap:10px; margin-bottom:12px;">
+                    <input type="number" id="cashier-amount" placeholder="المبلغ (SDG)" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg); margin:0;">
+                </div>
+                <div style="margin-bottom:15px;">
+                    <input type="text" id="cashier-notes" placeholder="البيان / السبب (مثال: إيداع كاش بالفرع)" style="width:100%; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg); margin:0;">
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-main" style="background:var(--accent-green); border:none; flex:1;" onclick="cashierDeposit()">إيداع 📥</button>
+                    <button class="btn-main" style="background:var(--danger); border:none; flex:1;" onclick="cashierWithdraw()">سحب 📤</button>
+                </div>
+                <button class="btn-main btn-outline" style="margin-top:15px; border:none;" onclick="clearCashierSearch()">إلغاء وبحث جديد</button>
             </div>
         </div>
     </div>
-
-    <div id="withdraw-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة السحب"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="withdraw_title">سحب الرصيد للبنك</div><button class="back-btn" onclick="switchScreen('home-screen',0)">↩</button></div><div class="app-content"><div style="background: var(--card-bg); padding: 25px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.03); border:1px solid var(--border);"><p style="font-size: 14px; color: var(--danger); margin-bottom: 25px; line-height: 1.8; font-weight: 900;" data-key="wit_info_txt">سيتم تحويل أرباحك أو رصيدك إلى حسابك البنكي خلال 24 ساعة. (ملاحظة: سيتم حجز المبلغ من رصيدك المتاح لحين المراجعة).</p><div class="form-group"><label for="wit-amount" data-key="wit_amount">المبلغ المراد سحبه (SDG)</label><input type="number" id="wit-amount" placeholder="1000"></div><div class="form-group"><label for="wit-bank" data-key="wit_bank_details">بيانات حسابك البنكي (اسم البنك، رقم الحساب، اسمك الرباعي)</label><textarea id="wit-bank" rows="4"></textarea></div><button class="btn-main" style="background: var(--danger); border: none;" onclick="submitWithdraw()" data-key="btn_send_wit">طلب السحب المالي 💸</button></div></div></div>
-    <div id="notifications-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة الإشعارات"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="notif_title">مركز الإشعارات</div><button class="back-btn" onclick="switchScreen('home-screen',0)">↩</button></div><div class="app-content" id="notifications-list-container"></div></div>
-    <div id="kyc-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة التوثيق"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="kyc_title">توثيق الحساب (KYC)</div><button class="back-btn" onclick="switchScreen('settings-screen',4)">↩</button></div><div class="app-content"><div style="background: var(--card-bg); padding: 25px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.03); border:1px solid var(--border);"><p style="font-size: 14px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.8; font-weight: bold;" data-key="kyc_info">لفتح حدود التحويل المالي، الرجاء إرفاق المستندات الرسمية لتوثيق هويتك.</p><div class="form-group"><label for="kyc-doc-type" data-key="kyc_doc_type">نوع المستند التعريفي</label><select id="kyc-doc-type"><option value="national_id">بطاقة قومية / رقم وطني</option><option value="passport">جواز سفر (Passport)</option></select></div>
-    <div class="form-group">
-        <label for="kyc-national-id">الرقم الوطني / رقم الجواز</label>
-        <input type="text" id="kyc-national-id" placeholder="أدخل الرقم هنا بدقة..." style="direction: ltr; text-align: left; font-family: monospace; letter-spacing: 1px;">
-    </div>
-    <div class="form-group"><label for="kyc-doc-img" data-key="kyc_doc_img">صورة المستند التعريفي</label><div class="file-upload-wrapper" id="wrap-doc"><span id="label-doc">📷</span><input type="file" id="kyc-doc-img" accept="image/*" capture="environment" onchange="updateFileLabel('doc')"></div></div><div class="form-group"><label for="kyc-selfie-img" data-key="kyc_selfie">صورة شخصية (Selfie) للتحقق</label><div class="file-upload-wrapper" id="wrap-selfie"><span id="label-selfie">🤳</span><input type="file" id="kyc-selfie-img" accept="image/*" capture="user" onchange="updateFileLabel('selfie')"></div></div><button class="btn-main" style="background: var(--accent-green); border: none; margin-top: 15px;" onclick="submitKYCDocs()" data-key="btn_send_kyc">إرسال بيانات التوثيق 🛡️</button></div></div></div>
-    <div id="support-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة الدعم"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="support_title">الدعم الفني</div><button class="back-btn" onclick="switchScreen('settings-screen',4)">↩</button></div><div class="app-content"><div class="grid-section-title" data-key="support_new">إرسال رسالة جديدة</div><div style="background: var(--card-bg); border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.03); border:1px solid var(--border);"><div class="form-group"><label for="sup-subject" data-key="support_subject">عنوان المشكلة</label><input type="text" id="sup-subject"></div><div class="form-group"><label for="sup-message" data-key="support_msg">تفاصيل المشكلة</label><textarea id="sup-message" rows="4"></textarea></div><button class="btn-main" onclick="submitSupportTicket()" data-key="btn_send_support" style="border:none;">إرسال التذكرة 📩</button></div><div class="grid-section-title" data-key="support_prev">تذاكر الدعم السابقة</div><div id="support-list-container"></div></div></div>
-    <div id="terms-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة الشروط"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="nav_terms">الشروط والخصوصية</div><button class="back-btn" onclick="goBackFromTerms()">↩</button></div><div class="app-content"><div id="terms-dynamic-content" style="background: var(--card-bg); border-radius: 20px; padding: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.03); line-height: 1.8; font-size: 15px; color: var(--text-dark); text-align: right; font-weight: bold; border:1px solid var(--border);"><h3 style="color: var(--primary-blue); margin-bottom: 15px; text-align: center; font-weight: 900; font-size: 20px;" data-key="terms_h1">شروط الاستخدام وسياسة الخصوصية</h3><p style="margin-bottom: 20px; font-weight: 900; color: var(--text-muted); text-align: center; font-size: 13px;">آخر تحديث: يوليو 2026</p><p style="margin-bottom: 15px;" data-key="terms_p1">مرحباً بك في منصة وتطبيق <strong>"بومة" (BOMA)</strong>. يُشكل استخدامك لهذا التطبيق موافقة قانونية ملزمة على الشروط الموضحة أدناه.</p></div></div></div>
 
     <div class="bottom-nav" id="main-nav">
         <div class="nav-item active" onclick="switchScreen('home-screen')" tabindex="0" role="button" aria-pressed="true" onkeydown="if(event.key==='Enter'||event.key===' ') switchScreen('home-screen')"><div>🏠</div><span data-key="nav_home">الرئيسية</span></div>
@@ -927,7 +931,7 @@
     </div>
 </div>
 <script>
-    const STORE_KEY = 'boma_app_client_v53';
+    const STORE_KEY = 'boma_app_client_v54';
     const API_URL = 'https://api.boomapay.com/api';
 
     let customDialogConfirmCallback = null;
@@ -944,6 +948,10 @@
     let featuredProductsInterval; 
     let wishlist = [];
     let currentTheme = 'light';
+    
+    // متغير لتتبع تعديل منتجات التاجر
+    let editingVendorProductId = null;
+    let vendorProductsData = []; 
 
     function showToast(msg, isError = false) {
         const t = document.getElementById('toast');
@@ -981,7 +989,6 @@
         confirmBtn.onclick = () => { 
             const val = requiresInput ? inputField.value : null;
             if(requiresInput && val.length !== 6) return showToast(currentLang === 'ar' ? 'أدخل 6 أرقام بشكل صحيح' : 'Enter 6 digits correctly', true);
-
             closeCustomDialog(); if(customDialogConfirmCallback) customDialogConfirmCallback(val); 
         };
         const overlay = document.getElementById('custom-dialog');
@@ -1015,6 +1022,41 @@
             link.download = `BOMA_Receipt_${document.getElementById('rec-id').innerText || 'Transfer'}.jpg`; link.href = imgData;
             document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('تم التنزيل ✅');
         }).catch(e => { if(isDark) document.documentElement.setAttribute('data-theme', 'dark'); showToast('حدث خطأ: ' + e.message, true); });
+    }
+
+    async function shareReceipt() {
+        if(typeof html2canvas === 'undefined') return showToast('جاري التحميل...', true);
+        const target = document.getElementById('receipt-content-box'); 
+        showToast(currentLang === 'ar' ? 'جاري تحضير الإيصال للمشاركة... ⏳' : 'Preparing receipt to share... ⏳');
+        const isDark = currentTheme === 'dark'; if(isDark) document.documentElement.setAttribute('data-theme', 'light');
+        
+        try {
+            const canvas = await html2canvas(target, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
+            if(isDark) document.documentElement.setAttribute('data-theme', 'dark');
+            
+            canvas.toBlob(async (blob) => {
+                if (!blob) return showToast('حدث خطأ أثناء إنشاء الصورة', true);
+                const file = new File([blob], `BOMA_Receipt_${document.getElementById('rec-id').innerText || 'Transfer'}.jpg`, { type: 'image/jpeg' });
+                
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            title: currentLang === 'ar' ? 'إيصال تحويل BOMA' : 'BOMA Transfer Receipt',
+                            text: currentLang === 'ar' ? 'مرفق إيصال العملية من محفظة بومة.' : 'Attached is the receipt from BOMA Wallet.',
+                            files: [file]
+                        });
+                        showToast(currentLang === 'ar' ? 'تمت المشاركة بنجاح ✅' : 'Shared Successfully ✅');
+                    } catch (err) {
+                        console.log('Share error:', err);
+                    }
+                } else {
+                    showToast(currentLang === 'ar' ? 'المشاركة غير مدعومة في هذا المتصفح، استخدم زر التحميل' : 'Sharing not supported in this browser.', true);
+                }
+            }, 'image/jpeg', 0.9);
+        } catch (e) {
+            if(isDark) document.documentElement.setAttribute('data-theme', 'dark'); 
+            showToast('حدث خطأ: ' + e.message, true);
+        }
     }
 
     const languages = {
@@ -1249,7 +1291,6 @@
             .btn-main { background: linear-gradient(135deg, ${ui.btnMainBg || 'var(--primary-blue-shine)'}, var(--primary-blue)) !important; color: ${ui.btnMainText || '#ffffff'} !important; }
         `;
 
-        // 🌟 التعديل الخاص بألوان البار العلوي (App Header) 🌟
         let headerBg = (ui.appHeaderBgType === 'solid') 
             ? (ui.appHeaderColor1 || 'var(--accent-orange)') 
             : `linear-gradient(135deg, ${ui.appHeaderColor1 || 'var(--accent-orange)'}, ${ui.appHeaderColor2 || '#f25522'})`;
@@ -1805,7 +1846,7 @@
 
     window.changeDetImage = function(imgUrl, pId, isFav) {
         const safeImg = (imgUrl.includes('http') || imgUrl.includes('data:') || imgUrl.includes('Files/')) ? `<img src="${imgUrl}" style="width:100%; height:100%; object-fit:contain; border-radius:20px;">` : imgUrl;
-        document.getElementById('det-img').innerHTML = `${safeImg} <div class="wishlist-icon ${isFav ? 'active' : ''}" onclick="toggleWishlist('${pId}', this)">🔖</div>`;
+        document.getElementById('det-img').innerHTML = `${safeImg} <div class="wishlist-icon ${isFav ? 'active' : ''}" id="det-wishlist-icon" onclick="toggleWishlist('${pId}', this)">🔖</div>`;
     };
 
     function openProductByID(index) {
@@ -2111,6 +2152,8 @@
             
             const vendorBtn = document.getElementById('btn-vendor-panel');
             if(vendorBtn) vendorBtn.style.display = registeredUser.role === 'vendor' ? 'block' : 'none';
+            const cashierBtn = document.getElementById('btn-cashier-panel');
+            if(cashierBtn) cashierBtn.style.display = registeredUser.role === 'cashier' ? 'block' : 'none';
 
         } else {
             document.getElementById('set-user-name').innerText = currentLang === 'ar' ? 'زائر (Guest)' : 'Guest User';
@@ -2124,6 +2167,9 @@
             
             const vendorBtn = document.getElementById('btn-vendor-panel');
             if(vendorBtn) vendorBtn.style.display = 'none';
+                        const cashierBtn = document.getElementById('btn-cashier-panel');
+            if(cashierBtn) cashierBtn.style.display = 'none';
+
         }
     }
 
@@ -2267,7 +2313,6 @@
         }
     }
 
-
     function renderExpenseChart(txs) {
         const canvas = document.getElementById('expenseChart');
         if (!canvas) return;
@@ -2306,6 +2351,28 @@
             options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } } }
         });
     }
+    // 🌟 جلب وعرض شعارات البنوك المدعومة 🌟
+    async function loadClientBanks() {
+        const container = document.getElementById('client-banks-container');
+        if(!container) return;
+        try {
+            const res = await fetch(`${API_URL}/banks`);
+            const banks = await res.json();
+            container.innerHTML = '';
+            if(banks.length === 0) {
+                container.parentElement.style.display = 'none';
+                return;
+            }
+            container.parentElement.style.display = 'block';
+            banks.forEach(b => {
+                container.innerHTML += `
+                    <div style="min-width: 65px; height: 65px; background: var(--card-bg); border-radius: 16px; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border); flex-shrink: 0; padding: 8px;">
+                        <img src="${b.logo}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;" alt="${b.name}" title="${b.name}">
+                    </div>
+                `;
+            });
+        } catch(e) { console.error('Error loading banks:', e); }
+    }
 
     async function fetchTransactionHistory() { 
         const container = document.getElementById('transactions-list-container'); container.innerHTML = '<p style="text-align:center; margin-top:30px; font-weight:900; font-size:18px;">جاري التحميل... ⏳</p>'; 
@@ -2320,8 +2387,10 @@
             data.forEach(tx => { 
                 const isOut = tx.type === 'out'; const sign = isOut ? '-' : '+'; const color = isOut ? 'var(--danger)' : 'var(--accent-green)'; 
                 const date = new Date(tx.date).toLocaleString('ar-EG', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); let amtDisplay = Number(tx.amount || 0).toLocaleString('en-US') + ' SDG';
- 
-                container.innerHTML += `<div class="transaction-card"><div><strong style="font-size:16px; color:var(--primary-blue);">${tx.title}</strong><br><small style="color:var(--text-muted); font-size:12px; font-weight:bold; margin-top:5px; display:inline-block;">🕒 ${date}</small></div><div style="font-weight:900; font-size:20px; color:${color}; direction:ltr;">${sign}${amtDisplay}</div></div>`; 
+                
+                const txnIdDisplay = tx.transactionId ? `<br><small style="color:var(--text-muted); font-size:11px; font-weight:bold; font-family:monospace;">رقم العملية: <span style="color:var(--primary-blue);">${tx.transactionId}</span></small>` : '';
+
+                container.innerHTML += `<div class="transaction-card"><div><strong style="font-size:16px; color:var(--primary-blue);">${tx.title}</strong><br><small style="color:var(--text-muted); font-size:12px; font-weight:bold; margin-top:5px; display:inline-block;">🕒 ${date}</small>${txnIdDisplay}</div><div style="font-weight:900; font-size:20px; color:${color}; direction:ltr;">${sign}${amtDisplay}</div></div>`; 
             }); 
         } catch (e) { container.innerHTML = `<p style="text-align:center; color:var(--danger); margin-top:20px; font-weight:bold;">خطأ: ${e.message}</p>`; } 
     }
@@ -2371,6 +2440,8 @@
                 if(!res.ok) { showToast(data.message, true); return; }
                 
                 registeredUser.balance = data.newBalance; saveState(); renderWalletDisplay();
+                loadClientBanks();
+
                 document.getElementById('transfer-receiver').value = '';
                 document.getElementById('transfer-amount').value = '';
                 document.getElementById('receiver-name-display').style.display = 'none';
@@ -2583,20 +2654,23 @@
         } catch (e) {}
     }
 
+    // 🌟 التحديث: عرض المنتجات وإضافة زر تعديل المنتج 🌟
     async function loadVendorProducts() {
         const list = document.getElementById('vendor-products-list');
         list.innerHTML = '<p style="text-align:center; font-weight:bold;">جاري التحميل...</p>';
         try {
             const token = localStorage.getItem('boma_token');
             const res = await fetch(`${API_URL}/vendor/products`, { headers: { 'Authorization': `Bearer ${token}` } });
-            const data = await res.json();
+            vendorProductsData = await res.json(); 
+            const data = vendorProductsData;
+            
             list.innerHTML = '';
             if (data.length === 0) {
                 list.innerHTML = '<p style="text-align:center; font-size:13px; color:var(--text-muted); font-weight:bold;">لا توجد منتجات، أضف منتجك الأول لتبدأ البيع!</p>';
                 return;
             }
             data.forEach(p => {
-                const imgDisplay = p.img.includes('http') ? `<img src="${p.img}" style="width:50px; height:50px; border-radius:10px; object-fit:cover;">` : `<div style="font-size:30px;">${p.img}</div>`;
+                const imgDisplay = p.img.includes('http') || p.img.includes('data:') ? `<img src="${p.img}" style="width:50px; height:50px; border-radius:10px; object-fit:cover;">` : `<div style="font-size:30px;">${p.img}</div>`;
                 list.innerHTML += `
                     <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:12px; display:flex; align-items:center; gap:12px; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
                         ${imgDisplay}
@@ -2605,7 +2679,10 @@
                             <small style="color:var(--green); font-weight:bold;">السعر: ${Number(p.price).toLocaleString()} SDG</small>
                             <small style="color:var(--text-muted); display:block; margin-top:2px;">المخزون: ${p.stock}</small>
                         </div>
-                        <button style="background:var(--danger); color:white; border:none; padding:8px 12px; border-radius:10px; font-weight:bold; cursor:pointer;" onclick="deleteVendorProduct('${p._id}')">حذف 🗑️</button>
+                        <div style="display:flex; flex-direction:column; gap:5px;">
+                            <button style="background:var(--primary-blue); color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="editVendorProduct('${p._id}')">تعديل ✏️</button>
+                            <button style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="deleteVendorProduct('${p._id}')">حذف 🗑️</button>
+                        </div>
                     </div>
                 `;
             });
@@ -2614,6 +2691,53 @@
         }
     }
 
+    // 🌟 التحديث: دالة تعبئة نموذج تعديل منتج التاجر 🌟
+    function editVendorProduct(id) {
+        const p = vendorProductsData.find(item => item._id === id);
+        if(!p) return;
+        editingVendorProductId = id;
+        
+        document.getElementById('v-cat').value = p.categoryId || '';
+        document.getElementById('v-brand-name').value = p.vendorName || '';
+        document.getElementById('v-name-ar').value = p.arName || '';
+        document.getElementById('v-name-en').value = p.enName || '';
+        document.getElementById('v-price').value = p.price || '';
+        document.getElementById('v-min-price').value = p.minPrice || '';
+        document.getElementById('v-stock').value = p.stock || 0;
+        document.getElementById('v-desc-ar').value = p.arDesc || '';
+        document.getElementById('v-desc-en').value = p.enDesc || '';
+        document.getElementById('v-variations').value = (p.variations && p.variations.length > 0) ? p.variations.join(', ') : '';
+        document.getElementById('v-delivery-scope').value = p.deliveryScope || 'جميع المناطق';
+        document.getElementById('v-img-url').value = p.img || '';
+        document.getElementById('v-gallery').value = (p.gallery && p.gallery.length > 0) ? p.gallery.join(', ') : '';
+        
+        document.getElementById('btn-submit-vendor-product').innerText = 'حفظ التعديلات 💾';
+        document.getElementById('btn-cancel-vendor-edit').style.display = 'block';
+        document.getElementById('vendor-screen').scrollTop = 0;
+    }
+
+    // 🌟 التحديث: دالة إلغاء تعديل منتج التاجر 🌟
+    function cancelEditVendorProduct() {
+        editingVendorProductId = null;
+        document.getElementById('v-cat').selectedIndex = 0;
+        document.getElementById('v-brand-name').value = '';
+        document.getElementById('v-name-ar').value = '';
+        document.getElementById('v-name-en').value = '';
+        document.getElementById('v-price').value = '';
+        document.getElementById('v-min-price').value = '';
+        document.getElementById('v-stock').value = '';
+        document.getElementById('v-desc-ar').value = '';
+        document.getElementById('v-desc-en').value = '';
+        document.getElementById('v-variations').value = '';
+        document.getElementById('v-delivery-scope').value = '';
+        document.getElementById('v-img-url').value = '';
+        document.getElementById('v-gallery').value = '';
+        
+        document.getElementById('btn-submit-vendor-product').innerText = 'نشر في متجر بومة 🚀';
+        document.getElementById('btn-cancel-vendor-edit').style.display = 'none';
+    }
+
+    // 🌟 التحديث: دعم الإضافة والتعديل في دالة Submit 🌟
     async function submitVendorProduct() {
         const categoryId = document.getElementById('v-cat').value;
         const brandName = document.getElementById('v-brand-name').value.trim();
@@ -2637,40 +2761,40 @@
             return showToast('الحد الأدنى لا يمكن أن يكون أعلى من السعر الأساسي!', true);
         }
 
-        showToast('جاري رفع المنتج... ⏳');
+        showToast('جاري حفظ المنتج... ⏳');
         try {
             const token = localStorage.getItem('boma_token');
-            const res = await fetch(`${API_URL}/vendor/products`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({ 
-                    categoryId, brandName, arName, enName: enName || arName, price, minPrice, stock, 
-                    arDesc, enDesc: enDesc || arDesc, variations, img: imgUrl, gallery, deliveryScope 
-                })
+            const productBody = JSON.stringify({ 
+                categoryId, brandName, arName, enName: enName || arName, price, minPrice, stock, 
+                arDesc, enDesc: enDesc || arDesc, variations, img: imgUrl, gallery, deliveryScope 
             });
+
+            let res;
+            if (editingVendorProductId) {
+                res = await fetch(`${API_URL}/vendor/products/${editingVendorProductId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: productBody
+                });
+            } else {
+                res = await fetch(`${API_URL}/vendor/products`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: productBody
+                });
+            }
+
             const data = await res.json();
             if (res.ok) {
-                showToast('تم نشر المنتج في المتجر! 🎉');
-                document.getElementById('v-brand-name').value = '';
-                document.getElementById('v-name-ar').value = '';
-                document.getElementById('v-name-en').value = '';
-                document.getElementById('v-price').value = '';
-                document.getElementById('v-min-price').value = '';
-                document.getElementById('v-stock').value = '';
-                document.getElementById('v-desc-ar').value = '';
-                document.getElementById('v-desc-en').value = '';
-                document.getElementById('v-variations').value = '';
-                document.getElementById('v-img-url').value = '';
-                document.getElementById('v-gallery').value = '';
-                document.getElementById('v-delivery-scope').value = ''; 
-                
+                showToast(editingVendorProductId ? 'تم تعديل المنتج بنجاح! ✅' : 'تم نشر المنتج في المتجر! 🎉');
+                cancelEditVendorProduct(); 
                 loadVendorStats();
                 loadVendorProducts();
             } else {
                 showToast(data.message, true);
             }
         } catch (e) {
-            showToast('خطأ في الرفع', true);
+            showToast('خطأ في الاتصال!', true);
         }
     }
 
@@ -2894,7 +3018,93 @@
             waBtn.style.color = 'var(--accent-orange)';
         }
     }
+    // ==============================================
+    // 🌟 وظائف لوحة الخزينة (Cashier Functions) 🌟
+    // ==============================================
+    let currentCashierTargetAcc = null;
 
+    async function searchUserForCashier() {
+        const accNum = document.getElementById('cashier-search-input').value.trim();
+        if(!accNum) return showToast(currentLang === 'ar' ? 'أدخل رقم الحساب!' : 'Enter account number!', true);
+        showToast(currentLang === 'ar' ? 'جاري البحث... ⏳' : 'Searching... ⏳');
+        try {
+            const token = localStorage.getItem('boma_token');
+            const res = await fetch(`${API_URL}/cashier/search/${accNum}`, { headers: { 'Authorization': `Bearer ${token}` }});
+            const data = await res.json();
+            if(!res.ok) return showToast(data.message, true);
+            if(data.isSuspended) return showToast(currentLang === 'ar' ? 'عذراً، هذا الحساب موقوف!' : 'Account is suspended!', true);
+
+            currentCashierTargetAcc = data.accountNumber;
+            document.getElementById('c-user-name').innerText = data.fullName;
+            document.getElementById('c-user-acc').innerText = data.accountNumber;
+            document.getElementById('c-user-id').innerText = data.identity;
+            
+            document.getElementById('cashier-result-box').style.display = 'block';
+        } catch (e) {
+            showToast(currentLang === 'ar' ? 'خطأ في الاتصال' : 'Connection error', true);
+        }
+    }
+
+    function clearCashierSearch() {
+        currentCashierTargetAcc = null;
+        document.getElementById('cashier-search-input').value = '';
+        document.getElementById('cashier-amount').value = '';
+        document.getElementById('cashier-notes').value = '';
+        document.getElementById('cashier-result-box').style.display = 'none';
+    }
+
+    async function cashierDeposit() {
+        if(!currentCashierTargetAcc) return;
+        const amount = document.getElementById('cashier-amount').value;
+        const notes = document.getElementById('cashier-notes').value;
+        if(!amount || amount <= 0) return showToast(currentLang === 'ar' ? 'أدخل مبلغاً صالحاً للإيداع!' : 'Enter valid amount!', true);
+        
+        if(!confirm(currentLang === 'ar' ? `تأكيد إيداع ${amount} SDG في حساب العميل؟` : `Confirm deposit of ${amount} SDG?`)) return;
+
+        showToast(currentLang === 'ar' ? 'جاري التنفيذ... ⏳' : 'Processing... ⏳');
+        try {
+            const token = localStorage.getItem('boma_token');
+            const res = await fetch(`${API_URL}/cashier/deposit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ clientAccount: currentCashierTargetAcc, amount, notes })
+            });
+            const data = await res.json();
+            if(!res.ok) return showToast(data.message, true);
+            
+            showToast(currentLang === 'ar' ? 'تم الإيداع بنجاح ✅' : 'Deposited successfully ✅');
+            if(data.receipt) showReceiptModal(data.receipt);
+            clearCashierSearch();
+        } catch(e) { showToast(currentLang === 'ar' ? 'خطأ في الاتصال' : 'Connection error', true); }
+    }
+
+    async function cashierWithdraw() {
+        if(!currentCashierTargetAcc) return;
+        const amount = document.getElementById('cashier-amount').value;
+        const notes = document.getElementById('cashier-notes').value;
+        if(!amount || amount <= 0) return showToast(currentLang === 'ar' ? 'أدخل مبلغاً صالحاً للسحب!' : 'Enter valid amount!', true);
+        
+        showCustomDialog('🏦', currentLang === 'ar' ? 'تأكيد السحب' : 'Confirm Withdrawal', 
+            currentLang === 'ar' ? `أدخل رمز PIN الخاص بك (كأمين صندوق) لتأكيد سحب ${amount} SDG من العميل` : `Enter your PIN to confirm withdrawal`, 
+            currentLang === 'ar' ? 'تأكيد' : 'Confirm', currentLang === 'ar' ? 'إلغاء' : 'Cancel', async (pinVal) => {
+            
+            showToast(currentLang === 'ar' ? 'جاري التنفيذ... ⏳' : 'Processing... ⏳');
+            try {
+                const token = localStorage.getItem('boma_token');
+                const res = await fetch(`${API_URL}/cashier/withdraw`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ clientAccount: currentCashierTargetAcc, amount, notes, pin: pinVal })
+                });
+                const data = await res.json();
+                if(!res.ok) return showToast(data.message, true);
+                
+                showToast(currentLang === 'ar' ? 'تم السحب بنجاح ✅' : 'Withdrawn successfully ✅');
+                if(data.receipt) showReceiptModal(data.receipt);
+                clearCashierSearch();
+            } catch(e) { showToast(currentLang === 'ar' ? 'خطأ في الاتصال' : 'Connection error', true); }
+        }, true, false);
+    }
 </script>
 </body>
 </html>
