@@ -624,6 +624,16 @@
                 <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:bold;">تابع حركات أموالك، إيداعاتك، ومسحوباتك بسهولة.</p>
                 <button class="btn-main" style="padding:12px; font-size:14px; border:none;" onclick="switchScreen('history-screen')">عرض كشف الحساب 📄</button>
             </div>
+            
+            <!-- 🌟 قسم شركاء الدفع والبنوك المدعومة 🌟 -->
+            <div style="margin-top: 25px; margin-bottom: 25px; padding: 0 5px;">
+                <h3 style="color:var(--primary-blue); font-size:14px; margin-bottom:12px; font-weight:900;">بنوك ومحافظ ندعمها 🏦</h3>
+                <div id="client-banks-container" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none;">
+                    <!-- سيتم جلب الشعارات هنا برمجياً -->
+                </div>
+                <style>#client-banks-container::-webkit-scrollbar { display: none; }</style>
+            </div>
+
         </div>
     </div>
 
@@ -724,15 +734,6 @@
                 <canvas id="expenseChart" style="width:100%; max-height:200px;"></canvas>
             </div>
             <div id="transactions-list-container"></div>
-                        <!-- 🌟 قسم شركاء الدفع والبنوك المدعومة 🌟 -->
-            <div style="margin-bottom: 90px; padding: 0 5px;">
-                <h3 style="color:var(--primary-blue); font-size:14px; margin-bottom:12px; font-weight:900;">بنوك ومحافظ ندعمها 🏦</h3>
-                <div id="client-banks-container" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none;">
-                    <!-- سيتم جلب الشعارات هنا برمجياً -->
-                </div>
-                <style>#client-banks-container::-webkit-scrollbar { display: none; }</style>
-            </div>
-
         </div>
     </div>
 
@@ -949,7 +950,6 @@
     let wishlist = [];
     let currentTheme = 'light';
     
-    // متغير لتتبع تعديل منتجات التاجر
     let editingVendorProductId = null;
     let vendorProductsData = []; 
 
@@ -1585,7 +1585,6 @@
             if(guestPrompt) guestPrompt.style.display = 'block';
         }
     }
-
     function toggleBalance() {
         isBalanceHidden = !isBalanceHidden;
         const icon = document.getElementById('toggle-balance-icon');
@@ -2351,6 +2350,7 @@
             options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } } }
         });
     }
+
     // 🌟 جلب وعرض شعارات البنوك المدعومة 🌟
     async function loadClientBanks() {
         const container = document.getElementById('client-banks-container');
@@ -2829,6 +2829,7 @@
         }); 
         renderPayments(); 
         renderWalletDisplay(); 
+        loadClientBanks(); 
         updateSettingsUI(); 
         loadDeliveryZones(); 
     }
