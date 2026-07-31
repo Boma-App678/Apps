@@ -727,6 +727,7 @@
     </div>
     
     <div id="history-screen" class="screen">
+        
         <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة السجل"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="history_title">سجل المعاملات</div><button class="back-btn" onclick="switchScreen('home-screen',0)">↩</button></div>
         <div class="app-content">
             <div style="background:var(--card-bg); padding:15px; border-radius:16px; margin-bottom:20px; border:1px solid var(--border); box-shadow:0 4px 10px rgba(0,0,0,0.02);">
@@ -734,6 +735,52 @@
                 <canvas id="expenseChart" style="width:100%; max-height:200px;"></canvas>
             </div>
             <div id="transactions-list-container"></div>
+        </div>
+    </div>
+    <!-- شاشة التحويل -->
+    <div id="transfer-screen" class="screen">
+        <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button">💸</div><div class="app-header-title" data-key="transfer_title">تحويل أموال BOMA</div><button class="back-btn" onclick="switchScreen('wallet-screen',1)">↩</button></div>
+        <div class="app-content">
+            <div class="card" style="background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--border);">
+                <h3 style="color:var(--primary-blue); font-size:16px; margin-bottom:15px; font-weight:900;" data-key="transfer_info">بيانات التحويل</h3>
+                <div class="form-group">
+                    <label data-key="receiver_acc">رقم حساب المستلم (10 أرقام)</label>
+                    <input type="number" id="transfer-receiver" placeholder="مثال: 1000000001" oninput="checkReceiverName()">
+                    <div id="receiver-name-display" style="display:none; font-size:13px; font-weight:bold; margin-top:8px; color:var(--accent-green);"></div>
+                </div>
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label data-key="amount_sdg">المبلغ المراد تحويله (SDG)</label>
+                    <input type="number" id="transfer-amount" placeholder="0.00">
+                </div>
+                <div id="transfer-error" class="error-message"></div>
+                <button class="btn-main" onclick="handleTransfer()" data-key="btn_send_money" style="border:none;">إرسال الأموال 💸</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشة الإيداع -->
+    <div id="deposit-screen" class="screen">
+        <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button">📥</div><div class="app-header-title" data-key="deposit_title">شحن المحفظة (إيداع)</div><button class="back-btn" onclick="switchScreen('wallet-screen',1)">↩</button></div>
+        <div class="app-content">
+            <div class="card" style="background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--border);">
+                <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:bold; line-height:1.6;" data-key="dep_info_txt">قم بتحويل المبلغ لأحد حساباتنا البنكية أولاً، ثم أدخل المبلغ ورقم العملية ليتعرف عليها النظام.</p>
+                <div class="form-group"><label data-key="dep_amount">المبلغ المودع (SDG)</label><input type="number" id="dep-amount" placeholder="0.00"></div>
+                <div class="form-group" style="margin-bottom:25px;"><label>رقم العملية (Transaction ID)</label><input type="text" id="dep-txn-id" placeholder="أدخل رقم العملية البنكية" style="direction:ltr; text-align:right;"></div>
+                <button class="btn-main" onclick="submitDeposit()" data-key="btn_send_dep" style="border:none;">شحن المحفظة 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشة السحب -->
+    <div id="withdraw-screen" class="screen">
+        <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button">📤</div><div class="app-header-title" data-key="withdraw_title">سحب الرصيد للبنك</div><button class="back-btn" onclick="switchScreen('wallet-screen',1)">↩</button></div>
+        <div class="app-content">
+            <div class="card" style="background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--border);">
+                <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:bold; line-height:1.6;" data-key="wit_info_txt">سيتم تحويل رصيدك إلى حسابك البنكي خلال 24 ساعة.</p>
+                <div class="form-group"><label data-key="amount_sdg">المبلغ المراد سحبه (SDG)</label><input type="number" id="wit-amount" placeholder="0.00"></div>
+                <div class="form-group" style="margin-bottom:25px;"><label data-key="wit_bank_details">بيانات حسابك البنكي (اسم البنك، رقم الحساب، اسمك الرباعي)</label><textarea id="wit-bank" rows="3" placeholder="مثال: بنك الخرطوم، 1234567، أحمد محمد..."></textarea></div>
+                <button class="btn-main" onclick="submitWithdraw()" data-key="btn_send_wit" style="border:none; background:var(--danger);">طلب السحب المالي 💸</button>
+            </div>
         </div>
     </div>
 
@@ -1024,11 +1071,16 @@
         }).catch(e => { if(isDark) document.documentElement.setAttribute('data-theme', 'dark'); showToast('حدث خطأ: ' + e.message, true); });
     }
 
-    async function shareReceipt() {
-        if(typeof html2canvas === 'undefined') return showToast('جاري التحميل...', true);
+      async function shareReceipt() {
+        if(typeof html2canvas === 'undefined') {
+            return showToast(currentLang === 'ar' ? 'مكتبة المشاركة غير متوفرة' : 'Sharing library not loaded', true);
+        }
+        
         const target = document.getElementById('receipt-content-box'); 
-        showToast(currentLang === 'ar' ? 'جاري تحضير الإيصال للمشاركة... ⏳' : 'Preparing receipt to share... ⏳');
-        const isDark = currentTheme === 'dark'; if(isDark) document.documentElement.setAttribute('data-theme', 'light');
+        showToast(currentLang === 'ar' ? 'جاري تجهيز الصورة للمشاركة... ⏳' : 'Preparing image to share... ⏳');
+        
+        const isDark = currentTheme === 'dark'; 
+        if(isDark) document.documentElement.setAttribute('data-theme', 'light');
         
         try {
             const canvas = await html2canvas(target, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
@@ -1042,20 +1094,27 @@
                     try {
                         await navigator.share({
                             title: currentLang === 'ar' ? 'إيصال تحويل BOMA' : 'BOMA Transfer Receipt',
-                            text: currentLang === 'ar' ? 'مرفق إيصال العملية من محفظة بومة.' : 'Attached is the receipt from BOMA Wallet.',
+                            text: currentLang === 'ar' ? 'مرفق إيصال العملية المالية من محفظة بومة.' : 'Attached is the receipt from BOMA Wallet.',
                             files: [file]
                         });
                         showToast(currentLang === 'ar' ? 'تمت المشاركة بنجاح ✅' : 'Shared Successfully ✅');
                     } catch (err) {
-                        console.log('Share error:', err);
+                        if (err.name !== 'AbortError') {
+                            showToast('تم إلغاء المشاركة أو حدث خطأ', true);
+                        }
                     }
                 } else {
-                    showToast(currentLang === 'ar' ? 'المشاركة غير مدعومة في هذا المتصفح، استخدم زر التحميل' : 'Sharing not supported in this browser.', true);
+                    // إذا لم يدعم المتصفح المشاركة المباشرة، يتم تنزيل الصورة كبديل تلقائي
+                    const link = document.createElement('a');
+                    link.download = `BOMA_Receipt.jpg`;
+                    link.href = canvas.toDataURL('image/jpeg', 1.0);
+                    link.click();
+                    showToast(currentLang === 'ar' ? 'تم حفظ الإيصال كصورة لجهازك ✅' : 'Receipt saved to device ✅');
                 }
             }, 'image/jpeg', 0.9);
         } catch (e) {
             if(isDark) document.documentElement.setAttribute('data-theme', 'dark'); 
-            showToast('حدث خطأ: ' + e.message, true);
+            showToast('خطأ: ' + e.message, true);
         }
     }
 
