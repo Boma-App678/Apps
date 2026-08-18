@@ -320,7 +320,12 @@
 <body>
 
 <div class="phone-container">
-    
+        <!-- 🌟 الشاشة الترحيبية 🌟 -->
+    <div class="splash-screen" id="splash-screen" style="position: fixed; inset: 0; background: linear-gradient(135deg, var(--primary-blue-shine), var(--primary-blue)); z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease;">
+        <div style="font-size: 90px; margin-bottom: 20px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));">🦉</div>
+        <div style="font-size: 40px; font-weight: 900; color: var(--accent-orange); letter-spacing: 4px; text-shadow: 0 4px 10px rgba(0,0,0,0.3);">BOMA</div>
+    </div>
+
     <div class="negotiation-overlay" id="negotiation-modal">
         <div class="negotiation-box">
             <div class="neg-header">
@@ -382,7 +387,7 @@
         <button class="btn-lang" onclick="toggleLanguage()" id="lang-btn">EN</button>
     </div>
 
-    <div id="login-screen" class="screen account-screen active">
+    <div id="login-screen" class="screen account-screen">
         <div class="boma-logo-header-wrapper">
             <div class="login-logo" id="dynamic-login-logo" style="display:flex; justify-content:center; align-items:center; overflow:hidden; background:transparent;">🦉</div>
         </div>
@@ -548,7 +553,7 @@
         </div>
     </div>
 
-    <div id="home-screen" class="screen">
+    <div id="home-screen" class="screen active">
         <div class="app-header">
             <div class="boma-fixed-icon" style="width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; border-radius: 50%; overflow: hidden; background: transparent;" tabindex="0" role="button" aria-label="أيقونة التطبيق"></div>
             <div class="app-header-title" data-key="app_name">بـــومـــة</div>
@@ -722,7 +727,8 @@
                 <button class="btn-main" style="margin:0; width:auto; padding:12px 20px; font-size:14px; border:none;" onclick="applyPromoCode()">تطبيق</button>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:15px;font-weight:900;font-size:18px;"><span data-key="cart_total_lbl">المجموع الكلي:</span><span id="cart-total-price" style="color:var(--accent-orange);">0.00 SDG</span></div>
-            <button class="btn-main" onclick="switchScreen('payment-screen',3)" data-key="btn_checkout" style="border:none;">إتمام الشراء</button>
+            <button class="btn-main" onclick="triggerCheckoutFlow()" data-key="btn_checkout" style="border:none;">إتمام الشراء</button>
+
         </div>
     </div>
     
@@ -976,6 +982,18 @@
             </div>
         </div>
     </div>
+    <!-- 🌟 الشاشات المفقودة التي تسبب انهيار النظام 🌟 -->
+    <div id="kyc-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon">🛡️</div><div class="app-header-title">توثيق الحساب (KYC)</div><button class="back-btn" onclick="switchScreen('settings-screen')">↩</button></div><div class="app-content"><div class="card" style="background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--border);"><p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:bold; line-height:1.6;">لفتح حدود التحويل المالي، الرجاء إرفاق المستندات الرسمية لتوثيق هويتك.</p><div class="form-group"><label>نوع المستند التعريفي</label><select id="kyc-doc-type"><option value="national_id">بطاقة قومية / رقم وطني</option><option value="passport">جواز سفر</option></select></div><div class="form-group"><label>الرقم الوطني / رقم الجواز</label><input type="text" id="kyc-national-id"></div><div class="file-upload-wrapper" id="wrap-doc"><input type="file" id="kyc-doc-img" accept="image/*" onchange="updateFileLabel('doc')"><span id="label-doc">صورة المستند التعريفي 📷</span></div><div class="file-upload-wrapper" id="wrap-selfie"><input type="file" id="kyc-selfie-img" accept="image/*" onchange="updateFileLabel('selfie')"><span id="label-selfie">صورة شخصية (Selfie) 📷</span></div><button class="btn-main" onclick="submitKYCDocs()" style="border:none;">إرسال بيانات التوثيق 🛡️</button></div></div></div>
+    
+    <div id="support-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon">🎧</div><div class="app-header-title">الدعم الفني</div><button class="back-btn" onclick="switchScreen('settings-screen')">↩</button></div><div class="app-content"><div class="card" style="background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--border); margin-bottom: 20px;"><h3 style="color:var(--primary-blue); font-size:16px; margin-bottom:15px; font-weight:900;">إرسال رسالة جديدة</h3><div class="form-group"><label>عنوان المشكلة</label><input type="text" id="sup-subject"></div><div class="form-group"><label>تفاصيل المشكلة</label><textarea id="sup-message" rows="4"></textarea></div><button class="btn-main" onclick="submitSupportTicket()" style="border:none;">إرسال التذكرة 📩</button></div><h3 style="color:var(--text-dark); font-size:16px; margin-bottom:15px; font-weight:900;">تذاكر الدعم السابقة</h3><div id="support-list-container"></div></div></div>
+    
+    <div id="terms-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon">📜</div><div class="app-header-title">الشروط والأحكام</div><button class="back-btn" onclick="goBackFromTerms()">↩</button></div><div class="app-content"><div class="card" style="background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--border); line-height: 1.8; font-weight: bold; font-size: 14px;"><div id="terms-dynamic-content"><h3 style="color: var(--primary-blue); margin-bottom: 10px;">شروط الاستخدام</h3><p>يُشكل استخدامك لهذا التطبيق موافقة قانونية ملزمة.</p></div></div></div></div>
+    
+    <div id="notifications-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon">🔔</div><div class="app-header-title">مركز الإشعارات</div><button class="back-btn" onclick="switchScreen('home-screen')">↩</button></div><div class="app-content" id="notifications-list-container"></div></div>
+
+    <div id="vendor-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon" style="border-radius:50%; background:var(--card-bg); color:var(--primary-blue); font-size:20px;">🏪</div><div class="app-header-title">إدارة متجري</div><button class="back-btn" onclick="switchScreen('settings-screen')">↩</button></div><div class="app-content"><div style="display: flex; gap: 10px; margin-bottom: 20px;"><div style="flex:1; background:var(--card-bg); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--border);"><div style="font-size:12px; color:var(--text-muted); font-weight:bold;">المبيعات (SDG)</div><div id="vendor-sales-val" style="font-size:18px; color:var(--green); font-weight:900;">0</div></div><div style="flex:1; background:var(--card-bg); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--border);"><div style="font-size:12px; color:var(--text-muted); font-weight:bold;">منتجاتي</div><div id="vendor-products-count" style="font-size:18px; color:var(--primary-blue); font-weight:900;">0</div></div></div><div style="background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--accent-orange); margin-bottom:20px;"><h3 style="color:var(--accent-orange); font-size:16px; margin-bottom:15px; font-weight:900;">➕ إضافة / تعديل منتج</h3><select id="v-cat" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg); font-weight:bold;"></select><input type="text" id="v-brand-name" placeholder="العلامة التجارية" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);"><div style="display:flex; gap:10px; margin-bottom:12px;"><input type="text" id="v-name-ar" placeholder="عربي" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg);"><input type="text" id="v-name-en" placeholder="إنجليزي" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg); direction:ltr;"></div><div style="display:flex; gap:10px; margin-bottom:12px;"><input type="number" id="v-price" placeholder="السعر" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg);"><input type="number" id="v-min-price" placeholder="أدنى سعر تفاوض" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg);"></div><input type="number" id="v-stock" placeholder="الكمية المتوفرة" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);"><textarea id="v-desc-ar" placeholder="وصف (عربي)" rows="2" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);"></textarea><textarea id="v-desc-en" placeholder="وصف (إنجليزي)" rows="2" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg); direction:ltr; text-align:left;"></textarea><input type="text" id="v-variations" placeholder="خيارات (ألوان/مقاسات) افصل بينها بـ ،" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);"><input type="text" id="v-delivery-scope" placeholder="نطاق التوصيل" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg);"><input type="text" id="v-img-url" placeholder="رابط الصورة الأساسية" style="width:100%; padding:14px; border-radius:12px; margin-bottom:12px; border:2px solid var(--border); background:var(--input-bg); direction:ltr;"><input type="text" id="v-gallery" placeholder="روابط صور إضافية بفاصلة ،" style="width:100%; padding:14px; border-radius:12px; margin-bottom:15px; border:2px solid var(--border); background:var(--input-bg); direction:ltr;"><div style="display:flex; gap:10px; margin-top:10px;"><button class="btn-main" id="btn-submit-vendor-product" onclick="submitVendorProduct()" style="border:none; flex:1;">نشر المنتج 🚀</button><button class="btn-main" id="btn-cancel-vendor-edit" onclick="cancelEditVendorProduct()" style="border:none; flex:1; background:var(--text-muted); display:none;">إلغاء التعديل</button></div></div><h3 style="font-size:16px; margin-bottom:15px; color:var(--text-dark); font-weight:900;">📦 منتجاتي الحالية</h3><div id="vendor-products-list" style="display:flex; flex-direction:column; gap:12px; padding-bottom:30px;"></div></div></div>
+    
+    <div id="cashier-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon" style="border-radius:50%; background:var(--card-bg); color:var(--primary-blue); font-size:20px;">🗄️</div><div class="app-header-title">لوحة الخزينة</div><button class="back-btn" onclick="switchScreen('settings-screen')">↩</button></div><div class="app-content"><div class="card" style="background:var(--card-bg); padding:20px; border-radius:20px; box-shadow:0 6px 15px rgba(0,0,0,0.05); border:1px solid var(--border); margin-bottom:20px;"><h3 style="color:var(--primary-blue); font-size:16px; margin-bottom:15px; font-weight:900;">🔍 البحث عن حساب عميل</h3><div style="display:flex; gap:10px;"><input type="number" id="cashier-search-input" placeholder="رقم حساب العميل" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg); margin:0;"><button class="btn-main" style="width:auto; padding:0 20px; margin:0; border:none;" onclick="searchUserForCashier()">بحث</button></div></div><div id="cashier-result-box" style="display:none; background:var(--card-bg); padding:20px; border-radius:20px; border:1px solid var(--accent-green);"><h3 style="color:var(--accent-green); font-size:16px; margin-bottom:15px; font-weight:900;">👤 بيانات العميل</h3><div style="background:var(--input-bg); padding:15px; border-radius:12px; margin-bottom:15px; font-weight:bold; font-size:14px; color:var(--text-dark); line-height:1.8;"><div>الاسم: <span id="c-user-name" style="color:var(--primary-blue);">---</span></div><div>الحساب: <span id="c-user-acc" style="color:var(--primary-blue);">---</span></div><div>المعرف: <span id="c-user-id" style="color:var(--primary-blue); direction:ltr; display:inline-block;">---</span></div></div><h4 style="font-size:14px; color:var(--text-dark); margin-bottom:10px; font-weight:900;">💸 تنفيذ عملية مالية</h4><div style="display:flex; gap:10px; margin-bottom:12px;"><input type="number" id="cashier-amount" placeholder="المبلغ (SDG)" style="flex:1; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg); margin:0;"></div><div style="margin-bottom:15px;"><input type="text" id="cashier-notes" placeholder="البيان / السبب" style="width:100%; padding:14px; border-radius:12px; border:2px solid var(--border); background:var(--input-bg); margin:0;"></div><div style="display:flex; gap:10px;"><button class="btn-main" style="background:var(--accent-green); border:none; flex:1;" onclick="cashierDeposit()">إيداع 📥</button><button class="btn-main" style="background:var(--danger); border:none; flex:1;" onclick="cashierWithdraw()">سحب 📤</button></div><button class="btn-main btn-outline" style="margin-top:15px; border:none;" onclick="clearCashierSearch()">إلغاء وبحث جديد</button></div></div></div>
 
     <div class="bottom-nav" id="main-nav">
         <div class="nav-item active" onclick="switchScreen('home-screen')" tabindex="0" role="button" aria-pressed="true" onkeydown="if(event.key==='Enter'||event.key===' ') switchScreen('home-screen')"><div>🏠</div><span data-key="nav_home">الرئيسية</span></div>
@@ -1007,6 +1025,24 @@
     
     let editingVendorProductId = null;
     let vendorProductsData = []; 
+    // 🌟 إخفاء الشاشة الترحيبية تلقائياً 🌟
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            if(splash) {
+                splash.style.opacity = '0';
+                setTimeout(() => splash.remove(), 500);
+            }
+        }, 2000);
+    });
+    function triggerCheckoutFlow() {
+        if (!registeredUser || !registeredUser.active) {
+            showCustomDialog('🔒', currentLang === 'ar' ? 'تسجيل الدخول مطلوب' : 'Login Required', currentLang === 'ar' ? 'يرجى تسجيل الدخول لإتمام عملية الشراء.' : 'Please login to checkout.', currentLang === 'ar' ? 'دخول' : 'Login', currentLang === 'ar' ? 'تراجع' : 'Back', () => { switchScreen('login-screen'); });
+            return;
+        }
+        if(cart.length === 0) return showToast(currentLang === 'ar' ? 'العربة فارغة!' : 'Cart is empty!', true);
+        switchScreen('payment-screen');
+    }
 
     function showToast(msg, isError = false) {
         const t = document.getElementById('toast');
@@ -1441,10 +1477,21 @@
         });
     }
 
-    function switchScreen(id) {
+            function switchScreen(id) {
+        // 🌟 التوجيه الذكي لحماية الصفحات 🌟
+        const protectedScreens = ['transfer-screen', 'deposit-screen', 'withdraw-screen', 'history-screen', 'notifications-screen', 'kyc-screen', 'vendor-screen', 'cashier-screen', 'support-screen', 'payment-screen'];
+        if (protectedScreens.includes(id) && (!registeredUser || !registeredUser.active)) {
+            showCustomDialog('🔒', currentLang === 'ar' ? 'تسجيل الدخول مطلوب' : 'Login Required', currentLang === 'ar' ? 'يرجى تسجيل الدخول أو إنشاء حساب لإتمام هذا الإجراء بأمان.' : 'Please login or create an account to proceed securely.', currentLang === 'ar' ? 'دخول' : 'Login', currentLang === 'ar' ? 'تراجع' : 'Cancel', () => {
+                switchScreen('login-screen');
+            });
+            return;
+        }
+
         document.querySelectorAll('.error-message').forEach(e => e.style.display = 'none');
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        
+        const targetScreen = document.getElementById(id);
+        if(targetScreen) targetScreen.classList.add('active');
 
         if (['login-screen', 'signup-screen', 'otp-screen', 'forgot-screen', 'reset-screen', 'pin-reset-screen'].includes(id)) {
             document.getElementById('main-nav').style.display = 'none'; document.getElementById('lang-toggle-container').style.display = 'block';
@@ -1454,13 +1501,10 @@
 
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
         const navMap = { 'home-screen': 0, 'wallet-screen': 1, 'shop-screen': 2, 'services-screen': 3, 'cart-screen': 4, 'settings-screen': 5 };
-        
         let activeNavIndex = navMap[id];
-        if (id === 'details-screen') activeNavIndex = 2;
-        if (id === 'payment-screen') activeNavIndex = 4;
-        if (id === 'kyc-screen' || id === 'support-screen' || id === 'terms-screen' || id === 'vendor-screen') activeNavIndex = 5;
-
-        if (activeNavIndex !== undefined) { document.querySelectorAll('.nav-item')[activeNavIndex].classList.add('active'); }
+        if (activeNavIndex !== undefined && document.querySelectorAll('.nav-item')[activeNavIndex]) { 
+            document.querySelectorAll('.nav-item')[activeNavIndex].classList.add('active'); 
+        }
 
         id === 'home-screen' ? startAutoSlider() : stopAutoSlider();
 
@@ -1477,9 +1521,8 @@
             updateSettingsUI();
             document.getElementById('theme-icon-display').innerText = currentTheme === 'light' ? '🌙' : '☀️';
         }
-        if (id === 'notifications-screen') { markNotificationsAsRead(); fetchUserNotifications(); }
-        if (id === 'history-screen') { fetchTransactionHistory(); }
-        if (id === 'support-screen') { loadSupportTickets(); }
+        if (id === 'history-screen') fetchTransactionHistory();
+        if (id === 'support-screen') loadSupportTickets();
     }
 
     function goBackFromTerms() { if (registeredUser && registeredUser.active) { switchScreen('settings-screen', 4); } else { switchScreen('signup-screen'); } }
@@ -1614,24 +1657,18 @@
         }); 
     }
 
-    function renderWalletDisplay() {
+            function renderWalletDisplay() {
         const walletCard = document.getElementById('boma-wallet-display');
-        const guestPrompt = document.getElementById('wallet-guest-prompt');
         if (!walletCard) return;
 
+        walletCard.style.display = 'block'; // المحفظة ظاهرة للجميع
+
         if (registeredUser && registeredUser.active) {
-            walletCard.style.display = 'block';
-            if(guestPrompt) guestPrompt.style.display = 'none';
             document.getElementById('wallet-account-number').innerText = registeredUser.accountNumber || '---- ---- ----';
             document.getElementById('wallet-account-name').innerText = registeredUser.name || 'GUEST';
-
             const balanceDisplay = document.getElementById('wallet-account-balance');
-            if (isBalanceHidden) {
-                balanceDisplay.innerText = '**** SDG';
-            } else {
-                balanceDisplay.innerText = Number(registeredUser.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' SDG';
-            }
-
+            balanceDisplay.innerText = isBalanceHidden ? '**** SDG' : Number(registeredUser.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' SDG';
+            
             const kycBadge = document.getElementById('kyc-status-badge');
             if (registeredUser.kycStatus === 'approved') {
                 kycBadge.className = 'kyc-badge kyc-approved';
@@ -1648,10 +1685,18 @@
                 kycBadge.innerText = currentLang === 'ar' ? '⏳ قيد المراجعة' : '⏳ Pending';
             }
         } else {
-            walletCard.style.display = 'none';
-            if(guestPrompt) guestPrompt.style.display = 'block';
+            // بيانات مغطاة للزائر 🔒
+            document.getElementById('wallet-account-number').innerText = '---- ---- ----';
+            document.getElementById('wallet-account-name').innerText = currentLang === 'ar' ? 'زائر (GUEST)' : 'GUEST';
+            document.getElementById('wallet-account-balance').innerText = '**** SDG';
+            const kycBadge = document.getElementById('kyc-status-badge');
+            kycBadge.className = 'kyc-badge';
+            kycBadge.style.background = 'rgba(255,255,255,0.15)';
+            kycBadge.style.borderColor = 'rgba(255,255,255,0.3)';
+            kycBadge.innerText = currentLang === 'ar' ? '🔒 حساب مغلق' : '🔒 Locked';
         }
     }
+
     function toggleBalance() {
         isBalanceHidden = !isBalanceHidden;
         const icon = document.getElementById('toggle-balance-icon');
@@ -2026,9 +2071,12 @@
     let isNegotiationSuccess = false;
     let agreedPrice = 0;
 
-    function openNegotiation() {
+        function openNegotiation() {
         if (!registeredUser || !registeredUser.active) {
-            return showToast(currentLang === 'ar' ? 'يجب تسجيل الدخول للتفاوض مع بومة!' : 'Login to negotiate!', true);
+            showCustomDialog('🔒', currentLang === 'ar' ? 'تسجيل الدخول مطلوب' : 'Login Required', currentLang === 'ar' ? 'يرجى تسجيل الدخول أو إنشاء حساب للتمتع بميزة التفاوض مع بومة.' : 'Please login to negotiate with AI.', currentLang === 'ar' ? 'تسجيل الدخول' : 'Login', currentLang === 'ar' ? 'تراجع' : 'Back', () => {
+                switchScreen('login-screen');
+            });
+            return;
         }
         currentNegotiationProductId = currentSelectedProduct.id;
         isNegotiationSuccess = false;
@@ -2047,6 +2095,7 @@
         modal.style.display = 'flex';
         setTimeout(() => modal.classList.add('active'), 10);
     }
+
 
     function closeNegotiation() {
         const modal = document.getElementById('negotiation-modal');
@@ -3173,6 +3222,24 @@
             } catch(e) { showToast(currentLang === 'ar' ? 'خطأ في الاتصال' : 'Connection error', true); }
         }, true, false);
     }
-</script>
-</body>
-</html>
+    // ==============================================
+    // 🌟 تهيئة التطبيق الأساسية عند الفتح 🌟
+    // ==============================================
+    loadState();
+    applyLanguageShell();
+    renderCountriesDropdown();
+    applyLocalization();
+    applyAppLogos();
+    
+    // 💡 هذا هو السطر السحري: يقوم بإظهار البار السفلي وإخفاء زر اللغة المتداخل 💡
+    switchScreen('home-screen');
+    
+    // تأخير تحميل البيانات الثقيلة حتى تختفي الشاشة الترحيبية
+    setTimeout(() => {
+    renderAppDynamicContent();
+    }, 100);
+    
+    setInterval(fetchUserNotifications, 15000);
+    </script>
+    </body>
+    </html>
