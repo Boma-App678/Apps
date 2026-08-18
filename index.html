@@ -41,13 +41,10 @@
         html[data-theme="dark"] .bottom-nav { box-shadow: 0 -5px 25px rgba(0,0,0,0.5); }
         
         * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
-        body { background: radial-gradient(circle at top, #dbeafe, #f1f5f9 45%, #e2e8f0); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 0; overflow: hidden; transition: background 0.3s, zoom 0.3s ease; color: var(--text-dark); }
+        body { background: var(--bg-light); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 0; overflow: hidden; transition: background 0.3s, zoom 0.3s ease; color: var(--text-dark); }
         
-        .phone-container { width: 100vw; height: 100dvh; background: var(--card-bg); position: relative; display: flex; flex-direction: column; overflow: hidden; transition: background 0.3s; }
-        @media (min-width: 431px) { 
-            body { padding: 20px; }
-            .phone-container { width: 400px; height: 800px; border-radius: 40px; border: 10px solid #0f172a; box-shadow: 0 25px 60px rgba(15,23,42,0.28); margin: 20px auto; } 
-        }
+        .phone-container { width: 100vw; height: 100dvh; background: var(--card-bg); position: relative; display: flex; flex-direction: column; overflow: hidden; transition: background 0.3s; border: none; border-radius: 0; box-shadow: none; margin: 0; }
+
         
         #festive-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 120px; z-index: 9998; pointer-events: none; display: none; overflow: hidden; opacity: 0.9; }
         .festive-bg-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
@@ -298,7 +295,7 @@
         .neg-input-area button { background: var(--accent-green); color: white; border: none; padding: 0 20px; height: 50px; border-radius: 14px; font-weight: 900; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(16,185,129,0.3); }
         .neg-input-area button:active { transform: scale(0.95); }
 
-        @media (max-width: 430px) { body { padding: 0; margin: 0; background: var(--card-bg); overflow: hidden; } .phone-container { width: 100vw; height: 100dvh; border: 0; border-radius: 0; box-shadow: none; margin: 0; } }
+
         .password-wrapper { position: relative; width: 100%; margin-bottom: 5px; }
         .password-wrapper input { width: 100%; padding-left: 40px; margin-bottom: 0; }
         .toggle-eye { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: var(--text-muted); opacity: 0.7; transition: 0.2s; }
