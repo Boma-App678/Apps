@@ -251,7 +251,12 @@
         .nav-item.active { color: #e60000; font-weight: 900; }
         .nav-item div { font-size: 22px; margin-bottom: 2px; transition: 0.2s; filter: opacity(0.8); }
         .nav-item.active div { filter: opacity(1); transform: scale(1.1); }
-        
+                /* تصميم الزر العائم في المنتصف (فودافون) */
+        .nav-item.floating-btn { position: relative; top: -20px; background: var(--card-bg); width: 65px; height: 65px; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 5px solid var(--bg-light); flex: none; justify-content: center; align-items: center; color: var(--text-dark); z-index: 101; }
+        .nav-item.floating-btn.active { border-color: #e60000; color: #e60000; }
+        .nav-item.floating-btn div { margin-bottom: 0 !important; font-size: 30px !important; }
+        .nav-item.floating-btn span { display: none; }
+
         .back-btn { border: 1px solid var(--border); background: var(--input-bg); color: var(--text-dark); border-radius: 12px; padding: 8px 14px; font-size: 16px; font-weight: 900; cursor:pointer; transition: 0.2s; }
         .back-btn:active { background: var(--border); transform: scale(0.95); }
         
@@ -800,12 +805,8 @@
 
         <div class="bottom-nav" id="main-nav">
             <div class="nav-item active" onclick="switchScreen('home-screen')" tabindex="0" role="button" aria-pressed="true"><div>🏠</div><span data-key="nav_home">الرئيسية</span></div>
-            <div class="nav-item" onclick="switchScreen('wallet-screen')" tabindex="0" role="button" aria-pressed="false"><div>💳</div><span data-key="nav_wallet">المحفظة</span></div>
-            <!-- 🌟 الزر العائم للمتجر (تصميم فودافون) 🌟 -->
-            <div class="nav-item floating-btn" onclick="switchScreen('shop-screen')" tabindex="0" role="button" aria-pressed="false"><div>🛍️</div><span data-key="nav_shop">المتجر</span></div>
-            
-            <div class="nav-item" onclick="switchScreen('services-screen')" tabindex="0" role="button" aria-pressed="false"><div>💼</div><span data-key="nav_services">الخدمات</span></div>
-            <div class="nav-item" onclick="switchScreen('settings-screen')" tabindex="0" role="button" aria-pressed="false"><div>⚙️</div><span data-key="nav_settings">الإعدادات</span></div>
+            <div class="nav-item" onclick="switchScreen('wallet-screen')" tabindex="0" role="button" aria-pressed="false"><div>💳</div><span data-key="nav_wallet">المحفظة</span></div><div class="nav-item floating-btn" onclick="switchScreen('shop-screen')" tabindex="0" role="button" aria-pressed="false" onkeydown="if(event.key==='Enter'||event.key===' ') switchScreen('shop-screen')"><div>🛍️</div><span data-key="nav_shop">المتجر</span></div>
+
         </div>
     </div>
 <script>
@@ -2729,21 +2730,21 @@
     // ==============================================
     // 🌟 تهيئة التطبيق الأساسية عند الفتح 🌟
     // ==============================================
-    window.addEventListener('load', () => {
-        loadState(); 
-        applyLanguageShell(); 
-        renderCountriesDropdown(); 
-        applyLocalization(); 
+      setTimeout(() => {
+        loadState();
+        applyLanguageShell();
+        renderCountriesDropdown();
+        applyLocalization();
+        applyAppLogos();
         
-        switchScreen('home-screen'); 
+        switchScreen('home-screen');
         
         setTimeout(() => {
             renderAppDynamicContent();
-            applyAppLogos();
         }, 100);
-
+        
         setInterval(fetchUserNotifications, 15000);
-    });
+    }, 50);
 
 </script>
 </body>
