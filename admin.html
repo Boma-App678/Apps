@@ -173,16 +173,61 @@
         <!-- 🎨 تخصيص المظهر -->
         <div id="section-appearance" class="section">
             <h2 style="margin-bottom: 20px;">تخصيص مظهر التطبيق (UI Customization)</h2>
+            
+            <!-- الشاشة الترحيبية الجديدة -->
+            <div class="card">
+                <h3 style="margin-bottom: 15px; color: var(--primary);">0. الشاشة الترحيبية (Splash Screen)</h3>
+                <div class="search-flex">
+                    <div style="flex: 1;">
+                        <label>نوع الخلفية</label>
+                        <select id="ui-splash-bg-type">
+                            <option value="color">لون ثابت</option>
+                            <option value="image">صورة (رابط)</option>
+                        </select>
+                    </div>
+                    <div style="flex: 2;">
+                        <label>الخلفية (كود لون أو رابط صورة)</label>
+                        <input type="text" id="ui-splash-bg-value" placeholder="مثال: #e60000 أو https://...">
+                    </div>
+                </div>
+                <div class="search-flex" style="margin-top: 10px;">
+                    <div style="flex: 1;">
+                        <label>نوع الشعار</label>
+                        <select id="ui-splash-logo-type">
+                            <option value="emoji">إيموجي / نص</option>
+                            <option value="image_static">صورة ثابتة (PNG/JPG)</option>
+                            <option value="image_animated">صورة متحركة (GIF)</option>
+                        </select>
+                    </div>
+                    <div style="flex: 2;">
+                        <label>الشعار (إيموجي أو رابط)</label>
+                        <input type="text" id="ui-splash-logo-value" placeholder="🦉 أو https://...">
+                    </div>
+                </div>
+                <div class="search-flex" style="margin-top: 10px;">
+                    <div style="flex: 1;">
+                        <label>لون نص BOMA</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="ui-splash-text-color-picker" value="#ffffff" oninput="document.getElementById('ui-splash-text-color').value = this.value">
+                            <input type="text" id="ui-splash-text-color" value="#ffffff" oninput="document.getElementById('ui-splash-text-color-picker').value = this.value">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بقية إعدادات المظهر -->
             <div class="card">
                 <h3 style="margin-bottom: 15px; color: var(--primary);">1. الشعار في صفحة الدخول</h3>
                 <div class="search-flex"><div style="flex: 1;"><label>نوع الشعار</label><select id="ui-login-logo-type"><option value="emoji">إيموجي</option><option value="image">صورة (رابط)</option></select></div><div style="flex: 2;"><label>القيمة</label><input type="text" id="ui-login-logo-val"></div></div>
                 <div style="margin-top: 15px;"><label>النص أسفل الشعار</label><input type="text" id="ui-login-brand-text"></div>
                 <div class="search-flex" style="margin-top: 10px;">
-                    <div style="flex: 1;"><label>لون تدرج النص (العلوي)</label><div class="color-input-wrapper"><input type="color" id="ui-login-brand-color-top-picker"><input type="text" id="ui-login-brand-color-top"></div></div>
-                    <div style="flex: 1;"><label>لون تدرج النص (السفلي)</label><div class="color-input-wrapper"><input type="color" id="ui-login-brand-color-bottom-picker"><input type="text" id="ui-login-brand-color-bottom"></div></div>
+                    <div style="flex: 1;"><label>لون تدرج النص (العلوي)</label><div class="color-input-wrapper"><input type="color" id="ui-login-brand-color-top-picker" oninput="document.getElementById('ui-login-brand-color-top').value=this.value"><input type="text" id="ui-login-brand-color-top" oninput="document.getElementById('ui-login-brand-color-top-picker').value=this.value"></div></div>
+                    <div style="flex: 1;"><label>لون تدرج النص (السفلي)</label><div class="color-input-wrapper"><input type="color" id="ui-login-brand-color-bottom-picker" oninput="document.getElementById('ui-login-brand-color-bottom').value=this.value"><input type="text" id="ui-login-brand-color-bottom" oninput="document.getElementById('ui-login-brand-color-bottom-picker').value=this.value"></div></div>
                 </div>
             </div>
+            
             <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">2. الأيقونة العلوية</h3><div class="search-flex"><div style="flex: 1;"><label>نوع الأيقونة</label><select id="ui-home-logo-type"><option value="emoji">إيموجي</option><option value="image">صورة</option></select></div><div style="flex: 2;"><label>القيمة</label><input type="text" id="ui-home-logo-val"></div></div></div>
+            
             <div class="card">
                 <h3 style="margin-bottom: 15px; color: var(--primary);">3. تخصيص البار العلوي للتطبيق (App Header)</h3>
                 <div class="form-group"><label>نوع الخلفية</label><select id="ui-header-bg-type" onchange="toggleHeaderCardInputs()"><option value="gradient">تدرج لوني (Gradient)</option><option value="solid">لون سادة (Solid)</option></select></div>
@@ -192,9 +237,44 @@
                 </div>
                 <div class="form-group"><label>لون النصوص والأيقونات في البار</label><div class="color-input-wrapper" style="max-width: 300px;"><input type="color" id="ui-header-text-color-picker" value="#ffffff" oninput="document.getElementById('ui-header-text-color').value = this.value"><input type="text" id="ui-header-text-color" value="#ffffff" oninput="document.getElementById('ui-header-text-color-picker').value = this.value"></div></div>
             </div>
-            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">4. تخصيص المحفظة</h3><div class="form-group"><label>نوع الخلفية</label><select id="ui-card-bg-type" onchange="toggleCardInputs()"><option value="gradient">تدرج لوني</option><option value="solid">سادة</option></select></div><div class="search-flex" id="ui-card-colors"><div style="flex: 1;"><label>اللون الأول</label><div class="color-input-wrapper"><input type="color" id="ui-card-color1-picker"><input type="text" id="ui-card-color1"></div></div><div style="flex: 1;" id="card-color-2-wrapper"><label>اللون الثاني</label><div class="color-input-wrapper"><input type="color" id="ui-card-color2-picker"><input type="text" id="ui-card-color2"></div></div></div><div class="form-group"><label>لون النصوص</label><div class="color-input-wrapper" style="max-width: 300px;"><input type="color" id="ui-card-text-color-picker"><input type="text" id="ui-card-text-color"></div></div><label class="settings-label"><input type="checkbox" id="ui-card-decorations"> إظهار الزخارف</label></div>
-            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">5. الأزرار والأقسام</h3><div class="search-flex"><div style="flex: 1;"><label>لون الخلفية</label><div class="color-input-wrapper"><input type="color" id="ui-cat-bg-color-picker"><input type="text" id="ui-cat-bg-color"></div></div><div style="flex: 1;"><label>لون النص</label><div class="color-input-wrapper"><input type="color" id="ui-cat-text-color-picker"><input type="text" id="ui-cat-text-color"></div></div></div><div class="form-group"><label>حجم الزر</label><select id="ui-cat-size"><option value="70px">صغير</option><option value="85px">متوسط</option><option value="100px">كبير</option></select></div><div class="form-group"><label>الانحناء</label><input type="range" id="ui-cat-radius" min="0" max="40" oninput="document.getElementById('radius-val').innerText=this.value+'px'"><span id="radius-val">12px</span></div></div>
-            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">6. المساحات والأزرار</h3><div class="search-flex"><div style="flex: 1;"><label>لون مساحة الدخول</label><div class="color-input-wrapper"><input type="color" id="ui-auth-bg-color-picker"><input type="text" id="ui-auth-bg-color"></div></div><div style="flex: 1;"><label>الانحناء</label><input type="range" id="ui-auth-radius" min="0" max="60" oninput="document.getElementById('auth-radius-val').innerText=this.value+'px'"><span id="auth-radius-val">32px</span></div></div><div class="search-flex"><div style="flex: 1;"><label>خلفية الزر</label><div class="color-input-wrapper"><input type="color" id="ui-btn-main-bg-picker"><input type="text" id="ui-btn-main-bg"></div></div><div style="flex: 1;"><label>نص الزر</label><div class="color-input-wrapper"><input type="color" id="ui-btn-main-text-picker"><input type="text" id="ui-btn-main-text"></div></div></div></div>
+            
+            <div class="card">
+                <h3 style="margin-bottom: 15px; color: var(--primary);">4. تخصيص المحفظة (Wallet Card)</h3>
+                <div class="form-group">
+                    <label>نوع الخلفية</label>
+                    <select id="ui-card-bg-type" onchange="toggleCardInputs()">
+                        <option value="gradient">تدرج لوني</option>
+                        <option value="solid">سادة</option>
+                    </select>
+                </div>
+                <div class="search-flex" id="ui-card-colors">
+                    <div style="flex: 1;">
+                        <label>اللون الأول</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="ui-card-color1-picker" oninput="document.getElementById('ui-card-color1').value = this.value">
+                            <input type="text" id="ui-card-color1" oninput="document.getElementById('ui-card-color1-picker').value = this.value">
+                        </div>
+                    </div>
+                    <div style="flex: 1;" id="card-color-2-wrapper">
+                        <label>اللون الثاني (للتدرج)</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="ui-card-color2-picker" oninput="document.getElementById('ui-card-color2').value = this.value">
+                            <input type="text" id="ui-card-color2" oninput="document.getElementById('ui-card-color2-picker').value = this.value">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>لون النصوص</label>
+                    <div class="color-input-wrapper" style="max-width: 300px;">
+                        <input type="color" id="ui-card-text-color-picker" oninput="document.getElementById('ui-card-text-color').value = this.value">
+                        <input type="text" id="ui-card-text-color" oninput="document.getElementById('ui-card-text-color-picker').value = this.value">
+                    </div>
+                </div>
+                <label class="settings-label"><input type="checkbox" id="ui-card-decorations"> إظهار الزخارف (الدوائر الشفافة)</label>
+            </div>
+            
+            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">5. الأزرار والأقسام</h3><div class="search-flex"><div style="flex: 1;"><label>لون الخلفية</label><div class="color-input-wrapper"><input type="color" id="ui-cat-bg-color-picker" oninput="document.getElementById('ui-cat-bg-color').value=this.value"><input type="text" id="ui-cat-bg-color" oninput="document.getElementById('ui-cat-bg-color-picker').value=this.value"></div></div><div style="flex: 1;"><label>لون النص</label><div class="color-input-wrapper"><input type="color" id="ui-cat-text-color-picker" oninput="document.getElementById('ui-cat-text-color').value=this.value"><input type="text" id="ui-cat-text-color" oninput="document.getElementById('ui-cat-text-color-picker').value=this.value"></div></div></div><div class="form-group"><label>حجم الزر</label><select id="ui-cat-size"><option value="70px">صغير</option><option value="85px">متوسط</option><option value="105px">كبير</option></select></div><div class="form-group"><label>الانحناء</label><input type="range" id="ui-cat-radius" min="0" max="40" oninput="document.getElementById('radius-val').innerText=this.value+'px'"><span id="radius-val">12px</span></div></div>
+            <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">6. المساحات والأزرار</h3><div class="search-flex"><div style="flex: 1;"><label>لون مساحة الدخول</label><div class="color-input-wrapper"><input type="color" id="ui-auth-bg-color-picker" oninput="document.getElementById('ui-auth-bg-color').value=this.value"><input type="text" id="ui-auth-bg-color" oninput="document.getElementById('ui-auth-bg-color-picker').value=this.value"></div></div><div style="flex: 1;"><label>الانحناء</label><input type="range" id="ui-auth-radius" min="0" max="60" oninput="document.getElementById('auth-radius-val').innerText=this.value+'px'"><span id="auth-radius-val">32px</span></div></div><div class="search-flex"><div style="flex: 1;"><label>خلفية الزر</label><div class="color-input-wrapper"><input type="color" id="ui-btn-main-bg-picker" oninput="document.getElementById('ui-btn-main-bg').value=this.value"><input type="text" id="ui-btn-main-bg" oninput="document.getElementById('ui-btn-main-bg-picker').value=this.value"></div></div><div style="flex: 1;"><label>نص الزر</label><div class="color-input-wrapper"><input type="color" id="ui-btn-main-text-picker" oninput="document.getElementById('ui-btn-main-text').value=this.value"><input type="text" id="ui-btn-main-text" oninput="document.getElementById('ui-btn-main-text-picker').value=this.value"></div></div></div></div>
             <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">7. الحجم (Zoom)</h3><input type="range" id="ui-global-font-size" min="80" max="130" oninput="document.getElementById('font-size-val').innerText=this.value+'%'"><span id="font-size-val">100%</span></div>
             <button class="btn btn-orange" style="padding: 14px; width: 100%;" onclick="saveSettings()">حفظ وتطبيق المظهر 💾</button>
         </div>
@@ -233,7 +313,6 @@
             </div>
             <div class="card table-responsive"><table><thead><tr><th>الكود</th><th>نسبة الخصم</th><th>التاريخ</th><th>إجراء</th></tr></thead><tbody id="promocodes-tbody"></tbody></table></div>
         </div>
-
         <!-- الإعلانات المنبثقة -->
         <div id="section-announcements" class="section">
             <h2 style="margin-bottom: 20px;">إرسال التنبيهات العامة</h2>
@@ -987,52 +1066,65 @@
 
     async function loadOriginalSettings() {
         try {
-            const res = await authFetch(`${API_URL}/admin/settings`); const data = await res.json();
+            const res = await authFetch(`${API_URL}/admin/settings`); 
+            const data = await res.json();
             const ui = data.uiSettings || {};
+            
+            // الشاشة الترحيبية الجديدة
+            if (document.getElementById('ui-splash-bg-type')) {
+                document.getElementById('ui-splash-bg-type').value = ui.splashBgType || 'color';
+                document.getElementById('ui-splash-bg-value').value = ui.splashBgValue || '#e60000';
+                document.getElementById('ui-splash-logo-type').value = ui.splashLogoType || 'emoji';
+                document.getElementById('ui-splash-logo-value').value = ui.splashLogoValue || '🦉';
+                document.getElementById('ui-splash-text-color').value = ui.splashTextColor || '#ffffff';
+                document.getElementById('ui-splash-text-color-picker').value = ui.splashTextColor || '#ffffff';
+            }
+
+            // الألوان والتخصيص
             if(document.getElementById('ui-login-logo-type')) {
                 document.getElementById('ui-login-logo-type').value = ui.loginLogoType || 'emoji';
                 document.getElementById('ui-login-logo-val').value = ui.loginLogoValue || '🦉';
-                document.getElementById('ui-login-brand-text').value = ui.loginBrandText || 'بـــومـــة BOMA';
-                document.getElementById('ui-login-brand-color-top').value = ui.loginBrandColorTop || '#ff6e40';
-                document.getElementById('ui-login-brand-color-top-picker').value = ui.loginBrandColorTop || '#ff6e40';
+                document.getElementById('ui-login-brand-text').value = ui.loginBrandText || 'BOMA';
+                document.getElementById('ui-login-brand-color-top').value = ui.loginBrandColorTop || '#ffffff';
+                document.getElementById('ui-login-brand-color-top-picker').value = ui.loginBrandColorTop || '#ffffff';
                 document.getElementById('ui-login-brand-color-bottom').value = ui.loginBrandColorBottom || '#ffffff';
                 document.getElementById('ui-login-brand-color-bottom-picker').value = ui.loginBrandColorBottom || '#ffffff';
                 
                 document.getElementById('ui-home-logo-type').value = ui.homeLogoType || 'emoji';
                 document.getElementById('ui-home-logo-val').value = ui.homeLogoValue || '🦉';
                 
-                document.getElementById('ui-header-bg-type').value = ui.appHeaderBgType || 'gradient';
-                document.getElementById('ui-header-color1').value = ui.appHeaderColor1 || '#ff6e40';
-                document.getElementById('ui-header-color1-picker').value = ui.appHeaderColor1 || '#ff6e40';
-                document.getElementById('ui-header-color2').value = ui.appHeaderColor2 || '#f25522';
-                document.getElementById('ui-header-color2-picker').value = ui.appHeaderColor2 || '#f25522';
-                document.getElementById('ui-header-text-color').value = ui.appHeaderTextColor || '#ffffff';
-                document.getElementById('ui-header-text-color-picker').value = ui.appHeaderTextColor || '#ffffff';
+                document.getElementById('ui-header-bg-type').value = ui.appHeaderBgType || 'solid';
+                document.getElementById('ui-header-color1').value = ui.appHeaderColor1 || '#ffffff';
+                document.getElementById('ui-header-color1-picker').value = ui.appHeaderColor1 || '#ffffff';
+                document.getElementById('ui-header-color2').value = ui.appHeaderColor2 || '#f3f4f6';
+                document.getElementById('ui-header-color2-picker').value = ui.appHeaderColor2 || '#f3f4f6';
+                document.getElementById('ui-header-text-color').value = ui.appHeaderTextColor || '#111827';
+                document.getElementById('ui-header-text-color-picker').value = ui.appHeaderTextColor || '#111827';
                 toggleHeaderCardInputs(); 
                 
-                document.getElementById('ui-card-bg-type').value = ui.cardBgType || 'gradient';
-                document.getElementById('ui-card-color1').value = ui.cardColor1 || '#1e3d59';
-                document.getElementById('ui-card-color1-picker').value = ui.cardColor1 || '#1e3d59';
-                document.getElementById('ui-card-color2').value = ui.cardColor2 || '#2b567d';
-                document.getElementById('ui-card-color2-picker').value = ui.cardColor2 || '#2b567d';
+                document.getElementById('ui-card-bg-type').value = ui.cardBgType || 'solid';
+                document.getElementById('ui-card-color1').value = ui.cardColor1 || '#111827';
+                document.getElementById('ui-card-color1-picker').value = ui.cardColor1 || '#111827';
+                document.getElementById('ui-card-color2').value = ui.cardColor2 || '#1f2937';
+                document.getElementById('ui-card-color2-picker').value = ui.cardColor2 || '#1f2937';
                 document.getElementById('ui-card-text-color').value = ui.cardTextColor || '#ffffff';
                 document.getElementById('ui-card-text-color-picker').value = ui.cardTextColor || '#ffffff';
                 document.getElementById('ui-card-decorations').checked = ui.cardDecorations !== false;
                 
-                document.getElementById('ui-cat-bg-color').value = ui.catBgColor || '#1e3d59';
-                document.getElementById('ui-cat-bg-color-picker').value = ui.catBgColor || '#1e3d59';
-                document.getElementById('ui-cat-text-color').value = ui.catTextColor || '#ffffff';
-                document.getElementById('ui-cat-text-color-picker').value = ui.catTextColor || '#ffffff';
-                document.getElementById('ui-cat-size').value = ui.catSize || '85px';
-                document.getElementById('ui-cat-radius').value = ui.catRadius || '12';
-                document.getElementById('radius-val').innerText = (ui.catRadius || '12') + 'px';
+                document.getElementById('ui-cat-bg-color').value = ui.catBgColor || '#ffffff';
+                document.getElementById('ui-cat-bg-color-picker').value = ui.catBgColor || '#ffffff';
+                document.getElementById('ui-cat-text-color').value = ui.catTextColor || '#111827';
+                document.getElementById('ui-cat-text-color-picker').value = ui.catTextColor || '#111827';
+                document.getElementById('ui-cat-size').value = ui.catSize || '105px';
+                document.getElementById('ui-cat-radius').value = ui.catRadius || '16';
+                document.getElementById('radius-val').innerText = (ui.catRadius || '16') + 'px';
                 
                 document.getElementById('ui-auth-bg-color').value = ui.authBgColor || '#ffffff';
                 document.getElementById('ui-auth-bg-color-picker').value = ui.authBgColor || '#ffffff';
-                document.getElementById('ui-auth-radius').value = ui.authRadius || '32';
-                document.getElementById('auth-radius-val').innerText = (ui.authRadius || '32') + 'px';
-                document.getElementById('ui-btn-main-bg').value = ui.btnMainBg || '#1e3d59';
-                document.getElementById('ui-btn-main-bg-picker').value = ui.btnMainBg || '#1e3d59';
+                document.getElementById('ui-auth-radius').value = ui.authRadius || '40';
+                document.getElementById('auth-radius-val').innerText = (ui.authRadius || '40') + 'px';
+                document.getElementById('ui-btn-main-bg').value = ui.btnMainBg || '#e60000';
+                document.getElementById('ui-btn-main-bg-picker').value = ui.btnMainBg || '#e60000';
                 document.getElementById('ui-btn-main-text').value = ui.btnMainText || '#ffffff';
                 document.getElementById('ui-btn-main-text-picker').value = ui.btnMainText || '#ffffff';
                 
@@ -1040,7 +1132,6 @@
                     document.getElementById('ui-global-font-size').value = ui.globalFontSize || '100';
                     document.getElementById('font-size-val').innerText = (ui.globalFontSize || '100') + '%';
                 }
-
                 toggleCardInputs();
             }
             
@@ -1060,6 +1151,12 @@
 
     async function saveSettings() {
         const uiSettings = {
+            splashBgType: document.getElementById('ui-splash-bg-type') ? document.getElementById('ui-splash-bg-type').value : 'color',
+            splashBgValue: document.getElementById('ui-splash-bg-value') ? document.getElementById('ui-splash-bg-value').value : '#e60000',
+            splashLogoType: document.getElementById('ui-splash-logo-type') ? document.getElementById('ui-splash-logo-type').value : 'emoji',
+            splashLogoValue: document.getElementById('ui-splash-logo-value') ? document.getElementById('ui-splash-logo-value').value : '🦉',
+            splashTextColor: document.getElementById('ui-splash-text-color') ? document.getElementById('ui-splash-text-color').value : '#ffffff',
+
             loginLogoType: document.getElementById('ui-login-logo-type').value,
             loginLogoValue: document.getElementById('ui-login-logo-val').value,
             loginBrandText: document.getElementById('ui-login-brand-text').value,
@@ -1113,7 +1210,7 @@
                     vendorCommissionPct, isWelcomeBonusEnabled, welcomeBonusAmount
                 }) 
             }); 
-            showToast('تم الحفظ ✅'); 
+            showToast('تم الحفظ ✅ وسينعكس فوراً على تطبيق العميل'); 
         } catch(e) { showToast('خطأ الحفظ: ' + e.message, true); }
     }
 
