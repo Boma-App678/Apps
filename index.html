@@ -60,15 +60,15 @@
         .screen.active { display: flex; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .account-screen { width: 100%; height: 100%; background: #ffffff; display: none; flex-direction: column; overflow: hidden !important; padding-bottom: 0 !important; }
+        .account-screen { width: 100%; height: 100%; background: #f9fafb; display: none; flex-direction: column; overflow: hidden !important; padding-bottom: 0 !important; }
         .account-screen.active { display: flex; }
 
         .boma-logo-header-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px 25px; text-align: center; z-index: 5; flex-shrink: 0; }
-        .logo-image-container { width: 115px; height: 115px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; position: relative; }
+        .logo-image-container { width: 115px; height: 115px; background: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; position: relative; }
         .boma-central-image-logo { width: 100%; height: 100%; object-fit: contain; position: absolute; inset: 0; z-index: 2; }
         .boma-fallback-vector { font-size: 60px; z-index: 1; user-select: none; }
         
-        .logo-text-brand { font-size: 36px; font-weight: 900; margin-top: 5px; color: var(--text-dark); display: inline-block; transition: 0.3s; }
+        .logo-text-brand { font-size: 36px; font-weight: 900; margin-top: 5px; color: #e60000 !important; display: inline-block; transition: 0.3s; }
 
         .glass-card { width: 100%; flex-grow: 1; background: var(--card-bg); border-radius: 30px 30px 0 0; padding: 30px 24px 40px; box-shadow: 0 -10px 30px rgba(0,0,0,0.04); z-index: 10; overflow-y: auto; transition: 0.3s; border-top: 1px solid var(--border); }
         .glass-card-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: -10px auto 20px; }
@@ -93,7 +93,7 @@
 
         .lang-switch-wrapper { position: absolute; top: 20px; z-index: 100; }
         html[dir="rtl"] .lang-switch-wrapper { left: 20px; } html[dir="ltr"] .lang-switch-wrapper { right: 20px; }
-        .btn-lang { background: #f3f4f6; border: 1px solid var(--border); color: var(--text-dark); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: 0.2s; }
+        .btn-lang { background: #ffffff; border: 1px solid var(--border); color: var(--text-dark); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: 0.2s; }
         .btn-lang:active { transform: scale(0.95); }
 
         .btn-main { width: 100%; padding: 16px; background: #e60000; color: #fff; border: none; border-radius: 14px; font-size: 16px; font-weight: 900; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 12px rgba(230,0,0,0.25); transition: 0.2s; }
@@ -411,7 +411,7 @@
 
                 <div style="text-align:start; margin-bottom:12px;"><span style="color:var(--accent-orange); font-size:14px; font-weight:900; cursor:pointer;" onclick="switchScreen('forgot-screen')" data-key="forgot_link" tabindex="0" role="button">نسيت كلمة المرور؟</span></div>
                 <div id="login-error" class="error-message"></div>
-                <button class="btn-main" onclick="handleLogin()" data-key="btn_login">تسجيل الدخول</button>
+                <button class="btn-main" onclick="handleLogin()" data-key="btn_login" style="border:none;">تسجيل الدخول</button>
                 <button class="btn-guest" onclick="handleGuestLogin()" data-key="btn_guest">تصفح كزائر</button>
                 <p style="text-align:center; font-size:14px; margin-top:25px; color:var(--text-dark); font-weight:900;" id="signup-prompt-text"></p>
             </div>
@@ -456,7 +456,7 @@
                     <label for="signup-terms" id="terms_agree_text" style="display:inline; margin:0; font-weight:900;">أوافق على <b style="color:var(--primary-blue); cursor:pointer; text-decoration:underline;" onclick="switchScreen('terms-screen')">الشروط والأحكام</b></label>
                 </div>
                 <div id="signup-error" class="error-message"></div>
-                <button class="btn-main" onclick="handleSignUp()" data-key="btn_send_otp">تأكيد وإرسال الـ OTP</button>
+                <button class="btn-main" style="border:none;" onclick="handleSignUp()" data-key="btn_send_otp">تأكيد وإرسال الـ OTP</button>
                 <p style="text-align:center; font-size:14px; margin-top:25px; color:var(--text-dark); font-weight:900;" id="login-prompt-text"></p>
             </div>
         </div>
@@ -483,7 +483,7 @@
                     <input type="password" id="new-wallet-pin" maxlength="6" placeholder="••••••" inputmode="numeric" style="text-align:center; font-size:26px; letter-spacing:12px;">
                 </div>
                 <div id="pin-reset-error" class="error-message"></div>
-                <button class="btn-main" onclick="submitPinReset()" data-key="btn_confirm_save">تأكيد وحفظ</button>
+                <button class="btn-main" onclick="submitPinReset()" data-key="btn_confirm_save" style="border:none;">تأكيد وحفظ</button>
                 <button class="btn-guest" style="margin-top:12px;" onclick="switchScreen('home-screen', 0)" data-key="btn_cancel">إلغاء</button>
             </div>
         </div>
@@ -505,7 +505,7 @@
                     <label for="otp-4" class="sr-only" style="display:none;">الرقم الرابع</label><input type="text" maxlength="1" class="otp-field" id="otp-4" inputmode="numeric">
                 </div>
                 <div id="otp-error" class="error-message"></div>
-                <button class="btn-main" onclick="verifyOTP()" data-key="btn_verify">تأكيد وتفعيل الحساب</button>
+                <button class="btn-main" onclick="verifyOTP()" data-key="btn_verify" style="border:none;">تأكيد وتفعيل الحساب</button>
             </div>
         </div>
 
@@ -532,7 +532,7 @@
                     <div class="phone-input-wrapper"><select class="phone-country-select" id="forgot-country-select" onchange="updateCountryRules(this,'forgot')"></select><input type="tel" class="phone-number-field" id="forgot-phone" inputmode="numeric"></div>
                 </div>
                 <div id="forgot-error" class="error-message"></div>
-                <button class="btn-main" onclick="handleForgotSubmit()" data-key="btn_send_otp">إرسال رمز OTP</button>
+                <button class="btn-main" onclick="handleForgotSubmit()" data-key="btn_send_otp" style="border:none;">إرسال رمز OTP</button>
                 <p style="text-align:center; font-size:14px; margin-top:25px; color:var(--text-dark); font-weight:900;" id="forgot-back-text"></p>
             </div>
         </div>
@@ -542,9 +542,198 @@
                 <div class="glass-card-handle"></div>
                 <div class="form-title-context" data-key="reset_title">كلمة مرور جديدة</div>
                 <div class="form-group"><label for="new-pass" data-key="label_new_pass">كلمة المرور الجديدة</label><input type="password" placeholder="••••••••" id="new-pass"></div>
-                <button class="btn-main" onclick="handleResetPassword()" data-key="btn_update">تحديث كلمة المرور</button>
+                <button class="btn-main" onclick="handleResetPassword()" data-key="btn_update" style="border:none;">تحديث كلمة المرور</button>
             </div>
         </div>
+        <div id="home-screen" class="screen active">
+            <div class="app-header">
+                <div class="boma-fixed-icon" style="width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; border-radius: 50%; overflow: hidden; background: transparent;" tabindex="0" role="button" aria-label="أيقونة التطبيق"></div>
+                <div class="app-header-title" data-key="app_name">بـــومـــة</div>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <div class="bell-icon-wrapper" style="display:flex;" onclick="switchScreen('wishlist-screen')" tabindex="0" role="button" aria-label="المحفوظات">🔖</div>
+                    <div class="bell-icon-wrapper" id="home-bell-btn" onclick="switchScreen('notifications-screen')" tabindex="0" role="button" aria-label="الإشعارات">🔔<div class="bell-badge" id="bell-unread-count" style="display:none;">0</div></div>
+                </div>
+            </div>
+            <div class="app-content">
+                <div class="search-box-wrapper">
+                    <div class="search-right-icons">🎤 📷</div>
+                    <label for="home-search-bar" class="sr-only" style="display:none;">بحث</label>
+                    <input type="text" class="search-bar" placeholder="البحث في منصة بـــومـــة..." id="home-search-bar" onfocus="switchToShopSearch()" oninput="syncSearch(this.value)">
+                    <div class="search-left-icon">🔍</div>
+                </div>
+                <div class="carousel-wrapper"><div class="carousel-container" id="main-carousel"></div></div>
+                <div id="static-banner-container"></div>
+                <div class="grid-section-title"><span data-key="shop_by_cat">التسوق حسب الفئة</span></div>
+                <div id="cat-grid-container" class="categories-scroll-wrapper"></div>
+                <div class="grid-section-title" style="margin-top: 25px;"><span data-key="exclusive_offers">عروض ومنتجات مميزة</span></div>
+                <div class="shop-products-grid" id="home-products-container"></div>
+            </div>
+        </div>
+        
+        <div id="wallet-screen" class="screen">
+            <div class="app-header">
+                <div class="boma-fixed-icon" id="dynamic-home-logo" style="display:flex; justify-content:center; align-items:center; overflow:hidden; background:transparent; border-radius:50%;" tabindex="0" role="button" aria-label="شعار المحفظة">🦉</div>
+                <div class="app-header-title" data-key="nav_wallet">المحفظة</div>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <div class="bell-icon-wrapper" style="display:flex;" onclick="switchScreen('wishlist-screen')" tabindex="0" role="button" aria-label="المحفوظات">🔖</div>
+                    <div class="bell-icon-wrapper" onclick="switchScreen('notifications-screen')" tabindex="0" role="button" aria-label="الإشعارات">🔔</div>
+                </div>
+            </div>
+            <div class="app-content">
+                <div id="wallet-guest-prompt" style="display:none; text-align:center; padding: 40px 20px;">
+                    <div style="font-size:50px; margin-bottom:15px;">🔒</div>
+                    <h3 style="color:var(--primary-blue); font-weight:900; margin-bottom:10px;">المحفظة مغلقة</h3>
+                    <p style="color:var(--text-muted); font-size:14px; font-weight:bold; margin-bottom:20px;">يرجى تسجيل الدخول للوصول إلى محفظتك المالية.</p>
+                    <button class="btn-main" style="border:none;" onclick="switchScreen('login-screen')">تسجيل الدخول</button>
+                </div>
+                
+                <div class="boma-wallet-card" id="boma-wallet-display">
+                    <div class="wallet-header">
+                        <div class="wallet-title" data-key="wallet_title">رقم الحساب البنكي</div>
+                        <div class="wallet-logo">BOMA Pay</div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; position:relative; z-index:2; margin-bottom:8px;">
+                        <div class="wallet-number" id="wallet-account-number">---- ---- ----</div>
+                        <div class="kyc-badge" id="kyc-status-badge" style="margin-bottom:0;">⏳ قيد المراجعة</div>
+                    </div>
+                    <div class="wallet-footer">
+                        <div class="wallet-user" id="wallet-account-name" style="max-width:45%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">GUEST</div>
+                        <div class="wallet-balance-box">
+                            <span class="wallet-balance-label" data-key="wallet_balance">الرصيد المتاح</span>
+                            <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px;">
+                                <span class="wallet-balance" id="wallet-account-balance">0.00 SDG</span>
+                                <span id="toggle-balance-icon" style="cursor:pointer; display:flex; align-items:center; opacity:0.8; transition:0.2s; margin-right:4px;" onclick="toggleBalance()" tabindex="0" role="button" aria-label="إظهار وإخفاء الرصيد">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wallet-actions-grid">
+                        <div class="wallet-action-btn" onclick="switchScreen('transfer-screen')" tabindex="0" role="button"><span class="icon">💸</span><span data-key="btn_transfer">تحويل</span></div>
+                        <div class="wallet-action-btn" onclick="switchScreen('deposit-screen')" tabindex="0" role="button"><span class="icon">📥</span><span data-key="btn_deposit">إيداع</span></div>
+                        <div class="wallet-action-btn" onclick="switchScreen('withdraw-screen')" tabindex="0" role="button"><span class="icon">📤</span><span data-key="btn_withdraw">سحب</span></div>
+                        <div class="wallet-action-btn" onclick="switchScreen('history-screen')" tabindex="0" role="button"><span class="icon">📄</span><span data-key="btn_history">السجل</span></div>
+                    </div>
+                </div>
+                
+                <div style="background:var(--card-bg); padding:20px; border-radius:20px; margin-top:15px; border:1px solid var(--border); box-shadow:0 4px 10px rgba(0,0,0,0.02);">
+                    <h4 style="font-size:15px; color:var(--primary-blue); margin-bottom:10px; font-weight:900;" data-key="history_title">سجل المعاملات</h4>
+                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:bold;">تابع حركات أموالك، إيداعاتك، ومسحوباتك بسهولة.</p>
+                    <button class="btn-main" style="padding:12px; font-size:14px; border:none;" onclick="switchScreen('history-screen')">عرض كشف الحساب 📄</button>
+                </div>
+                
+                <!-- 🌟 قسم شركاء الدفع والبنوك المدعومة 🌟 -->
+                <div style="margin-top: 25px; margin-bottom: 25px; padding: 0 5px;">
+                    <h3 style="color:var(--primary-blue); font-size:14px; margin-bottom:12px; font-weight:900;">بنوك ومحافظ ندعمها 🏦</h3>
+                    <div id="client-banks-container" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none;">
+                        <!-- سيتم جلب الشعارات هنا برمجياً -->
+                    </div>
+                    <style>#client-banks-container::-webkit-scrollbar { display: none; }</style>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="shop-screen" class="screen">
+            <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة المتجر"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="nav_shop">متجر المنتجات</div><div class="bell-icon-wrapper" style="display:flex;" onclick="switchScreen('wishlist-screen')" tabindex="0" role="button" aria-label="المحفوظات">🔖</div></div>
+            <div class="app-content">
+                <div class="search-box-wrapper" style="margin-bottom: 15px;"><div class="search-right-icons">🎤 📷</div>
+                <label for="shop-search-bar" class="sr-only" style="display:none;">بحث المتجر</label>
+                <input type="text" class="search-bar" id="shop-search-bar" oninput="syncSearch(this.value)"><div class="search-left-icon">🔍</div></div>
+                <div style="display:flex; gap:10px; margin-bottom:20px;">
+                    <label for="sort-select" class="sr-only" style="display:none;">ترتيب المنتجات</label>
+                    <select id="sort-select" onchange="applyFilters()" style="margin:0; padding:12px; flex:1; border-radius:12px;">
+                        <option value="default">الترتيب الافتراضي</option>
+                        <option value="price_asc">السعر: من الأقل للأعلى</option>
+                        <option value="price_desc">السعر: من الأعلى للأقل</option>
+                    </select>
+                </div>
+                <div class="shop-products-grid" id="products-container"></div>
+            </div>
+        </div>
+
+        <div id="wishlist-screen" class="screen">
+            <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة المحفوظات"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title">قائمة المحفوظات 🔖</div><button class="back-btn" onclick="switchScreen('home-screen',0)">↩</button></div>
+            <div class="app-content">
+                <div class="shop-products-grid" id="wishlist-container"></div>
+            </div>
+        </div>
+
+        <div id="details-screen" class="screen">
+            <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة التفاصيل"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="det_title">تفاصيل المنتج</div><button class="back-btn" onclick="switchScreen('shop-screen',1)">↩</button></div>
+            <div class="app-content">
+                <div class="detail-img" id="det-img">
+                    <div class="wishlist-icon" id="det-wishlist-icon" onclick="toggleWishlist(currentSelectedProduct.id, this)" tabindex="0" role="button" aria-label="حفظ المنتج">🔖</div>
+                </div>
+                <div class="det-gallery-scroll" id="det-gallery"></div>
+                <h3 id="det-name" style="color:var(--primary-blue); margin-bottom:8px; font-size: 20px; font-weight: 900;"></h3>
+                
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
+                    <div style="padding: 4px 10px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; font-weight: bold; color: var(--text-muted);">
+                        🏪 البائع: <span id="det-vendor-name" style="color: var(--primary-blue); font-weight: 900;">بومة</span>
+                    </div>
+                    <div id="det-delivery-scope-badge" style="font-size: 12px; font-weight: 900; padding: 4px 10px; border-radius: 8px; display: inline-block;">🌍 شحن متاح لجميع المناطق</div>
+                </div>
+
+                <div id="det-stock-badge" style="font-size: 14px; font-weight: 900; margin-bottom: 15px; display: inline-block; padding: 6px 14px; border-radius: 10px;"></div>
+                <h4 id="det-price" style="color:var(--accent-orange); margin-bottom:20px; font-size: 24px; font-weight: 900;"></h4>
+                <div class="avg-rating-badge" id="det-avg-rating">⭐ لا يوجد تقييمات بعد</div>
+                <p id="det-desc" style="font-size:15px; line-height:1.8; margin-bottom:30px; font-weight: bold;"></p>
+                
+                <div id="det-variations-container" style="display:none; margin-bottom: 25px; text-align: right;">
+                    <label for="det-variation-select" id="det-var-label" style="font-size:14px; font-weight:900; color:var(--text-dark); display:block; margin-bottom:10px;">اختر (المقاس/اللون/المدة):</label>
+                    <select id="det-variation-select" onchange="calculateDetPrice()" style="padding:16px; width:100%; border-radius:14px; border:2px solid var(--border); font-weight:900;"></select>
+                </div>
+
+                <div class="qty-controls" id="det-qty-container">
+                    <button class="qty-btn" onclick="updateDetQty(1)">+</button>
+                    <div class="qty-display" id="det-qty-val">1</div>
+                    <button class="qty-btn" onclick="updateDetQty(-1)">-</button>
+                </div>
+
+                <div style="text-align: center; border-top: 2px dashed var(--border); padding-top: 25px; margin-bottom: 25px;">
+                    <p style="font-size:14px; font-weight:900; color:var(--text-dark);" data-key="rate_product">ما رأيك في هذا المنتج؟ (تقييم)</p>
+                    <div class="stars-container" id="rating-stars">
+                        <span class="star" onclick="rateProduct(1)" tabindex="0" role="button" aria-label="1 نجمة">★</span>
+                        <span class="star" onclick="rateProduct(2)" tabindex="0" role="button" aria-label="2 نجوم">★</span>
+                        <span class="star" onclick="rateProduct(3)" tabindex="0" role="button" aria-label="3 نجوم">★</span>
+                        <span class="star" onclick="rateProduct(4)" tabindex="0" role="button" aria-label="4 نجوم">★</span>
+                        <span class="star" onclick="rateProduct(5)" tabindex="0" role="button" aria-label="5 نجوم">★</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;" id="product-action-buttons">
+                    <button class="btn-main" id="btn-negotiate-main" onclick="openNegotiation()" style="flex: 1; background: var(--primary-blue); border:none;">فاوض بالسعر 🤝</button>
+                    <button class="btn-main" id="btn-add-to-cart-main" onclick="triggerAddToCart()" data-key="btn_add_to_cart" style="flex: 1; border:none; margin-top:0;">أضف للسلة 🛒</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="cart-screen" class="screen">
+            <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة السلة"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="nav_cart">سلة المشتريات 🛒</div><div></div></div>
+            <div class="app-content" id="cart-items-container" style="padding-bottom:180px;"></div>
+            <div class="cart-summary">
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <label for="promo-code-input" class="sr-only" style="display:none;">كوبون الخصم</label>
+                    <input type="text" id="promo-code-input" placeholder="أدخل كوبون الخصم (إن وجد)" style="margin:0; padding:12px; flex:1;">
+                    <button class="btn-main" style="margin:0; width:auto; padding:12px 20px; font-size:14px; border:none;" onclick="applyPromoCode()">تطبيق</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:15px;font-weight:900;font-size:18px;"><span data-key="cart_total_lbl">المجموع الكلي:</span><span id="cart-total-price" style="color:var(--accent-orange);">0.00 SDG</span></div>
+                <button class="btn-main" onclick="triggerCheckoutFlow()" data-key="btn_checkout" style="border:none;">إتمام الشراء</button>
+            </div>
+        </div>
+        
+        <div id="history-screen" class="screen">
+            <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة السجل"><div class="owl-eyes-container"><div class="owl-eye"></div><div class="owl-eye"></div></div><div class="owl-beak"></div></div><div class="app-header-title" data-key="history_title">سجل المعاملات</div><button class="back-btn" onclick="switchScreen('home-screen',0)">↩</button></div>
+            <div class="app-content">
+                <div style="background:var(--card-bg); padding:15px; border-radius:16px; margin-bottom:20px; border:1px solid var(--border); box-shadow:0 4px 10px rgba(0,0,0,0.02);">
+                    <h4 style="font-size:14px; color:var(--text-dark); margin-bottom:10px; text-align:center;">تحليل المصروفات (آخر 7 أيام)</h4>
+                    <canvas id="expenseChart" style="width:100%; max-height:200px;"></canvas>
+                </div>
+                <div id="transactions-list-container"></div>
+            </div>
+        </div>
+
         <!-- شاشة التحويل -->
         <div id="transfer-screen" class="screen">
             <div class="app-header"><div class="boma-fixed-icon" tabindex="0" role="button">💸</div><div class="app-header-title" data-key="transfer_title">تحويل أموال BOMA</div><button class="back-btn" onclick="switchScreen('wallet-screen',1)">↩</button></div>
@@ -682,7 +871,6 @@
             </div>
         </div>
 
-        <!-- 🌟 الشاشات المفقودة (التوثيق، الدعم، الشروط، والإشعارات) 🌟 -->
         <div id="kyc-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon">🛡️</div><div class="app-header-title">توثيق الحساب (KYC)</div><button class="back-btn" onclick="switchScreen('settings-screen')">↩</button></div><div class="app-content"><div class="card" style="background:var(--card-bg); padding:20px; border-radius:16px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.02);"><p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:bold; line-height:1.6;">لفتح حدود التحويل المالي، الرجاء إرفاق المستندات الرسمية لتوثيق هويتك.</p><div class="form-group"><label>نوع المستند التعريفي</label><select id="kyc-doc-type"><option value="national_id">بطاقة قومية / رقم وطني</option><option value="passport">جواز سفر</option></select></div><div class="form-group"><label>الرقم الوطني / رقم الجواز</label><input type="text" id="kyc-national-id"></div><div class="file-upload-wrapper" id="wrap-doc"><input type="file" id="kyc-doc-img" accept="image/*" onchange="updateFileLabel('doc')"><span id="label-doc">صورة المستند التعريفي 📷</span></div><div class="file-upload-wrapper" id="wrap-selfie"><input type="file" id="kyc-selfie-img" accept="image/*" onchange="updateFileLabel('selfie')"><span id="label-selfie">صورة شخصية (Selfie) 📷</span></div><button class="btn-main" onclick="submitKYCDocs()">إرسال بيانات التوثيق 🛡️</button></div></div></div>
         
         <div id="support-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon">🎧</div><div class="app-header-title">الدعم الفني</div><button class="back-btn" onclick="switchScreen('settings-screen')">↩</button></div><div class="app-content"><div class="card" style="background:var(--card-bg); padding:20px; border-radius:16px; border:1px solid var(--border); margin-bottom: 20px; box-shadow:0 4px 12px rgba(0,0,0,0.02);"><h3 style="color:var(--text-dark); font-size:16px; margin-bottom:15px; font-weight:900;">إرسال رسالة جديدة</h3><div class="form-group"><label>عنوان المشكلة</label><input type="text" id="sup-subject"></div><div class="form-group"><label>تفاصيل المشكلة</label><textarea id="sup-message" rows="4"></textarea></div><button class="btn-main" onclick="submitSupportTicket()">إرسال التذكرة 📩</button></div><h3 style="color:var(--text-dark); font-size:16px; margin-bottom:15px; font-weight:900;">تذاكر الدعم السابقة</h3><div id="support-list-container"></div></div></div>
@@ -691,7 +879,7 @@
         
         <div id="notifications-screen" class="screen"><div class="app-header"><div class="boma-fixed-icon">🔔</div><div class="app-header-title">مركز الإشعارات</div><button class="back-btn" onclick="switchScreen('home-screen')">↩</button></div><div class="app-content" id="notifications-list-container"></div></div>
 
-        <!-- 🌟 شاشة لوحة التاجر المدمجة مع زري التعديل 🌟 -->
+        <!-- 🌟 شاشة لوحة التاجر 🌟 -->
         <div id="vendor-screen" class="screen">
             <div class="app-header">
                 <div class="boma-fixed-icon" tabindex="0" role="button" aria-label="أيقونة التاجر">🏪</div>
@@ -805,8 +993,12 @@
 
         <div class="bottom-nav" id="main-nav">
             <div class="nav-item active" onclick="switchScreen('home-screen')" tabindex="0" role="button" aria-pressed="true"><div>🏠</div><span data-key="nav_home">الرئيسية</span></div>
-            <div class="nav-item" onclick="switchScreen('wallet-screen')" tabindex="0" role="button" aria-pressed="false"><div>💳</div><span data-key="nav_wallet">المحفظة</span></div><div class="nav-item floating-btn" onclick="switchScreen('shop-screen')" tabindex="0" role="button" aria-pressed="false" onkeydown="if(event.key==='Enter'||event.key===' ') switchScreen('shop-screen')"><div>🛍️</div><span data-key="nav_shop">المتجر</span></div>
-
+            <div class="nav-item" onclick="switchScreen('wallet-screen')" tabindex="0" role="button" aria-pressed="false"><div>💳</div><span data-key="nav_wallet">المحفظة</span></div>
+            <!-- 🌟 الزر العائم للمتجر (تصميم فودافون) 🌟 -->
+            <div class="nav-item floating-btn" onclick="switchScreen('shop-screen')" tabindex="0" role="button" aria-pressed="false" onkeydown="if(event.key==='Enter'||event.key===' ') switchScreen('shop-screen')"><div>🛍️</div><span data-key="nav_shop">المتجر</span></div>
+            <div class="nav-item" onclick="switchScreen('services-screen')" tabindex="0" role="button" aria-pressed="false"><div>💼</div><span data-key="nav_services">الخدمات</span></div>
+            <div class="nav-item" onclick="switchScreen('cart-screen')" tabindex="0" role="button" aria-pressed="false"><div>🛒</div><span data-key="nav_cart">العربة</span></div>
+            <div class="nav-item" onclick="switchScreen('settings-screen')" tabindex="0" role="button" aria-pressed="false"><div>⚙️</div><span data-key="nav_settings">الإعدادات</span></div>
         </div>
     </div>
 <script>
