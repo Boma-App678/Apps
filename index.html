@@ -9,6 +9,10 @@
     <meta name="theme-color" content="#e60000" />
     <link rel="apple-touch-icon" href="./icon-192.png" />
     <!-- ============================================== -->
+    <!-- 🌟 استدعاء خط تجوال (Tajawal) الشبيه بخط فودافون 🌟 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
     <!-- 🌟 إضافة خصائص crossorigin و integrity للسكربتات الخارجية 🌟 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQmJg08B5QOAAyF3t1Q/Z0d512a+iQ8Q6a23C/z11+X9v2t2eW2r6n9zFp1F0s+eE6O9/Z9/T+J+P+1R+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -40,7 +44,8 @@
         }
         html[data-theme="dark"] .bottom-nav { box-shadow: 0 -5px 25px rgba(0,0,0,0.5); }
         
-        * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+        * { box-sizing: border-box; font-family: 'Tajawal', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+
         body { background: var(--bg-light); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 0; overflow: hidden; transition: background 0.3s, zoom 0.3s ease; color: var(--text-dark); }
         
         .phone-container { width: 100vw; height: 100dvh; background: var(--card-bg); position: relative; display: flex; flex-direction: column; overflow: hidden; transition: background 0.3s; border: none; border-radius: 0; box-shadow: none; margin: 0; }
@@ -321,11 +326,33 @@
 <body>
 
 <div class="phone-container">
-    <!-- 🌟 الشاشة الترحيبية (تصميم فودافون النظيف) 🌟 -->
+    <!-- 🌟 الشاشة الترحيبية 🌟 -->
     <div class="splash-screen" id="splash-screen" style="position: fixed; inset: 0; background: #e60000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease;">
-        <div style="font-size: 90px; margin-bottom: 20px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); color: white;">🦉</div>
-        <div style="font-size: 40px; font-weight: 900; color: #ffffff; letter-spacing: 4px; text-shadow: 0 4px 10px rgba(0,0,0,0.1);">BOMA</div>
+        <div id="splash-logo-wrapper" style="font-size: 90px; margin-bottom: 20px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); color: white;"></div>
     </div>
+    <script>
+        // 🚀 كود يعمل فوراً قبل رسم الشاشة لمنع ظهور الإيموجي بالخطأ
+        (function(){
+            var splashWrapper = document.getElementById('splash-logo-wrapper');
+            var splashScreen = document.getElementById('splash-screen');
+            try {
+                var cached = localStorage.getItem('boma_ui_cache');
+                if(cached) {
+                    var ui = JSON.parse(cached);
+                    if (ui.splashBgType === 'image' && ui.splashBgValue) splashScreen.style.background = 'url("' + ui.splashBgValue + '") center/cover no-repeat';
+                    else splashScreen.style.background = ui.splashBgValue || '#e60000';
+                    
+                    var isSplashImg = (ui.splashLogoType === 'image') || (ui.splashLogoValue && String(ui.splashLogoValue).startsWith('http'));
+                    if (isSplashImg && ui.splashLogoValue) {
+                        splashWrapper.innerHTML = '<img src="' + ui.splashLogoValue + '" alt="" style="max-width: 140px; max-height: 140px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));">';
+                    } else {
+                        splashWrapper.innerHTML = ui.splashLogoValue || '🦉';
+                    }
+                } else { splashWrapper.innerHTML = '🦉'; }
+            } catch(e) { splashWrapper.innerHTML = '🦉'; }
+        })();
+    </script>
+
 
     <div class="negotiation-overlay" id="negotiation-modal">
         <div class="negotiation-box">
@@ -390,7 +417,7 @@
 
     <div id="login-screen" class="screen account-screen">
         <div class="boma-logo-header-wrapper">
-            <div class="login-logo" id="dynamic-login-logo" style="display:flex; justify-content:center; align-items:center; overflow:hidden; background:transparent;">🦉</div>
+            <div class="login-logo" id="dynamic-login-logo" style="display:flex; justify-content:center; align-items:center; overflow:hidden; background:transparent;"><div style="font-size: 40px; font-weight: 900; color: #ffffff; letter-spacing: 4px; text-shadow: 0 4px 10px rgba(0,0,0,0.1);">BOMA</div></div>
         </div>
         <div class="glass-card">
             <div class="glass-card-handle"></div>
@@ -907,6 +934,59 @@
     const STORE_KEY = 'boma_app_client_v54';
     const API_URL = 'https://api.boomapay.com/api';
 
+    // 🌟 دالة مساعدة لاكتشاف إذا كان النص صورة (رابط أو Base64) 🌟
+    function isImageValue(val, type) {
+        if (!val) return false;
+        const str = String(val).trim();
+        return type === 'image' || str.startsWith('http') || str.startsWith('data:image') || str.startsWith('Files/');
+    }
+
+    // 🌟 تطبيق المظهر فوراً من الذاكرة السريعة لمنع الوميض (Flicker Fix) 🌟
+    try {
+        const cachedUIStr = localStorage.getItem('boma_ui_cache');
+        if (cachedUIStr) {
+            const ui = JSON.parse(cachedUIStr);
+            
+            window.addEventListener('DOMContentLoaded', function() {
+                // 1. تطبيق الشاشة الترحيبية فوراً
+                const splashScreen = document.getElementById('splash-screen');
+                if (splashScreen) {
+                    if (ui.splashBgType === 'image' && ui.splashBgValue) splashScreen.style.background = 'url("' + ui.splashBgValue + '") center/cover no-repeat';
+                    else splashScreen.style.background = ui.splashBgValue || '#e60000';
+                    
+                    const splashLogoDiv = splashScreen.children[0];
+                    if (splashLogoDiv) {
+                        if (isImageValue(ui.splashLogoValue, ui.splashLogoType)) {
+                            splashLogoDiv.innerHTML = '<img src="' + ui.splashLogoValue + '" alt="" style="max-width: 140px; max-height: 140px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); opacity: 0; transition: opacity 0.2s;" onload="this.style.opacity=1;">';
+                        } else {
+                            splashLogoDiv.innerHTML = ui.splashLogoValue || '🦉';
+                        }
+                    }
+                }
+
+                // 2. تطبيق شعار التطبيق فوراً
+                if (isImageValue(ui.loginLogoValue, ui.loginLogoType)) {
+                    document.querySelectorAll('.boma-central-image-logo').forEach(function(el) { el.src = ui.loginLogoValue; el.style.display = 'block'; });
+                    document.querySelectorAll('.boma-fallback-vector').forEach(function(el) { el.style.display = 'none'; });
+                } else {
+                    document.querySelectorAll('.boma-central-image-logo').forEach(function(el) { el.style.display = 'none'; });
+                    document.querySelectorAll('.boma-fallback-vector').forEach(function(el) { el.innerText = ui.loginLogoValue || '🦉'; el.style.display = 'block'; });
+                }
+
+                // 3. تطبيق شعار البار العلوي فوراً (لحل مشكلة الدائرة الفارغة)
+                document.querySelectorAll('.boma-fixed-icon').forEach(function(el) {
+                    el.style.background = 'transparent';
+                    el.style.boxShadow = 'none';
+                    if (isImageValue(ui.homeLogoValue, ui.homeLogoType)) {
+                        el.innerHTML = '<img src="' + ui.homeLogoValue + '" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">';
+                    } else {
+                        el.innerHTML = '<div style="font-size:26px; display:flex; align-items:center; justify-content:center; width:100%; height:100%;">' + (ui.homeLogoValue || '🦉') + '</div>';
+                    }
+                });
+            });
+        }
+    } catch(e) {}
+
     let customDialogConfirmCallback = null;
     let currentDetQty = 1; 
     let appCategories = []; 
@@ -942,6 +1022,146 @@
             }
         }
     });
+
+    async function fetchAppSettings() {
+        try {
+            const res = await fetch(API_URL + '/settings');
+            appSettings = await res.json();
+            applyDecorations();
+            applyUISettings(); 
+            if (appSettings.termsText) {
+                const termsContainer = document.getElementById('terms-dynamic-content');
+                if(termsContainer) termsContainer.innerHTML = appSettings.termsText;
+            }
+        } catch(e) {}
+    }
+
+    function applyUISettings() {
+        if (!appSettings || !appSettings.uiSettings) return;
+        const ui = appSettings.uiSettings;
+        
+        localStorage.setItem('boma_ui_cache', JSON.stringify(ui));
+        
+        // 🌟 1. تحديث الشاشة الترحيبية 🌟
+        const splashScreen = document.getElementById('splash-screen');
+        if (splashScreen) {
+            if (ui.splashBgType === 'image' && ui.splashBgValue) {
+                splashScreen.style.background = 'url("' + ui.splashBgValue + '") center/cover no-repeat';
+            } else {
+                splashScreen.style.background = ui.splashBgValue || '#e60000';
+            }
+            
+            const splashLogoDiv = document.getElementById('splash-logo-wrapper');
+            if (splashLogoDiv) {
+                const isSplashImg = (ui.splashLogoType === 'image') || (ui.splashLogoValue && String(ui.splashLogoValue).startsWith('http'));
+                if (isSplashImg && ui.splashLogoValue) {
+                    splashLogoDiv.innerHTML = '<img src="' + ui.splashLogoValue + '" alt="" style="max-width: 140px; max-height: 140px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); opacity: 0; transition: opacity 0.2s;" onload="this.style.opacity=1;">';
+                } else {
+                    splashLogoDiv.innerHTML = ui.splashLogoValue || '🦉';
+                }
+            }
+        }
+
+
+        // 🌟 2. تطبيق حجم الخط العام 🌟
+        if(ui.globalFontSize) {
+            document.documentElement.style.fontSize = (16 * (ui.globalFontSize / 100)) + 'px';
+        } else {
+            document.documentElement.style.fontSize = '16px';
+        }
+
+        // 🌟 3. تحديث شعارات شاشة الدخول والتطبيق 🌟
+        const logoImgContainers = document.querySelectorAll('.boma-central-image-logo');
+        const logoVectors = document.querySelectorAll('.boma-fallback-vector');
+        const logoTexts = document.querySelectorAll('.logo-text-brand');
+        
+        if (isImageValue(ui.loginLogoValue, ui.loginLogoType)) {
+            logoImgContainers.forEach(function(el) { el.src = ui.loginLogoValue; el.style.display = 'block'; });
+            logoVectors.forEach(function(el) { el.style.display = 'none'; });
+        } else {
+            logoImgContainers.forEach(function(el) { el.style.display = 'none'; });
+            logoVectors.forEach(function(el) { el.innerText = ui.loginLogoValue || '🦉'; el.style.display = 'block'; });
+        }
+        
+        if (ui.loginBrandText) {
+            logoTexts.forEach(function(el) { el.innerText = ui.loginBrandText; });
+        }
+        
+        const topColor = ui.loginBrandColorTop || 'var(--accent-orange)';
+        logoTexts.forEach(function(el) {
+            el.style.background = 'none';
+            el.style.color = topColor;
+            el.style.webkitBackgroundClip = 'initial';
+            el.style.webkitTextFillColor = 'initial';
+            el.style.backgroundClip = 'initial';
+        });
+        
+        const homeIconEls = document.querySelectorAll('.boma-fixed-icon');
+        if (isImageValue(ui.homeLogoValue, ui.homeLogoType)) {
+            homeIconEls.forEach(function(el) {
+                el.style.background = 'transparent';
+                el.style.boxShadow = 'none';
+                el.innerHTML = '<img src="' + ui.homeLogoValue + '" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">';
+            });
+        } else {
+            homeIconEls.forEach(function(el) {
+                el.style.background = 'transparent';
+                el.style.boxShadow = 'none';
+                el.innerHTML = '<div style="font-size:26px; display:flex; align-items:center; justify-content:center; width:100%; height:100%;">' + (ui.homeLogoValue || '🦉') + '</div>';
+            });
+        }
+
+        // 🌟 4. تطبيق الألوان الديناميكية للواجهة 🌟
+        const btnBg = ui.btnMainBg || '#e60000';
+        const btnText = ui.btnMainText || '#ffffff';
+        const catBg = ui.catBgColor || 'var(--card-bg)';
+        const catText = ui.catTextColor || 'var(--text-dark)';
+        
+        let headerBgStr = '';
+        if (ui.appHeaderBgType === 'gradient') {
+            headerBgStr = 'linear-gradient(135deg, ' + (ui.appHeaderColor1 || '#ffffff') + ', ' + (ui.appHeaderColor2 || '#f3f4f6') + ')';
+        } else {
+            headerBgStr = ui.appHeaderColor1 || 'rgba(255, 255, 255, 0.98)';
+        }
+        const headerText = ui.appHeaderTextColor || 'var(--text-dark)';
+
+        let style = document.getElementById('dynamic-ui-style');
+        if (!style) { style = document.createElement('style'); style.id = 'dynamic-ui-style'; document.head.appendChild(style); }
+        
+        style.innerHTML = `
+            .category-card-new { background: ` + catBg + ` !important; border-radius: ` + (ui.catRadius || '16') + `px !important; height: ` + (ui.catSize || '105px') + ` !important; min-width: 95px !important; border: 1px solid var(--border) !important; box-shadow: 0 4px 12px rgba(0,0,0,0.04) !important; }
+            .cat-title-new { color: ` + catText + ` !important; font-weight: 900 !important; text-shadow: none !important; }
+            .cat-media-new { color: inherit !important; filter: none !important; }
+            
+            .glass-card { background: ` + (ui.authBgColor || 'var(--card-bg)') + ` !important; border-radius: ` + (ui.authRadius !== undefined ? ui.authRadius : '40') + `px ` + (ui.authRadius !== undefined ? ui.authRadius : '40') + `px 0 0 !important; }
+            
+            .btn-main { background: ` + btnBg + ` !important; color: ` + btnText + ` !important; box-shadow: 0 6px 15px rgba(0,0,0,0.15) !important; border-radius: 14px !important; }
+            
+            .app-header { background: ` + headerBgStr + ` !important; backdrop-filter: blur(12px) !important; border-bottom: 1px solid var(--border) !important; box-shadow: 0 2px 15px rgba(0,0,0,0.03) !important; }
+            .app-header-title { color: ` + headerText + ` !important; text-shadow: none !important; }
+            .bell-icon-wrapper { color: ` + headerText + ` !important; background: transparent !important; }
+            .back-btn { color: ` + headerText + ` !important; border-color: var(--border) !important; background: transparent !important; }
+            
+            .boma-fixed-icon { background: var(--card-bg) !important; color: ` + btnBg + ` !important; box-shadow: 0 4px 10px rgba(0,0,0,0.03) !important; border: 1px solid var(--border) !important; }
+        `;
+
+        // 🌟 5. تطبيق ألوان المحفظة 🌟
+        const walletCard = document.getElementById('boma-wallet-display');
+        if (walletCard) {
+            if (ui.cardBgType === 'solid') {
+                walletCard.style.background = ui.cardColor1 || '#111827';
+            } else {
+                walletCard.style.background = 'linear-gradient(135deg, ' + (ui.cardColor1 || '#111827') + ', ' + (ui.cardColor2 || '#1f2937') + ')';
+            }
+            if (ui.cardTextColor) { walletCard.style.color = ui.cardTextColor; }
+            
+            if (ui.cardDecorations === false) {
+                style.innerHTML += '.boma-wallet-card::before, .boma-wallet-card::after { display: none !important; } ';
+            } else {
+                style.innerHTML += '.boma-wallet-card::before, .boma-wallet-card::after { display: block !important; } ';
+            }
+        }
+    }
 
     function triggerCheckoutFlow() {
         if (!registeredUser || !registeredUser.active) {
@@ -1136,7 +1356,7 @@
             transfer_title: 'تحويل أموال BOMA', transfer_info: 'بيانات التحويل', receiver_acc: 'رقم حساب المستلم (10 أرقام)', amount_sdg: 'المبلغ المراد تحويله (SDG)', btn_send_money: 'إرسال الأموال 💸',
             deposit_title: 'شحن المحفظة (إيداع)', dep_amount: 'المبلغ المودع (SDG)', dep_receipt: 'صورة إيصال التحويل البنكي', btn_send_dep: 'إرسال طلب الشحن 🚀', dep_info_txt: 'قم بتحويل المبلغ لأحد حساباتنا البنكية أولاً، ثم أدخل المبلغ وارفع صورة الإيصال.', dep_attach: 'إرفاق صورة الإيصال 📷',
             withdraw_title: 'سحب الرصيد للبنك', wit_bank_details: 'بيانات حسابك البنكي (اسم البنك، رقم الحساب، اسمك الرباعي)', btn_send_wit: 'طلب السحب المالي 💸', wit_info_txt: 'سيتم تحويل أرباحك أو رصيدك إلى حسابك البنكي خلال 24 ساعة.',
-            history_title: 'سجل المعاملات', notif_title: 'مركز الإشعارات',
+            history_title: 'Transaction History', notif_title: 'مركز الإشعارات',
             kyc_title: 'توثيق الحساب (KYC)', kyc_doc_type: 'نوع المستند التعريفي', kyc_doc_img: 'صورة المستند التعريفي', kyc_selfie: 'صورة شخصية (Selfie)', btn_send_kyc: 'إرسال بيانات التوثيق 🛡️', kyc_info: 'لفتح حدود التحويل المالي، الرجاء إرفاق المستندات الرسمية لتوثيق هويتك.',
             support_title: 'الدعم الفني', support_new: 'إرسال رسالة جديدة', support_subject: 'عنوان المشكلة', support_msg: 'تفاصيل المشكلة', btn_send_support: 'إرسال التذكرة 📩', support_prev: 'تذاكر الدعم السابقة',
             checkout_info: 'بيانات التوصيل والتواصل', checkout_name: 'اسم المستلم', checkout_phone: 'رقم التواصل', checkout_area: 'منطقة التوصيل', checkout_address: 'العنوان التفصيلي',
@@ -1239,102 +1459,6 @@
 
     function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
     function onlyDigits(v) { return String(v || '').replace(/\D/g, ''); }
-
-    async function fetchAppSettings() {
-        try {
-            const res = await fetch(API_URL + '/settings');
-            appSettings = await res.json();
-            applyDecorations();
-            applyUISettings(); 
-            if (appSettings.termsText) {
-                const termsContainer = document.getElementById('terms-dynamic-content');
-                if(termsContainer) termsContainer.innerHTML = appSettings.termsText;
-            }
-        } catch(e) {}
-    }
-
-    function applyUISettings() {
-        if (!appSettings || !appSettings.uiSettings) return;
-        const ui = appSettings.uiSettings;
-        if(ui.globalFontSize) {
-            document.documentElement.style.fontSize = (16 * (ui.globalFontSize / 100)) + 'px';
-        } else {
-            document.documentElement.style.fontSize = '16px';
-        }
-
-        const logoImgContainers = document.querySelectorAll('.boma-central-image-logo');
-        const logoVectors = document.querySelectorAll('.boma-fallback-vector');
-        const logoTexts = document.querySelectorAll('.logo-text-brand');
-        
-        if (ui.loginLogoType === 'image' && ui.loginLogoValue) {
-            logoImgContainers.forEach(function(el) { el.src = ui.loginLogoValue; el.style.display = 'block'; });
-            logoVectors.forEach(function(el) { el.style.display = 'none'; });
-        } else if (ui.loginLogoType === 'emoji' && ui.loginLogoValue) {
-            logoImgContainers.forEach(function(el) { el.style.display = 'none'; });
-            logoVectors.forEach(function(el) { el.innerText = ui.loginLogoValue; el.style.display = 'block'; });
-        }
-        
-        if (ui.loginBrandText) {
-            logoTexts.forEach(function(el) { el.innerText = ui.loginBrandText; });
-        }
-        
-        const topColor = ui.loginBrandColorTop || 'var(--accent-orange)';
-        logoTexts.forEach(function(el) {
-            el.style.background = 'none';
-            el.style.color = topColor;
-            el.style.webkitBackgroundClip = 'initial';
-            el.style.webkitTextFillColor = 'initial';
-            el.style.backgroundClip = 'initial';
-        });
-        
-        const homeIconEls = document.querySelectorAll('.boma-fixed-icon');
-        if (ui.homeLogoType === 'image' && ui.homeLogoValue) {
-            homeIconEls.forEach(function(el) {
-                el.style.background = 'transparent';
-                el.style.boxShadow = 'none';
-                el.innerHTML = '<img src="' + ui.homeLogoValue + '" style="width:100%; height:100%; object-fit:contain; border-radius:12px;">';
-            });
-        } else if (ui.homeLogoType === 'emoji' && ui.homeLogoValue) {
-            homeIconEls.forEach(function(el) {
-                el.style.background = 'transparent';
-                el.style.boxShadow = 'none';
-                el.innerHTML = '<div style="font-size:26px; display:flex; align-items:center; justify-content:center; width:100%; height:100%;">' + ui.homeLogoValue + '</div>';
-            });
-        }
-
-        let style = document.getElementById('dynamic-ui-style');
-        if (!style) { style = document.createElement('style'); style.id = 'dynamic-ui-style'; document.head.appendChild(style); }
-        
-        style.innerHTML = `
-            .category-card-new { background: var(--card-bg) !important; border-radius: ` + (ui.catRadius || '16') + `px !important; height: ` + (ui.catSize || '105px') + ` !important; min-width: 95px !important; border: 1px solid var(--border) !important; box-shadow: 0 4px 12px rgba(0,0,0,0.04) !important; }
-            .cat-title-new { color: var(--text-dark) !important; font-weight: 900 !important; text-shadow: none !important; }
-            .cat-media-new { color: inherit !important; filter: none !important; }
-            .glass-card { background: ` + (ui.authBgColor || 'var(--card-bg)') + ` !important; border-radius: ` + (ui.authRadius !== undefined ? ui.authRadius : '40') + `px ` + (ui.authRadius !== undefined ? ui.authRadius : '40') + `px 0 0 !important; }
-            .btn-main { background: #e60000 !important; color: #ffffff !important; box-shadow: 0 6px 15px rgba(230,0,0,0.2) !important; border-radius: 14px !important; }
-            
-            .app-header { background: rgba(255, 255, 255, 0.98) !important; backdrop-filter: blur(12px) !important; border-bottom: 1px solid var(--border) !important; box-shadow: 0 2px 15px rgba(0,0,0,0.03) !important; }
-            .app-header-title { color: var(--text-dark) !important; text-shadow: none !important; }
-            .bell-icon-wrapper { color: var(--text-dark) !important; }
-            .back-btn { color: var(--text-dark) !important; border-color: var(--border) !important; background: var(--input-bg) !important; }
-            .boma-fixed-icon { background: var(--card-bg) !important; color: #e60000 !important; box-shadow: 0 4px 10px rgba(0,0,0,0.03) !important; border: 1px solid var(--border) !important; }
-        `;
-
-        const walletCard = document.getElementById('boma-wallet-display');
-        if (walletCard) {
-            if (ui.cardBgType === 'solid') {
-                walletCard.style.background = ui.cardColor1 || '#111827';
-            } else {
-                walletCard.style.background = 'linear-gradient(135deg, ' + (ui.cardColor1 || '#111827') + ', ' + (ui.cardColor2 || '#1f2937') + ')';
-            }
-            if (ui.cardTextColor) { walletCard.style.color = ui.cardTextColor; }
-            
-            if (ui.cardDecorations === false) {
-                style.innerHTML += '.boma-wallet-card::before, .boma-wallet-card::after { display: none !important; } ';
-            } else {
-                style.innerHTML += '.boma-wallet-card::before, .boma-wallet-card::after { display: block !important; } ';
-            }
-        }
-    }
 
     function applyDecorations() {
         const overlay = document.getElementById('festive-overlay');
@@ -3069,32 +3193,6 @@
         });
     }
 
-    function applyAppLogos() {
-        fetch(API_URL + '/settings')
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-            if (!data || !data.uiSettings) return;
-            const ui = data.uiSettings;
-            const allAuthHeaders = document.querySelectorAll('.boma-logo-header-wrapper');
-            allAuthHeaders.forEach(function(wrapper) {
-                wrapper.style.display = 'flex'; wrapper.style.flexDirection = 'column'; wrapper.style.alignItems = 'center'; wrapper.style.justifyContent = 'center';
-                let logoHtml = '';
-                if (ui.loginLogoType === 'image' && ui.loginLogoValue) { logoHtml = '<img src="' + ui.loginLogoValue + '" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); background: #fff;">'; } 
-                else { logoHtml = '<div style="width: 120px; height: 120px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-size: 60px; color: var(--primary-blue);">' + (ui.loginLogoValue || '🦉') + '</div>'; }
-                let rawText = ui.loginBrandText || 'BOMA بومة'; let topCol = ui.loginBrandColorTop || 'var(--accent-orange)'; let solidStyle = 'color: ' + topCol + '; display: inline-block;';
-                let styledText = rawText.replace(/O/gi, '<span style="' + solidStyle + '">$&</span>').replace(/و/g, '<span style="' + solidStyle + '">و</span>');
-                let textHtml = '<div style="text-align: center; width: 100%;"><h1 style="margin-top: 15px; font-size: 40px; font-weight: 900; color: var(--text-dark); direction: ltr; display: inline-block; letter-spacing: 1px;">' + styledText + '</h1></div>';
-                wrapper.innerHTML = logoHtml + textHtml;
-            });
-            const headerLogos = document.querySelectorAll('.boma-fixed-icon');
-            headerLogos.forEach(function(logo) {
-                logo.style.background = 'transparent'; logo.style.padding = '0'; logo.style.border = 'none'; logo.style.boxShadow = 'none';
-                if (ui.homeLogoType === 'image' && ui.homeLogoValue) { logo.innerHTML = '<img src="' + ui.homeLogoValue + '" class="boma-pulse-anim" style="width: 45px; height: 45px; object-fit: contain; background: transparent;">'; } 
-                else { logo.innerHTML = '<span class="boma-pulse-anim" style="font-size:26px;">' + (ui.homeLogoValue || '🦉') + '</span>'; }
-            });
-        }).catch(function(err) {});
-    }
-
     function toggleVisibility(inputId, icon) { 
         const input = document.getElementById(inputId); 
         if(!input) return;
@@ -3153,7 +3251,6 @@
         applyLanguageShell();
         renderCountriesDropdown();
         applyLocalization();
-        applyAppLogos();
         switchScreen('home-screen');
         setTimeout(function() { renderAppDynamicContent(); }, 100);
         setInterval(fetchUserNotifications, 15000);
