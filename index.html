@@ -15,7 +15,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
     <!-- 🌟 إضافة خصائص crossorigin و integrity للسكربتات الخارجية 🌟 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQmJg08B5QOAAyF3t1Q/Z0d512a+iQ8Q6a23C/z11+X9v2t2eW2r6n9zFp1F0s+eE6O9/Z9/T+J+P+1R+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
     
     <style id="dynamic-ui-style"></style>
@@ -1273,66 +1274,100 @@
         }
     }
 
-    function downloadReceipt() {
-        if(typeof html2canvas === 'undefined') return showToast('جاري التحميل...', true);
+        function downloadReceipt() {
+        if(typeof html2canvas === 'undefined') return showToast('جاري تحميل المكتبات... يرجى المحاولة بعد قليل', true);
         const target = document.getElementById('receipt-content-box'); 
         if(!target) return;
-        showToast('جاري الحفظ... ⏳', false);
-        const isDark = currentTheme === 'dark'; 
-        if(isDark) document.documentElement.setAttribute('data-theme', 'light');
-        html2canvas(target, { scale: 2, backgroundColor: '#ffffff', useCORS: true }).then(function(canvas) {
-            if(isDark) document.documentElement.setAttribute('data-theme', 'dark');
-            const imgData = canvas.toDataURL('image/jpeg', 1.0); 
+        
+        showToast('جاري تجهيز الصورة للتحميل... ⏳', false);
+        
+        // 🌟 إخفاء الأزرار السفلية أثناء الالتقاط لتجنب ظهورها في الصورة 🌟
+        const actionBtns = target.nextElementSibling;
+        if(actionBtns) actionBtns.style.display = 'none';
+
+        html2canvas(target, { 
+            scale: window.devicePixelRatio > 1 ? window.devicePixelRatio : 2, 
+            backgroundColor: '#ffffff', 
+            useCORS: true,
+            logging: false,
+            width: target.offsetWidth,
+            height: target.offsetHeight
+        }).then(function(canvas) {
+            if(actionBtns) actionBtns.style.display = 'flex'; // إعادة إظهار الأزرار
+            
+            const imgData = canvas.toDataURL('image/png', 1.0); 
             const link = document.createElement('a');
             const recIdEl = document.getElementById('rec-id');
-            const rId = recIdEl ? recIdEl.innerText : 'Transfer';
-            link.download = 'BOMA_Receipt_' + rId + '.jpg'; 
+            const rId = recIdEl ? recIdEl.innerText : 'Transaction';
+            link.download = 'BOMA_Receipt_' + rId + '.png'; 
             link.href = imgData;
-            document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('تم التنزيل ✅', false);
-        }).catch(function(e) { if(isDark) document.documentElement.setAttribute('data-theme', 'dark'); showToast('حدث خطأ: ' + e.message, true); });
+            document.body.appendChild(link); 
+            link.click(); 
+            document.body.removeChild(link); 
+            showToast('تم التنزيل بنجاح ✅', false);
+        }).catch(function(e) { 
+            if(actionBtns) actionBtns.style.display = 'flex';
+            showToast('حدث خطأ أثناء الالتقاط: ' + e.message, true); 
+        });
     }
 
     async function shareReceipt() {
         if(typeof html2canvas === 'undefined') {
-            return showToast(currentLang === 'ar' ? 'مكتبة المشاركة غير متوفرة' : 'Sharing library not loaded', true);
+            return showToast(currentLang === 'ar' ? 'مكتبة المشاركة غير متوفرة بعد' : 'Sharing library not ready', true);
         }
         const target = document.getElementById('receipt-content-box'); 
         if(!target) return;
+        
         showToast(currentLang === 'ar' ? 'جاري تجهيز الصورة للمشاركة... ⏳' : 'Preparing image to share... ⏳', false);
-        const isDark = currentTheme === 'dark'; 
-        if(isDark) document.documentElement.setAttribute('data-theme', 'light');
+        
+        const actionBtns = target.nextElementSibling;
+        if(actionBtns) actionBtns.style.display = 'none';
+
         try {
-            const canvas = await html2canvas(target, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
-            if(isDark) document.documentElement.setAttribute('data-theme', 'dark');
+            const canvas = await html2canvas(target, { 
+                scale: window.devicePixelRatio > 1 ? window.devicePixelRatio : 2, 
+                backgroundColor: '#ffffff', 
+                useCORS: true,
+                logging: false,
+                width: target.offsetWidth,
+                height: target.offsetHeight
+            });
+            
+            if(actionBtns) actionBtns.style.display = 'flex';
+
             canvas.toBlob(async function(blob) {
                 if (!blob) return showToast('حدث خطأ أثناء إنشاء الصورة', true);
                 const recIdEl = document.getElementById('rec-id');
-                const rId = recIdEl ? recIdEl.innerText : 'Transfer';
-                const file = new File([blob], 'BOMA_Receipt_' + rId + '.jpg', { type: 'image/jpeg' });
+                const rId = recIdEl ? recIdEl.innerText : 'Transaction';
+                const file = new File([blob], 'BOMA_Receipt_' + rId + '.png', { type: 'image/png' });
+                
+                // 🌟 التحقق من دعم المتصفح أو الجوال لمشاركة الملفات 🌟
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     try {
                         await navigator.share({
-                            title: currentLang === 'ar' ? 'إيصال تحويل BOMA' : 'BOMA Transfer Receipt',
-                            text: currentLang === 'ar' ? 'مرفق إيصال العملية المالية من محفظة بومة.' : 'Attached is the receipt from BOMA Wallet.',
+                            title: currentLang === 'ar' ? 'إيصال بومة' : 'BOMA Receipt',
+                            text: currentLang === 'ar' ? 'تفاصيل العملية المالية من محفظة بومة.' : 'Transaction details from BOMA Wallet.',
                             files: [file]
                         });
                         showToast(currentLang === 'ar' ? 'تمت المشاركة بنجاح ✅' : 'Shared Successfully ✅', false);
                     } catch (err) {
-                        if (err.name !== 'AbortError') { showToast('تم إلغاء المشاركة أو حدث خطأ', true); }
+                        if (err.name !== 'AbortError') { showToast('تم إلغاء المشاركة', true); }
                     }
                 } else {
+                    // Fallback: تحميل الصورة إذا كانت المشاركة المباشرة غير مدعومة
+                    showToast(currentLang === 'ar' ? 'المشاركة غير مدعومة في متصفحك. سيتم تحميل الصورة بدلاً من ذلك.' : 'Sharing not supported. Downloading image instead.', false);
                     const link = document.createElement('a');
-                    link.download = 'BOMA_Receipt.jpg';
-                    link.href = canvas.toDataURL('image/jpeg', 1.0);
+                    link.download = 'BOMA_Receipt_' + rId + '.png';
+                    link.href = URL.createObjectURL(blob);
                     link.click();
-                    showToast(currentLang === 'ar' ? 'تم حفظ الإيصال كصورة لجهازك ✅' : 'Receipt saved to device ✅', false);
                 }
-            }, 'image/jpeg', 0.9);
+            }, 'image/png', 1.0);
         } catch (e) {
-            if(isDark) document.documentElement.setAttribute('data-theme', 'dark'); 
+            if(actionBtns) actionBtns.style.display = 'flex';
             showToast('خطأ: ' + e.message, true);
         }
     }
+
 
     const languages = {
         ar: {
@@ -2607,7 +2642,7 @@
         } catch(e) {}
     }
 
-    async function fetchTransactionHistory() { 
+        async function fetchTransactionHistory() { 
         const container = document.getElementById('transactions-list-container'); 
         if(!container) return;
         container.innerHTML = '<p style="text-align:center; margin-top:30px; font-weight:900; font-size:18px;">جاري التحميل... ⏳</p>'; 
@@ -2621,10 +2656,35 @@
                 const isOut = tx.type === 'out'; const sign = isOut ? '-' : '+'; const color = isOut ? 'var(--danger)' : 'var(--accent-green)'; 
                 const date = new Date(tx.date).toLocaleString('ar-EG', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); let amtDisplay = Number(tx.amount || 0).toLocaleString('en-US') + ' SDG';
                 const txnIdDisplay = tx.transactionId ? '<br><small style="color:var(--text-muted); font-size:11px; font-weight:bold; font-family:monospace;">رقم العملية: <span style="color:var(--primary-blue);">' + tx.transactionId + '</span></small>' : '';
-                container.innerHTML += '<div class="transaction-card"><div><strong style="font-size:16px; color:var(--primary-blue);">' + tx.title + '</strong><br><small style="color:var(--text-muted); font-size:12px; font-weight:bold; margin-top:5px; display:inline-block;">🕒 ' + date + '</small>' + txnIdDisplay + '</div><div style="font-weight:900; font-size:20px; color:' + color + '; direction:ltr;">' + sign + amtDisplay + '</div></div>'; 
+                
+                // 🌟 تجهيز بيانات الإيصال وتشفيرها لكي تفتح عند الضغط 🌟
+                const receiptData = {
+                    amount: tx.amount,
+                    txnId: tx.transactionId || 'N/A',
+                    date: tx.date,
+                    senderName: isOut ? registeredUser.name : tx.title,
+                    senderAccount: isOut ? registeredUser.accountNumber : 'N/A',
+                    receiverName: isOut ? tx.title : registeredUser.name,
+                    receiverAccount: isOut ? 'N/A' : registeredUser.accountNumber
+                };
+                const receiptDataStr = encodeURIComponent(JSON.stringify(receiptData));
+
+                // 🌟 إضافة خاصية النقر (onclick) لكرت المعاملة 🌟
+                container.innerHTML += '<div class="transaction-card" style="cursor:pointer; transition: 0.2s;" onclick="showReceiptModalFromHistory(\'' + receiptDataStr + '\')" onmousedown="this.style.transform=\'scale(0.98)\'" onmouseup="this.style.transform=\'scale(1)\'"><div><strong style="font-size:16px; color:var(--primary-blue);">' + tx.title + '</strong><br><small style="color:var(--text-muted); font-size:12px; font-weight:bold; margin-top:5px; display:inline-block;">🕒 ' + date + '</small>' + txnIdDisplay + '</div><div style="font-weight:900; font-size:20px; color:' + color + '; direction:ltr;">' + sign + amtDisplay + '</div></div>'; 
             }); 
         } catch (e) { container.innerHTML = '<p style="text-align:center; color:var(--danger); margin-top:20px; font-weight:bold;">خطأ: ' + e.message + '</p>'; } 
     }
+
+    // 🌟 الدالة الجديدة المسؤولة عن فتح الإيصال من السجل 🌟
+    function showReceiptModalFromHistory(encodedData) {
+        try {
+            const data = JSON.parse(decodeURIComponent(encodedData));
+            showReceiptModal(data);
+        } catch(e) {
+            showToast('لا يمكن عرض الإيصال لهذه المعاملة', true);
+        }
+    }
+
 
     let typingTimer;
     async function checkReceiverName() {
