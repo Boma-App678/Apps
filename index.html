@@ -9,6 +9,9 @@
     <meta name="theme-color" content="#e60000" />
     <link rel="apple-touch-icon" href="./icon-192.png" />
     <!-- ============================================== -->
+        <!-- 🌟 استدعاء مكتبة الأيقونات العصرية (Boxicons) 🌟 -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
     <!-- 🌟 استدعاء خط تجوال (Tajawal) الشبيه بخط فودافون 🌟 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -921,16 +924,47 @@
         </div>
     </div>
 
-    <!-- 🌟 شريط التنقل السفلي والزر العائم 🌟 -->
+       <!-- 🌟 شريط التنقل السفلي والزر العائم (أيقونات مطابقة للصورة 100%) 🌟 -->
     <div class="bottom-nav" id="main-nav">
-        <div class="nav-item active" onclick="switchScreen('home-screen')" tabindex="0" role="button" aria-pressed="true"><div>🏠</div><span data-key="nav_home">الرئيسية</span></div>
-        <div class="nav-item" onclick="switchScreen('wallet-screen')" tabindex="0" role="button" aria-pressed="false"><div>💳</div><span data-key="nav_wallet">المحفظة</span></div>
-        <div class="nav-item floating-btn" onclick="switchScreen('shop-screen')" tabindex="0" role="button" aria-pressed="false"><div>🛍️</div><span data-key="nav_shop">المتجر</span></div>
-        <div class="nav-item" onclick="switchScreen('services-screen')" tabindex="0" role="button" aria-pressed="false"><div>💼</div><span data-key="nav_services">الخدمات</span></div>
-        <div class="nav-item" onclick="switchScreen('cart-screen')" tabindex="0" role="button" aria-pressed="false"><div>🛒</div><span data-key="nav_cart">العربة</span></div>
-        <div class="nav-item" onclick="switchScreen('settings-screen')" tabindex="0" role="button" aria-pressed="false"><div>⚙️</div><span data-key="nav_settings">الإعدادات</span></div>
+        <!-- الرئيسية (أيقونة البيت المفرغ) -->
+        <div class="nav-item active" onclick="switchScreen('home-screen')" tabindex="0" role="button" aria-pressed="true">
+            <i class='bx bx-home-alt-2' style="font-size: 26px; margin-bottom: 2px;"></i>
+            <span data-key="nav_home">الرئيسية</span>
+        </div>
+        
+        <!-- المحفظة -->
+        <div class="nav-item" onclick="switchScreen('wallet-screen')" tabindex="0" role="button" aria-pressed="false">
+            <i class='bx bx-wallet' style="font-size: 26px; margin-bottom: 2px;"></i>
+            <span data-key="nav_wallet">المحفظة</span>
+        </div>
+        
+        <!-- الزر العائم (المتجر) -->
+        <div class="nav-item floating-btn" onclick="switchScreen('shop-screen')" tabindex="0" role="button" aria-pressed="false">
+            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: transparent; filter: drop-shadow(0 4px 6px rgba(230,0,0,0.3));">
+                <i class='bx bx-shopping-bag' style="font-size: 32px;"></i>
+            </div>
+            <span data-key="nav_shop" style="display:none;">المتجر</span>
+        </div>
+        
+        <!-- الخدمات (أيقونة المربعات الأربعة مطابقة للصورة) -->
+        <div class="nav-item" onclick="switchScreen('services-screen')" tabindex="0" role="button" aria-pressed="false">
+            <i class='bx bx-grid-alt' style="font-size: 26px; margin-bottom: 2px;"></i>
+            <span data-key="nav_services">خدمات</span>
+        </div>
+        
+        <!-- العربة -->
+        <div class="nav-item" onclick="switchScreen('cart-screen')" tabindex="0" role="button" aria-pressed="false">
+            <i class='bx bx-cart-alt' style="font-size: 26px; margin-bottom: 2px;"></i>
+            <span data-key="nav_cart">العربة</span>
+        </div>
+        
+        <!-- الحساب/الإعدادات (أيقونة الثلاث خطوط مطابقة للصورة) -->
+        <div class="nav-item" onclick="switchScreen('settings-screen')" tabindex="0" role="button" aria-pressed="false">
+            <i class='bx bx-menu' style="font-size: 30px; margin-bottom: 0px;"></i>
+            <span data-key="nav_settings">الحساب</span>
+        </div>
     </div>
-</div>
+
 <script>
     const STORE_KEY = 'boma_app_client_v54';
     const API_URL = 'https://api.boomapay.com/api';
