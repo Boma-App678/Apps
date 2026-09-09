@@ -276,6 +276,25 @@
             <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">5. الأزرار والأقسام</h3><div class="search-flex"><div style="flex: 1;"><label>لون الخلفية</label><div class="color-input-wrapper"><input type="color" id="ui-cat-bg-color-picker" oninput="document.getElementById('ui-cat-bg-color').value=this.value"><input type="text" id="ui-cat-bg-color" oninput="document.getElementById('ui-cat-bg-color-picker').value=this.value"></div></div><div style="flex: 1;"><label>لون النص</label><div class="color-input-wrapper"><input type="color" id="ui-cat-text-color-picker" oninput="document.getElementById('ui-cat-text-color').value=this.value"><input type="text" id="ui-cat-text-color" oninput="document.getElementById('ui-cat-text-color-picker').value=this.value"></div></div></div><div class="form-group"><label>حجم الزر</label><select id="ui-cat-size"><option value="70px">صغير</option><option value="85px">متوسط</option><option value="105px">كبير</option></select></div><div class="form-group"><label>الانحناء</label><input type="range" id="ui-cat-radius" min="0" max="40" oninput="document.getElementById('radius-val').innerText=this.value+'px'"><span id="radius-val">12px</span></div></div>
             <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">6. المساحات والأزرار</h3><div class="search-flex"><div style="flex: 1;"><label>لون مساحة الدخول</label><div class="color-input-wrapper"><input type="color" id="ui-auth-bg-color-picker" oninput="document.getElementById('ui-auth-bg-color').value=this.value"><input type="text" id="ui-auth-bg-color" oninput="document.getElementById('ui-auth-bg-color-picker').value=this.value"></div></div><div style="flex: 1;"><label>الانحناء</label><input type="range" id="ui-auth-radius" min="0" max="60" oninput="document.getElementById('auth-radius-val').innerText=this.value+'px'"><span id="auth-radius-val">32px</span></div></div><div class="search-flex"><div style="flex: 1;"><label>خلفية الزر</label><div class="color-input-wrapper"><input type="color" id="ui-btn-main-bg-picker" oninput="document.getElementById('ui-btn-main-bg').value=this.value"><input type="text" id="ui-btn-main-bg" oninput="document.getElementById('ui-btn-main-bg-picker').value=this.value"></div></div><div style="flex: 1;"><label>نص الزر</label><div class="color-input-wrapper"><input type="color" id="ui-btn-main-text-picker" oninput="document.getElementById('ui-btn-main-text').value=this.value"><input type="text" id="ui-btn-main-text" oninput="document.getElementById('ui-btn-main-text-picker').value=this.value"></div></div></div></div>
             <div class="card"><h3 style="margin-bottom: 15px; color: var(--primary);">7. الحجم (Zoom)</h3><input type="range" id="ui-global-font-size" min="80" max="130" oninput="document.getElementById('font-size-val').innerText=this.value+'%'"><span id="font-size-val">100%</span></div>
+                        <div class="card">
+                <h3 style="margin-bottom: 15px; color: var(--primary);">8. العروض الترويجية والعداد الزمني</h3>
+                
+                <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #e2e8f0;">
+                    <label class="settings-label"><input type="checkbox" id="ui-slider-btn-active"> تفعيل الزر التفاعلي داخل السلايدر (أعلى التطبيق)</label>
+                    <div class="search-flex" style="margin-top: 10px;">
+                        <div style="flex: 1;"><label>نص الزر</label><input type="text" id="ui-slider-btn-text" placeholder="مثال: اكتشف المزيد ↗"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="settings-label"><input type="checkbox" id="ui-flash-sale-active"> تفعيل بانر العداد التنازلي (Flash Sale)</label>
+                    <div class="search-flex" style="margin-top: 10px;">
+                        <div style="flex: 1;"><label>عنوان العرض</label><input type="text" id="ui-flash-sale-title" placeholder="مثال: عرض حصري مميز 🔥"></div>
+                        <div style="flex: 1;"><label>تاريخ ووقت انتهاء العرض</label><input type="datetime-local" id="ui-flash-sale-end"></div>
+                    </div>
+                </div>
+            </div>
+
             <button class="btn btn-orange" style="padding: 14px; width: 100%;" onclick="saveSettings()">حفظ وتطبيق المظهر 💾</button>
         </div>
 
@@ -1132,6 +1151,14 @@
                     document.getElementById('ui-global-font-size').value = ui.globalFontSize || '100';
                     document.getElementById('font-size-val').innerText = (ui.globalFontSize || '100') + '%';
                 }
+                                // تحميل إعدادات العروض
+                document.getElementById('ui-slider-btn-active').checked = ui.sliderBtnActive || false;
+                document.getElementById('ui-slider-btn-text').value = ui.sliderBtnText || 'اكتشف المزيد ↗';
+                
+                document.getElementById('ui-flash-sale-active').checked = ui.flashSaleActive || false;
+                document.getElementById('ui-flash-sale-title').value = ui.flashSaleTitle || 'عرض حصري مميز 🔥';
+                if (ui.flashSaleEnd) { document.getElementById('ui-flash-sale-end').value = ui.flashSaleEnd; }
+
                 toggleCardInputs();
             }
             
@@ -1186,7 +1213,14 @@
             authRadius: document.getElementById('ui-auth-radius').value,
             btnMainBg: document.getElementById('ui-btn-main-bg').value,
             btnMainText: document.getElementById('ui-btn-main-text').value,
-            globalFontSize: document.getElementById('ui-global-font-size').value 
+            globalFontSize: document.getElementById('ui-global-font-size').value,
+                        sliderBtnActive: document.getElementById('ui-slider-btn-active').checked,
+            sliderBtnText: document.getElementById('ui-slider-btn-text').value,
+            
+            flashSaleActive: document.getElementById('ui-flash-sale-active').checked,
+            flashSaleTitle: document.getElementById('ui-flash-sale-title').value,
+            flashSaleEnd: document.getElementById('ui-flash-sale-end').value
+
         };
 
         const isTransferEnabled = document.getElementById('set-transfer').checked; const isWithdrawEnabled = document.getElementById('set-withdraw').checked; const isDepositEnabled = document.getElementById('set-deposit').checked; const isStoreEnabled = document.getElementById('set-store').checked; const isServicesEnabled = document.getElementById('set-services').checked;
