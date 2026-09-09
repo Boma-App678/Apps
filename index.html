@@ -1660,6 +1660,51 @@
             cat.scrollLeft = scrollLeft - walk;
         });
     }
+    // 🌟 دالة المزامنة الذكية الشاملة (Live Sync) لكل أحداث التطبيق 🌟
+    async function syncAppData() {
+        if (!registeredUser || !registeredUser.active) return;
+        try {
+            const token = localStorage.getItem('boma_token');
+            if (!token) return;
+
+            // 1. تحديث البروفايل (الرصيد، حالة التوثيق، حالة الحظر)
+            const resProfile = await fetch(API_URL + '/user/profile', { headers: { 'Authorization': 'Bearer ' + token }});
+            if (resProfile.status === 403) return forceLogout('تم إنهاء جلستك.');
+            if (resProfile.ok) {
+                const data = await resProfile.json();
+                if (data.isSuspended) return forceLogout('تم إيقاف حسابك من قبل الإدارة.');
+                
+                let balanceChanged = registeredUser.balance !== data.balance;
+                let kycChanged = registeredUser.kycStatus !== data.kycStatus;
+                
+                if (balanceChanged || kycChanged) {
+                    registeredUser.balance = data.balance;
+                    registeredUser.kycStatus = data.kycStatus;
+                    saveState();
+                    renderWalletDisplay();
+                    updateSettingsUI();
+                }
+            }
+
+            // 2. تحديث الإشعارات (الجرس) بشكل دائم
+            fetchUserNotifications();
+
+            // 3. التحديث الذكي بناءً على الشاشة المفتوحة حالياً (تحديث صامت)
+            const activeScreen = document.querySelector('.screen.active');
+            if (activeScreen) {
+                if (activeScreen.id === 'history-screen') {
+                    // تحديث كشف الحساب إذا كان العميل يتصفحه الآن
+                    fetchTransactionHistory(true); 
+                } else if (activeScreen.id === 'support-screen') {
+                    // تحديث تذاكر الدعم لتظهر ردود الإدارة فوراً
+                    loadSupportTickets(true);
+                } else if (activeScreen.id === 'vendor-screen') {
+                    // تحديث أرباح التاجر
+                    loadVendorStats();
+                }
+            }
+        } catch(e) {}
+    }
 
        function switchScreen(id, isBackAction = false) {
         const protectedScreens = ['transfer-screen', 'deposit-screen', 'withdraw-screen', 'history-screen', 'notifications-screen', 'kyc-screen', 'vendor-screen', 'cashier-screen', 'support-screen', 'payment-screen'];
@@ -2786,37 +2831,33 @@
         } catch(e) {}
     }
 
-        async function fetchTransactionHistory() { 
+            async function fetchTransactionHistory(isSilent = false) { 
         const container = document.getElementById('transactions-list-container'); 
         if(!container) return;
-        container.innerHTML = '<p style="text-align:center; margin-top:30px; font-weight:900; font-size:18px;">جاري التحميل... ⏳</p>'; 
+        if(!isSilent) container.innerHTML = '<p style="text-align:center; margin-top:30px; font-weight:900; font-size:18px;">جاري التحميل... ⏳</p>'; 
         try { 
             const token = localStorage.getItem('boma_token'); const res = await fetch(API_URL + '/wallet/transactions', { headers: { 'Authorization': 'Bearer ' + token } }); 
             if (res.status === 403) return forceLogout('تم إنهاء جلستك.'); if (!res.ok) throw new Error(); 
-            const data = await res.json(); container.innerHTML = ''; 
+            const data = await res.json(); 
+            if(!isSilent) container.innerHTML = ''; else if (container.innerHTML.indexOf('جاري التحميل') !== -1) container.innerHTML = '';
+            
+            // ... (احتفظ بباقي كود الدالة كما هو لتوليد العناصر rendering)
             renderExpenseChart(data); 
             if (data.length === 0) { container.innerHTML = '<p style="text-align:center;color:var(--text-muted);margin-top:30px;font-weight:900;font-size:18px;">لا توجد معاملات.</p>'; return; } 
+            
+            let tempHtml = '';
             data.forEach(function(tx) { 
                 const isOut = tx.type === 'out'; const sign = isOut ? '-' : '+'; const color = isOut ? 'var(--danger)' : 'var(--accent-green)'; 
                 const date = new Date(tx.date).toLocaleString('ar-EG', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); let amtDisplay = Number(tx.amount || 0).toLocaleString('en-US') + ' SDG';
                 const txnIdDisplay = tx.transactionId ? '<br><small style="color:var(--text-muted); font-size:11px; font-weight:bold; font-family:monospace;">رقم العملية: <span style="color:var(--primary-blue);">' + tx.transactionId + '</span></small>' : '';
                 
-                // 🌟 تجهيز بيانات الإيصال وتشفيرها لكي تفتح عند الضغط 🌟
-                const receiptData = {
-                    amount: tx.amount,
-                    txnId: tx.transactionId || 'N/A',
-                    date: tx.date,
-                    senderName: isOut ? registeredUser.name : tx.title,
-                    senderAccount: isOut ? registeredUser.accountNumber : 'N/A',
-                    receiverName: isOut ? tx.title : registeredUser.name,
-                    receiverAccount: isOut ? 'N/A' : registeredUser.accountNumber
-                };
+                const receiptData = { amount: tx.amount, txnId: tx.transactionId || 'N/A', date: tx.date, senderName: isOut ? registeredUser.name : tx.title, senderAccount: isOut ? registeredUser.accountNumber : 'N/A', receiverName: isOut ? tx.title : registeredUser.name, receiverAccount: isOut ? 'N/A' : registeredUser.accountNumber };
                 const receiptDataStr = encodeURIComponent(JSON.stringify(receiptData));
 
-                // 🌟 إضافة خاصية النقر (onclick) لكرت المعاملة 🌟
-                container.innerHTML += '<div class="transaction-card" style="cursor:pointer; transition: 0.2s;" onclick="showReceiptModalFromHistory(\'' + receiptDataStr + '\')" onmousedown="this.style.transform=\'scale(0.98)\'" onmouseup="this.style.transform=\'scale(1)\'"><div><strong style="font-size:16px; color:var(--primary-blue);">' + tx.title + '</strong><br><small style="color:var(--text-muted); font-size:12px; font-weight:bold; margin-top:5px; display:inline-block;">🕒 ' + date + '</small>' + txnIdDisplay + '</div><div style="font-weight:900; font-size:20px; color:' + color + '; direction:ltr;">' + sign + amtDisplay + '</div></div>'; 
+                tempHtml += '<div class="transaction-card" style="cursor:pointer; transition: 0.2s;" onclick="showReceiptModalFromHistory(\'' + receiptDataStr + '\')"><div><strong style="font-size:16px; color:var(--primary-blue);">' + tx.title + '</strong><br><small style="color:var(--text-muted); font-size:12px; font-weight:bold; margin-top:5px; display:inline-block;">🕒 ' + date + '</small>' + txnIdDisplay + '</div><div style="font-weight:900; font-size:20px; color:' + color + '; direction:ltr;">' + sign + amtDisplay + '</div></div>'; 
             }); 
-        } catch (e) { container.innerHTML = '<p style="text-align:center; color:var(--danger); margin-top:20px; font-weight:bold;">خطأ: ' + e.message + '</p>'; } 
+            container.innerHTML = tempHtml;
+        } catch (e) { if(!isSilent) container.innerHTML = '<p style="text-align:center; color:var(--danger); margin-top:20px; font-weight:bold;">خطأ: ' + e.message + '</p>'; } 
     }
 
     // 🌟 الدالة الجديدة المسؤولة عن فتح الإيصال من السجل 🌟
@@ -3024,22 +3065,24 @@
         loadSupportTickets();
     }
     
-    async function loadSupportTickets() {
+        async function loadSupportTickets(isSilent = false) {
         const container = document.getElementById('support-list-container');
         if(!container) return;
-        container.innerHTML = 'جاري التحميل...';
+        if(!isSilent) container.innerHTML = 'جاري التحميل...';
         try {
             const token = localStorage.getItem('boma_token');
             const res = await fetch(API_URL + '/support', { headers: { 'Authorization': 'Bearer ' + token } });
             const data = await res.json();
-            container.innerHTML = '';
+            
+            let tempHtml = '';
             if(data.length === 0) { container.innerHTML = '<div class="empty-state">لا توجد تذاكر سابقة</div>'; return; }
             data.forEach(function(t) {
                 const statusHtml = t.status === 'replied' ? '<span class="status-badge status-replied">تم الرد</span>' : '<span class="status-badge status-pending">قيد الانتظار</span>';
                 const replyHtml = t.adminReply ? '<div class="ticket-reply"><strong>رد الإدارة:</strong> ' + t.adminReply + '</div>' : '';
-                container.innerHTML += '<div class="ticket-card"><div style="display:flex; justify-content:space-between;"><h5>' + t.subject + '</h5>' + statusHtml + '</div><p>' + t.message + '</p>' + replyHtml + '</div>';
+                tempHtml += '<div class="ticket-card"><div style="display:flex; justify-content:space-between;"><h5>' + t.subject + '</h5>' + statusHtml + '</div><p>' + t.message + '</p>' + replyHtml + '</div>';
             });
-        } catch(e) { container.innerHTML = 'خطأ في التحميل'; }
+            container.innerHTML = tempHtml;
+        } catch(e) { if(!isSilent) container.innerHTML = 'خطأ في التحميل'; }
     }
 
     let currentServiceName = '';
@@ -3527,7 +3570,9 @@
     switchScreen('home-screen', true);
     
     setTimeout(function() { renderAppDynamicContent(); }, 100);
-    setInterval(fetchUserNotifications, 15000);
+            // تشغيل المزامنة الشاملة كل 15 ثانية
+        setInterval(syncAppData, 15000);
+
     }, 100);
     
     </script>
