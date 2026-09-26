@@ -3025,7 +3025,7 @@
             const data = await res.json();
             if(!res.ok) return showToast(data.message, true);
             
-            showToast('تم شحن محفظتك بنجاح! ✅', false);
+            showToast('تم طلب شحن محفظتك بنجاح! ✅', false);
             amtEl.value = ''; 
             txnEl.value = ''; 
             if (registeredUser) { registeredUser.balance = data.newBalance; saveState(); renderWalletDisplay(); }
