@@ -1755,7 +1755,7 @@
         if (id === 'home-screen') { startAutoSlider(); } else { stopAutoSlider(); }
 
         if (id === 'cart-screen') updateCartUI();
-        if (id === 'wishlist-screen') updateWishlistUI(); 
+        if (id === 'wishlist-screen') updateWiupdateCartUIshlistUI(); 
         if (id === 'payment-screen') {
             renderPayments(); updatePaymentTotal();
             if(registeredUser && registeredUser.active) {
@@ -2578,7 +2578,7 @@
         saveState(); showToast(languages[currentLang].alert_add, false); switchScreen('shop-screen', 1); 
     }
 
-    function updateCartUI() {
+        function updateCartUI() {
         const container = document.getElementById('cart-items-container');
         if(!container) return;
         container.innerHTML = '';
@@ -2595,7 +2595,15 @@
             container.innerHTML += '<div class="cart-item-row"><div style="flex:1;"><div style="font-weight:900; font-size:15px; color:var(--text-dark);">' + item.name + '</div><div style="color:var(--accent-orange); font-weight:bold; font-size:14px; margin-top:4px;">' + Number(item.price).toLocaleString('en-US') + ' SDG</div></div><div class="cart-qty-controls"><button class="cart-qty-btn" onclick="updateCartItemQty(' + index + ', 1)">+</button><span style="font-weight:900; min-width:20px; text-align:center;">' + item.qty + '</span><button class="cart-qty-btn" onclick="updateCartItemQty(' + index + ', -1)">-</button></div></div>';
         });
         const cPrice = document.getElementById('cart-total-price');
-        if(cPrice) cPrice.innerText = total.toLocaleString('en-US') + ' SDG';
+        if(cPrice) {
+            if (appliedPromoDiscount > 0) {
+                const discountValue = total * (appliedPromoDiscount / 100);
+                const finalTotal = total - discountValue;
+                cPrice.innerHTML = `<span style="text-decoration:line-through; color:var(--text-muted); font-size:14px; margin-left:8px;">${total.toLocaleString('en-US')} SDG</span> ${finalTotal.toLocaleString('en-US')} SDG`;
+            } else {
+                cPrice.innerText = total.toLocaleString('en-US') + ' SDG';
+            }
+        }
     }
 
     function updateCartItemQty(index, change) {
@@ -2716,7 +2724,7 @@
         } catch(e) {}
     }
 
-    async function triggerCheckout() {
+        async function triggerCheckout() {
         if(!registeredUser || !registeredUser.active) return showToast(currentLang === 'ar' ? 'يجب تسجيل الدخول لإتمام الشراء!' : 'Must login to checkout!', true);
         if(cart.length === 0) return showToast(currentLang === 'ar' ? 'العربة فارغة!' : 'Cart is empty!', true);
         
@@ -2752,6 +2760,7 @@
         if(!address || !phone || !name) return showToast(currentLang === 'ar' ? 'أكمل بيانات التوصيل!' : 'Fill delivery details!', true);
         
         let cartTotal = cart.reduce(function(sum, item) { return sum + (item.price * item.qty); }, 0);
+        if (appliedPromoDiscount > 0) { cartTotal = cartTotal - (cartTotal * (appliedPromoDiscount / 100)); }
         const finalAmount = cartTotal + deliveryCost;
         const detailsStr = whatsappNumber + ' | ' + name + ' | ' + areaText + ' | ' + address + ' | هاتف للاتصال: ' + phone;
 
@@ -2763,15 +2772,15 @@
                     const res = await fetch(API_URL + '/wallet/checkout', { 
                         method: 'POST', 
                         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                        body: JSON.stringify({ totalAmount: finalAmount, pin: pinVal, cartItems: cart, deliveryDetails: detailsStr })
+                        body: JSON.stringify({ totalAmount: finalAmount, pin: pinVal, cartItems: cart, deliveryDetails: detailsStr, promoCode: appliedPromoCode })
                     });
                     if (res.status === 403) return forceLogout('تم إنهاء جلستك.');
                     const data = await res.json();
                     if (!res.ok) return showToast(data.message, true);
                     
                     registeredUser.balance = data.newBalance;
-                    saveState();
-                    cart = []; saveState(); updateCartUI();
+                    cart = []; appliedPromoCode = ''; appliedPromoDiscount = 0; document.getElementById('promo-code-input').value = ''; saveState(); updateCartUI();
+                    
                     showToast(languages[currentLang].alert_pay, false);
                     switchScreen('home-screen', 0);
                 } catch(e) { showToast(e.message, true); }
@@ -2784,13 +2793,13 @@
                     const res = await fetch(API_URL + '/checkout/cash', { 
                         method: 'POST', 
                         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                        body: JSON.stringify({ totalAmount: finalAmount, cartItems: cart, deliveryDetails: detailsStr })
+                        body: JSON.stringify({ totalAmount: finalAmount, cartItems: cart, deliveryDetails: detailsStr, promoCode: appliedPromoCode })
                     });
                     if (res.status === 403) return forceLogout('تم إنهاء جلستك.');
                     const data = await res.json();
                     if (!res.ok) return showToast(data.message, true);
                     
-                    cart = []; saveState(); updateCartUI();
+                    cart = []; appliedPromoCode = ''; appliedPromoDiscount = 0; document.getElementById('promo-code-input').value = ''; saveState(); updateCartUI();
                     showToast(currentLang === 'ar' ? 'تم تأكيد طلبك بنجاح! 🎉' : 'Order confirmed! 🎉', false);
                     switchScreen('home-screen', 0);
                 } catch(e) { showToast(e.message, true); }
@@ -2799,6 +2808,7 @@
             showToast(currentLang === 'ar' ? 'بوابات الدفع الخارجية تحت التحديث' : 'External gateways updating', true);
         }
     }
+
 
     function renderExpenseChart(txs) {
         const canvas = document.getElementById('expenseChart');
