@@ -904,6 +904,30 @@
         }
     }
 
+    // 🌟 التعديل الأساسي: دالة مساعدة لرفع الملفات كـ FormData بدلاً من JSON 🌟
+    async function uploadImageToServer(file) {
+        showToast('جاري ضغط ورفع الصورة... ⏳');
+        // نضغط الصورة للحفاظ على الإنترنت
+        const base64Url = await compressImage(file);
+        // تحويل النص المضغوط إلى ملف (Blob)
+        const res = await fetch(base64Url);
+        const blob = await res.blob();
+        
+        // تجهيز الملف للرفع
+        const formData = new FormData();
+        formData.append('image', blob, file.name || 'image.jpg');
+        
+        const uploadRes = await fetch(`${API_URL}/upload`, {
+            method: 'POST',
+            headers: { 'x-admin-pass': adminPass }, // مصادقة الإدارة
+            body: formData
+        });
+        
+        if (!uploadRes.ok) throw new Error('فشل رفع الصورة للخادم');
+        const data = await uploadRes.json();
+        return data.imageUrl; // السيرفر يرجع الرابط المباشر
+    }
+
     async function addSupportedBank() {
         const name = document.getElementById('bank-name-input').value.trim();
         const file = document.getElementById('bank-logo-file').files[0];
@@ -914,7 +938,8 @@
         
         showToast('جاري الحفظ... ⏳');
         try {
-            let logoData = url ? url : await compressImage(file);
+            // التعديل: استخدام دالة الرفع الجديدة
+            let logoData = url ? url : await uploadImageToServer(file);
             const res = await authFetch(`${API_URL}/admin/banks`, {
                 method: 'POST',
                 body: JSON.stringify({ name, logo: logoData })
@@ -1042,7 +1067,8 @@
         if(!file && !imgUrl && !bgColor) return showToast('الرجاء إرفاق ميديا أو خلفية للبنر!', true); 
         showToast('جاري النشر والمزامنة...'); 
         try { 
-            let finalImg = file ? await compressImage(file) : (imgUrl ? imgUrl : bgColor); 
+            // التعديل: استخدام دالة الرفع الجديدة
+            let finalImg = file ? await uploadImageToServer(file) : (imgUrl ? imgUrl : bgColor); 
             await authFetch(`${API_URL}/banners`, { method: 'POST', body: JSON.stringify({ placement, arTitle, enTitle, arDesc, enDesc, imgUrl: finalImg }) }); 
             showToast('تم نشر البنر بنجاح وتحديث واجهة العميل! 🎉'); 
             document.getElementById('b-ar-title').value = ''; document.getElementById('b-en-title').value = ''; document.getElementById('b-ar-desc').value = ''; document.getElementById('b-en-desc').value = ''; document.getElementById('b-img').value = ''; document.getElementById('b-img-url').value = ''; document.getElementById('b-color').value = ''; 
@@ -1595,7 +1621,8 @@
         
         showToast('جاري الحفظ... ⏳'); 
         try { 
-            let finalImg = null; if (file) finalImg = await compressImage(file); else if (imgUrl) finalImg = imgUrl; else if (emoji) finalImg = emoji; 
+            // التعديل: استخدام دالة الرفع الجديدة
+            let finalImg = null; if (file) finalImg = await uploadImageToServer(file); else if (imgUrl) finalImg = imgUrl; else if (emoji) finalImg = emoji; 
             let bodyData = { categoryId, arName, enName, price, minPrice, vendorIdentity, stock, arDesc, enDesc, variations, gallery, deliveryScope }; 
             if (finalImg) bodyData.img = finalImg; 
             if (editingProductId) { await authFetch(`${API_URL}/admin/products/${editingProductId}`, { method: 'PUT', body: JSON.stringify(bodyData) }); showToast('تم التعديل بنجاح! ✅'); cancelEditProduct(); } else { if(!finalImg) return showToast('الرجاء اختيار صورة رئيسية للمنتج الجديد', true); await authFetch(`${API_URL}/products`, { method: 'POST', body: JSON.stringify(bodyData) }); showToast('تم الإضافة بنجاح! ✅'); cancelEditProduct(); } 
