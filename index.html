@@ -1560,6 +1560,8 @@
     let currentSlideIndex = 0; 
     let slideInterval; 
     let selectedPayment = 'wallet';
+    let appliedPromoCode = '';
+    let appliedPromoDiscount = 0;
 
     function loadState() { 
         try { 
@@ -2095,12 +2097,30 @@
         container.innerHTML += '<button class="btn-main btn-outline" style="grid-column: span 2; margin-top:10px;" onclick="switchScreen(\'shop-screen\',1)">' + (currentLang === 'ar' ? 'تصفح كل المنتجات 🛒' : 'View All Products 🛒') + '</button>';
     }
 
-    function applyPromoCode() {
+    async function applyPromoCode() {
         const code = document.getElementById('promo-code-input').value.trim();
         if(!code) return showToast(currentLang === 'ar' ? 'أدخل كود الكوبون أولاً!' : 'Enter promo code first!', true);
-        showToast(currentLang === 'ar' ? 'جاري التحقق من الكوبون... ⏳' : 'Verifying promo code... ⏳', false);
-        setTimeout(function() { showToast(currentLang === 'ar' ? 'عذراً، نظام الكوبونات قيد التحديث في السيرفر.' : 'Promo codes system is updating on server.', true); }, 1500);
+        showToast(currentLang === 'ar' ? 'جاري التحقق... ⏳' : 'Verifying... ⏳', false);
+        try {
+            const res = await fetch(API_URL + '/promocodes/validate', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code })
+            });
+            const data = await res.json();
+            if(res.ok) {
+                appliedPromoCode = code;
+                appliedPromoDiscount = data.discountPercentage;
+                showToast((currentLang === 'ar' ? 'تم تطبيق الخصم بنجاح! 🎉 بنسبة ' : 'Discount applied! 🎉 ') + appliedPromoDiscount + '%', false);
+                updateCartUI();
+                updatePaymentTotal();
+            } else {
+                showToast(data.message, true);
+                appliedPromoCode = ''; appliedPromoDiscount = 0;
+                updateCartUI(); updatePaymentTotal();
+            }
+        } catch(e) { showToast(currentLang === 'ar' ? 'خطأ في الاتصال!' : 'Connection Error', true); }
     }
+
 
     async function fetchBanners() { try { const response = await fetch(API_URL + '/banners'); if (response.ok) { bannersData = await response.json(); renderDynamicBanners(); } } catch (error) {} }
     async function loadDeliveryZones() { try { const res = await fetch(API_URL + '/delivery-zones'); const zones = await res.json(); const select = document.getElementById('checkout-area'); if (!select) return; select.innerHTML = '<option value="0">' + (currentLang === 'ar' ? 'استلام من المتجر (مجانًا)' : 'Store Pickup (Free)') + '</option>'; zones.forEach(function(z) { select.innerHTML += '<option value="' + z.price + '">' + z.name + ' (+' + z.price + ' SDG)</option>'; }); updatePaymentTotal(); } catch(e) { } }
@@ -2954,6 +2974,27 @@
             reader.onerror = function() { reject('فشل القراءة'); };
         });
     }
+    // دالة رفع الصور الخاصة بالعميل والتاجر إلى السيرفر كملف حقيقي
+    async function uploadUserImageToServer(file) {
+        showToast('جاري ضغط ورفع الصورة... ⏳', false);
+        const base64Url = await compressImageToDataURL(file);
+        const res = await fetch(base64Url);
+        const blob = await res.blob();
+        
+        const formData = new FormData();
+        formData.append('image', blob, file.name || 'image.jpg');
+        
+        const token = localStorage.getItem('boma_token');
+        const uploadRes = await fetch(`${API_URL}/user/upload`, {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+            body: formData
+        });
+        
+        if (!uploadRes.ok) throw new Error('فشل رفع الصورة للخادم');
+        const data = await uploadRes.json();
+        return data.imageUrl;
+    }
 
     async function submitDeposit() {
         const amtEl = document.getElementById('dep-amount');
@@ -3024,8 +3065,9 @@
         
         showToast('جاري رفع المستندات... ⏳', false);
         try {
-            const docImage = await compressImageToDataURL(docFile);
-            const selfieImage = await compressImageToDataURL(selfieFile);
+            const docImage = await uploadUserImageToServer(docFile);
+            const selfieImage = await uploadUserImageToServer(selfieFile);
+
             const token = localStorage.getItem('boma_token');
             const res = await fetch(API_URL + '/wallet/submit-kyc', {
                 method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
