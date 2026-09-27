@@ -407,6 +407,14 @@
             </div>
 
             <div class="card" style="margin-top: 20px;">
+                <h3 style="margin-bottom: 15px; color: var(--primary);">🚧 إعدادات الحدود المالية الافتراضية (SDG)</h3>
+                <div class="search-flex">
+                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">الحد اليومي لسحب الكاش</label><input type="number" id="set-limit-cash" placeholder="مثال: 30000"></div>
+                    <div style="flex: 1;"><label style="font-size: 12px; font-weight: bold;">الحد اليومي للتحويل</label><input type="number" id="set-limit-transfer" placeholder="مثال: 200000"></div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
                 <h3 style="margin-bottom: 15px; color: var(--primary);">إعدادات بنكك (Bankak)</h3>
                 <div class="form-group"><label>رقم الحساب</label><input type="number" id="set-bankak-acc"></div>
                 <div class="form-group"><label>اسم الحساب</label><input type="text" id="set-bankak-name"></div>
@@ -484,7 +492,9 @@
                     <div style="background: #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px;" class="master-only">
                         <h4 style="margin-bottom: 10px;">إدارة وحظر:</h4>
                         <div class="manage-actions-flex" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                            <label>تجميد رصيد:</label><input type="number" id="manage-freeze-input" style="width: 150px; margin: 0;">
+                            <label>تجميد رصيد:</label><input type="number" id="manage-freeze-input" style="width: 120px; margin: 0;">
+                            <label>حد الكاش المخصص:</label><input type="number" id="manage-cash-limit" placeholder="تلقائي" style="width: 100px; margin: 0;">
+                            <label>حد التحويل المخصص:</label><input type="number" id="manage-transfer-limit" placeholder="تلقائي" style="width: 100px; margin: 0;">
                             <label style="margin-left: 10px;"><input type="checkbox" id="manage-suspend-input"> إيقاف الحساب</label>
                             <button class="btn btn-red" onclick="saveUserManage()">حفظ التعديلات</button>
                             <button class="btn btn-blue" onclick="loadUserTxs()">كشف الحركات 📄</button>
@@ -1199,6 +1209,9 @@
             document.getElementById('set-fee-deposit').value = data.depositFeePct || 0;
             document.getElementById('set-fee-transfer').value = data.transferFeePct || 0;
             document.getElementById('set-fee-withdraw').value = data.withdrawFeePct || 0;
+            
+            document.getElementById('set-limit-cash').value = data.defaultDailyCashLimit !== undefined ? data.defaultDailyCashLimit : 30000;
+            document.getElementById('set-limit-transfer').value = data.defaultDailyTransferLimit !== undefined ? data.defaultDailyTransferLimit : 200000;
         } catch(e) { }
     }
 
@@ -1260,6 +1273,9 @@
         const welcomeBonusAmount = Number(document.getElementById('set-welcome-amount').value) || 0;
         const vendorCommissionPct = Number(document.getElementById('set-fee-vendor').value) || 0;
 
+        const defaultDailyCashLimit = Number(document.getElementById('set-limit-cash').value) || 0;
+        const defaultDailyTransferLimit = Number(document.getElementById('set-limit-transfer').value) || 0;
+
         showToast('جاري الحفظ...');
         try { 
             await authFetch(`${API_URL}/admin/settings`, { 
@@ -1267,7 +1283,8 @@
                 body: JSON.stringify({ 
                     uiSettings, isTransferEnabled, isWithdrawEnabled, isDepositEnabled, isStoreEnabled, isServicesEnabled, bankakAccount, bankakName, bankakWhatsApp, isBankakEnabled,
                     depositFeePct, transferFeePct, withdrawFeePct,
-                    vendorCommissionPct, isWelcomeBonusEnabled, welcomeBonusAmount
+                    vendorCommissionPct, isWelcomeBonusEnabled, welcomeBonusAmount,
+                    defaultDailyCashLimit, defaultDailyTransferLimit
                 }) 
             }); 
             showToast('تم الحفظ ✅ وسينعكس فوراً على تطبيق العميل'); 
@@ -1368,6 +1385,8 @@
             if (currentAdminRole === 'master') {
                 document.getElementById('manage-freeze-input').value = data.frozenBalance || 0;
                 document.getElementById('manage-suspend-input').checked = data.isSuspended;
+                document.getElementById('manage-cash-limit').value = data.dailyCashLimit !== null ? data.dailyCashLimit : '';
+                document.getElementById('manage-transfer-limit').value = data.dailyTransferLimit !== null ? data.dailyTransferLimit : '';
                 const actionsFlex = document.querySelector('.manage-actions-flex');
                 document.querySelectorAll('.role-btn-dynamic').forEach(btn => btn.remove());
                 
@@ -1482,7 +1501,31 @@
             const data = await res.json(); showToast(data.message || 'تم التحديث بنجاح'); searchUser(); 
         } catch (e) { showToast('خطأ: ' + e.message, true); }
     }
-    async function saveUserManage() { if(!currentSearchId) return; const freeze = document.getElementById('manage-freeze-input').value; const susp = document.getElementById('manage-suspend-input').checked; if(!confirm('حفظ التعديلات؟')) return; try { await authFetch(`${API_URL}/admin/users/${currentSearchId}/manage`, { method: 'PUT', body: JSON.stringify({ isSuspended: susp, frozenBalance: freeze }) }); showToast('تم التعديل!'); searchUser(); } catch(e) { showToast('خطأ: ' + e.message, true); } }
+    async function saveUserManage() { 
+        if(!currentSearchId) return; 
+        const freeze = document.getElementById('manage-freeze-input').value; 
+        const susp = document.getElementById('manage-suspend-input').checked; 
+        
+        const cashLimVal = document.getElementById('manage-cash-limit').value;
+        const transferLimVal = document.getElementById('manage-transfer-limit').value;
+        const dailyCashLimit = cashLimVal === '' ? null : Number(cashLimVal);
+        const dailyTransferLimit = transferLimVal === '' ? null : Number(transferLimVal);
+
+        if(!confirm('حفظ التعديلات؟')) return; 
+        try { 
+            await authFetch(`${API_URL}/admin/users/${currentSearchId}/manage`, { 
+                method: 'PUT', 
+                body: JSON.stringify({ 
+                    isSuspended: susp, 
+                    frozenBalance: freeze,
+                    dailyCashLimit: dailyCashLimit,
+                    dailyTransferLimit: dailyTransferLimit
+                }) 
+            }); 
+            showToast('تم التعديل!'); 
+            searchUser(); 
+        } catch(e) { showToast('خطأ: ' + e.message, true); } 
+    }
     async function loadUserTxs() { if(!currentSearchIdentity) return; const box = document.getElementById('user-txs-box'); const tbody = document.getElementById('user-txs-tbody'); box.style.display = 'block'; tbody.innerHTML = '<tr><td colspan="4">جاري التحميل...</td></tr>'; try { const res = await authFetch(`${API_URL}/admin/user-transactions`, { method: 'POST', body: JSON.stringify({ identity: currentSearchIdentity }) }); const txs = await res.json(); tbody.innerHTML = ''; if(txs.length === 0) return tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">لا حركات</td></tr>'; txs.forEach(t => { const isOut = t.type === 'out'; tbody.innerHTML += `<tr><td style="font-size:11px;">${new Date(t.date).toLocaleString('ar-EG')}</td><td style="color:${isOut ? 'var(--red)' : 'var(--green)'}; font-weight:bold;">${isOut ? 'سحب/صادر' : 'إيداع/وارد'}</td><td style="direction:ltr; font-weight:bold;">${Number(t.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} SDG</td><td style="font-size:12px;">${t.title}</td></tr>`; }); } catch(e) { showToast('خطأ: ' + e.message, true); } }
 
     async function loadCashierLogs() {
