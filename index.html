@@ -1820,7 +1820,7 @@
         const err = document.getElementById('forgot-error'); 
         err.style.display = 'none'; 
         
-        if (!identity) { err.innerText = currentLang === 'ar' ? 'الرجاء إدخال البريد الإلكتروني أو رقم الحساب البنكي المكون من 10 أرقام' : 'Enter valid Email or 10-digit Account No'; err.style.display = 'block'; return; }
+        if (!identity) { err.innerText = currentLang === 'ar' ? 'الرجاء إدخال البريد الإلكتروني أو رقم الحساب البنكي الصحيح' : 'Enter valid Email or Account No'; err.style.display = 'block'; return; }
 
         showToast(currentLang === 'ar' ? 'جاري التحقق...' : 'Checking...', false);
         try {
@@ -2220,7 +2220,7 @@
             if(!el) return '';
             const val = el.value.trim().toLowerCase(); 
             if (screen === 'login' || screen === 'forgot') {
-                return (isEmail(val) || /^\d{10}$/.test(val)) ? val : '';
+                return (isEmail(val) || /^\d+$/.test(val)) ? val : '';
             }
             return isEmail(val) ? val : ''; 
         } 
