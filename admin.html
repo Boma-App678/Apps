@@ -449,18 +449,26 @@
                 <div class="search-flex">
                     <input type="text" id="create-u-name" placeholder="الاسم الكامل (رباعي)">
                     <input type="text" id="create-u-id" placeholder="رقم الهاتف أو البريد (المعرف)">
+                    
+                    <!-- 🌟 التحديث: إضافة نوع حساب شركة corporate -->
                     <select id="create-u-role" onchange="toggleBranchInput(this.value)">
                         <option value="user">عميل عادي</option>
                         <option value="vendor">تاجر 🏪</option>
+                        <option value="corporate">شركة / مؤسسة 🏢</option>
                         <option value="courier">مندوب توصيل 🛵</option>
                         <option value="cashier">أمين صندوق (للفروع)</option>
                     </select>
                 </div>
+                
                 <div class="search-flex" style="margin-top: 10px;">
                     <input type="password" id="create-u-pass" placeholder="كلمة المرور (8 خانات)">
                     <input type="text" id="create-u-pin" placeholder="رمز PIN المالي (6 أرقام)" maxlength="6">
+                    <!-- 🌟 التحديث: حقل لاختيار رقم حساب مميز VIP -->
+                    <input type="number" id="create-u-custom-acc" placeholder="رقم حساب مميز (اختياري)">
+                </div>
+                <div class="search-flex" style="margin-top: 10px;">
                     <input type="text" id="create-u-branch" placeholder="اسم الفرع (مطلوب للصرافين)" style="display:none; border-color:var(--accent);">
-                    <button class="btn btn-green" onclick="createNewUser()">إنشاء وتفعيل الحساب 🚀</button>
+                    <button class="btn btn-green" onclick="createNewUser()" style="flex:1;">إنشاء وتفعيل الحساب 🚀</button>
                 </div>
             </div>
 
@@ -477,6 +485,15 @@
                             <input type="text" id="direct-notes-input" placeholder="البيان / السبب" style="width: 200px; margin: 0;">
                             <button class="btn btn-green" onclick="directDeposit()">إيداع نقدي 📥</button>
                             <button class="btn btn-red" onclick="directWithdraw()">سحب نقدي 📤</button>
+                        </div>
+                    </div>
+
+                    <!-- 🌟 التحديث: نافذة استرداد الحوالات الخاطئة -->
+                    <div style="background: #fdf4ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #d946ef;" class="master-only">
+                        <h4 style="margin-bottom: 10px; color: #d946ef;">🔄 استرداد حوالة خاطئة للمرسل:</h4>
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" id="reverse-txn-id" placeholder="رقم العملية (مثال: BOMA-12345678)" style="width: 250px; margin: 0; border-color: #d946ef;">
+                            <button class="btn btn-blue" onclick="reverseTransaction()" style="background:#d946ef;">استرداد الحوالة 🔄</button>
                         </div>
                     </div>
 
@@ -1316,6 +1333,7 @@
         }
     }
 
+    // 🌟 التحديث: دالة إنشاء الحساب لتدعم الحساب المميز 🌟
     async function createNewUser() {
         const fullName = document.getElementById('create-u-name').value.trim();
         const identity = document.getElementById('create-u-id').value.trim();
@@ -1323,15 +1341,19 @@
         const password = document.getElementById('create-u-pass').value;
         const pin = document.getElementById('create-u-pin').value;
         const branchName = document.getElementById('create-u-branch').value.trim();
+        const customAccountNumber = document.getElementById('create-u-custom-acc').value.trim();
         
         if(!fullName || !identity || !password || !pin) return showToast('الرجاء إكمال جميع بيانات الحساب!', true);
         if(role === 'cashier' && !branchName) return showToast('الرجاء إدخال اسم الفرع لأمين الصندوق!', true);
         
         showToast('جاري إنشاء الحساب... ⏳');
         try {
+            const bodyPayload = { fullName, identity, role, password, pin, branchName };
+            if (customAccountNumber) bodyPayload.customAccountNumber = customAccountNumber;
+
             const res = await authFetch(`${API_URL}/admin/users/create`, {
                 method: 'POST',
-                body: JSON.stringify({ fullName, identity, role, password, pin, branchName })
+                body: JSON.stringify(bodyPayload)
             });
             const data = await res.json();
             if(!res.ok) return showToast(data.message, true);
@@ -1342,6 +1364,7 @@
             document.getElementById('create-u-pass').value = '';
             document.getElementById('create-u-pin').value = '';
             document.getElementById('create-u-branch').value = '';
+            document.getElementById('create-u-custom-acc').value = '';
             toggleBranchInput('user');
             document.getElementById('create-u-role').value = 'user';
             
@@ -1373,6 +1396,7 @@
             if (data.role === 'vendor') roleStr = 'تاجر 🏪';
             else if (data.role === 'courier') roleStr = 'مندوب توصيل 🛵';
             else if (data.role === 'cashier') roleStr = 'أمين صندوق 🗄️';
+            else if (data.role === 'corporate') roleStr = 'شركة / مؤسسة 🏢'; // 🌟 التحديث
             
             grid.innerHTML = `
                 <div class="detail-item"><span class="detail-lbl">الاسم</span><div class="detail-val">${data.fullName}</div></div>
@@ -1450,6 +1474,32 @@
             document.getElementById('direct-notes-input').value = '';
             searchUser(); 
         } catch(e) { showToast('خطأ: ' + e.message, true); }
+    }
+
+    // 🌟 التحديث: دالة استرداد الحوالات الخاطئة 🌟
+    async function reverseTransaction() {
+        const transactionId = document.getElementById('reverse-txn-id').value.trim();
+        if (!transactionId) return showToast('الرجاء إدخال رقم العملية (Transaction ID) المكون من BOMA-...', true);
+        
+        if (!confirm(`تحذير: هل أنت متأكد تماماً من سحب هذه الحوالة (رقم ${transactionId}) من حساب المستلم وإعادتها للمرسل؟`)) return;
+
+        showToast('جاري المعالجة والاسترداد... ⏳');
+        try {
+            const res = await authFetch(`${API_URL}/admin/reverse-transaction`, {
+                method: 'POST',
+                body: JSON.stringify({ transactionId })
+            });
+            const data = await res.json();
+            
+            if(!res.ok) return showToast(data.message, true);
+            
+            alert('✅ ' + data.message);
+            showToast('تم الاسترداد بنجاح');
+            document.getElementById('reverse-txn-id').value = '';
+            if (currentSearchIdentity) loadUserTxs(); // تحديث السجل إذا كان مفتوحاً
+        } catch(e) {
+            showToast('خطأ في الاتصال: ' + e.message, true);
+        }
     }
 
     async function changeUserIdentity() {
